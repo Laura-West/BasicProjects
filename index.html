@@ -69,4 +69,12 @@
     function render(nextIndex){
       index = (nextIndex + QUOTES.length) % QUOTES.length;
       quoteEl.textContent = QUOTES[index];
-      catEl.textContent =
+      catEl.textContent = EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
+    }
+
+    // Cycle every 10 seconds (10000 ms)
+    setInterval(()=>render(index+1), 10000);
+    render(0);
+  </script>
+</body>
+</html>
