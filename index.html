@@ -66,4 +66,107 @@
     }
 
     @keyframes fadeIn {
-      to { opacity: 1; tra
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .controls {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      display: flex;
+      gap: 4px;
+    }
+
+    .btn {
+      appearance: none;
+      background: transparent;
+      color: var(--fg);
+      font-size: 12px;
+      border-radius: 10px;
+      padding: 6px 8px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn:hover { color: var(--fg); }
+  </style>
+</head>
+<body>
+  <div class="widget">
+    <div class="card" tabindex="0" role="region" aria-label="Cat quote widget">
+      <div class="controls" aria-hidden="false">
+        <button class="btn" id="prevBtn" aria-label="Previous quote">◀</button>
+        <button class="btn" id="nextBtn" aria-label="Next quote">▶</button>
+      </div>
+      <div class="row">
+        <div class="cat" id="catEmoji" aria-hidden="true">😺</div>
+        <div class="quote" id="quote">Loading…</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const ROTATE_INTERVAL_MS = Math.max(1500, Number(params.get('interval')) || 6500);
+    const RANDOMIZE = params.get('random') === '1' || false;
+
+    const QUOTES = [
+      "Purr-gress, not purr-fection.",
+      "One task at a time… like batting toys under the couch.",
+      "Stay paw-sitive, you’re claw-ing through it!",
+      "Check it off, then strut like a kitty.",
+      "Tasks today, catnap later.",
+      "Conquer the list, claim the sunny spot.",
+      "Less hiss, more bliss—get it done.",
+      "Whisker by whisker, you’re making progress."
+    ];
+
+    const EMOJIS = ["🐱","🐈","🐈‍⬛","🐾","😸"];
+
+    const quoteEl = document.getElementById('quote');
+    const catEl = document.getElementById('catEmoji');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let order = QUOTES.map((q, i) => i);
+    if (RANDOMIZE) {
+      for (let i = order.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+    }
+
+    let index = 0;
+    let timer = null;
+    let paused = false;
+
+    function render(nextIndex) {
+      index = (nextIndex + order.length) % order.length;
+      const text = QUOTES[order[index]];
+      const emoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+      quoteEl.classList.remove('fade');
+      void quoteEl.offsetWidth;
+      quoteEl.textContent = `“${text}”`;
+      catEl.textContent = emoji;
+      quoteEl.classList.add('fade');
+    }
+
+    function startTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => { if (!paused) render(index + 1); }, ROTATE_INTERVAL_MS);
+    }
+
+    prevBtn.addEventListener('click', () => { render(index - 1); startTimer(); });
+    nextBtn.addEventListener('click', () => { render(index + 1); startTimer(); });
+
+    const card = document.querySelector('.card');
+    card.addEventListener('mouseenter', () => { paused = true; });
+    card.addEventListener('mouseleave', () => { paused = false; });
+    card.addEventListener('focusin',  () => { paused = true; });
+    card.addEventListener('focusout', () => { paused = false; });
+
+    render(0);
+    startTimer();
+  </script>
+</body>
+</html>
