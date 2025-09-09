@@ -56,7 +56,6 @@
 
     const EMOJIS = ["🐱","🐈","🐈‍⬛","🐾","😸"];
 
-    // Deep Winter matte palette, desaturated by ~50%
     const BG_COLORS = ["#262626", "#353535", "#4a4a4a", "#52526f", "#5a5a5a"];
 
     function getContrastYIQ(hexcolor){
@@ -84,7 +83,8 @@
       widgetEl.style.color = getContrastYIQ(bg);
     }
 
-    setInterval(()=>render(index+1), 5000);
+    // Cycle every 10 seconds (10000 ms)
+    setInterval(()=>render(index+1), 10000);
     render(0);
   </script>
 </body>
