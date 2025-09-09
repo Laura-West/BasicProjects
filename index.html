@@ -10,7 +10,7 @@
       width: 100%;
       margin: 0;
       font-family: Roboto, Arial, sans-serif;
-      background: transparent; /* Transparent background outside the widget */
+      background: #ffffff; /* White background for Notion */
     }
 
     body {
@@ -78,4 +78,21 @@
     const catEl = document.getElementById('catEmoji');
     const widgetEl = document.getElementById('widget');
 
-    let ind
+    let index = 0;
+
+    function render(nextIndex){
+      index = (nextIndex + QUOTES.length) % QUOTES.length;
+      quoteEl.textContent = QUOTES[index];
+      catEl.textContent = EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
+
+      const bg = BG_COLORS[index % BG_COLORS.length];
+      widgetEl.style.backgroundColor = bg;
+      widgetEl.style.color = getContrastYIQ(bg);
+    }
+
+    // Cycle every 10 seconds (10000 ms)
+    setInterval(()=>render(index+1), 10000);
+    render(0);
+  </script>
+</body>
+</html>
