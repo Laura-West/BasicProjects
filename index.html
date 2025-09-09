@@ -11,13 +11,13 @@
       font-family: Roboto, Arial, sans-serif;
       display: grid;
       place-items: center;
-      background: #ffffff;
+      background: #1c1c1c;
     }
 
     .widget {
       width: min(720px, 92vw);
       border-radius: 12px;
-      border: 2px solid #6200ee; /* Material Design primary color border */
+      border: 2px solid #4a4a4a; /* subtle material border */
       padding: 20px;
       display: flex;
       align-items: center;
@@ -34,38 +34,12 @@
     .cat {
       font-size: 28px;
     }
-
-    .controls {
-      margin-left: auto;
-      display: flex;
-      gap: 8px;
-    }
-
-    .btn {
-      appearance: none;
-      border: 1px solid #6200ee;
-      border-radius: 8px;
-      background: transparent;
-      color: inherit;
-      font-size: 12px;
-      padding: 6px 8px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .btn:hover {
-      background: rgba(98,0,238,0.1);
-    }
   </style>
 </head>
 <body>
   <div class="widget" id="widget">
     <div class="cat" id="catEmoji">😺</div>
     <div class="quote" id="quote">Loading…</div>
-    <div class="controls">
-      <button class="btn" id="prevBtn">◀</button>
-      <button class="btn" id="nextBtn">▶</button>
-    </div>
   </div>
 
   <script>
@@ -73,6 +47,7 @@
       "Purr-gress, not purr-fection.",
       "One task at a time… like batting toys under the couch.",
       "Stay paw-sitive, you’re claw-ing through it!",
+      "Tackle your tasks, then enjoy a cozy nap.",
       "Tasks today, catnap later.",
       "Conquer the list, claim the sunny spot.",
       "Less hiss, more bliss—get it done.",
@@ -81,7 +56,8 @@
 
     const EMOJIS = ["🐱","🐈","🐈‍⬛","🐾","😸"];
 
-    const BG_COLORS = ["#ffffff", "#6200ee", "#03dac6", "#ffeb3b", "#ff5722"];
+    // Deep Winter matte palette shades
+    const BG_COLORS = ["#1c1c1c", "#2a2a2a", "#3a3a3a", "#44475a", "#373737"];
 
     function getContrastYIQ(hexcolor){
         hexcolor = hexcolor.replace('#','');
@@ -95,11 +71,8 @@
     const quoteEl = document.getElementById('quote');
     const catEl = document.getElementById('catEmoji');
     const widgetEl = document.getElementById('widget');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
 
     let index = 0;
-    let timer = null;
 
     function render(nextIndex){
       index = (nextIndex + QUOTES.length) % QUOTES.length;
@@ -111,16 +84,8 @@
       widgetEl.style.color = getContrastYIQ(bg);
     }
 
-    function startTimer(){
-      clearInterval(timer);
-      timer = setInterval(()=>render(index+1), 5000);
-    }
-
-    prevBtn.addEventListener('click', ()=>{render(index-1); startTimer();});
-    nextBtn.addEventListener('click', ()=>{render(index+1); startTimer();});
-
+    setInterval(()=>render(index+1), 5000);
     render(0);
-    startTimer();
   </script>
 </body>
 </html>
