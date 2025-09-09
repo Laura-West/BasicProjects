@@ -17,7 +17,7 @@
     .widget {
       width: min(720px, 92vw);
       border-radius: 12px;
-      border: 2px solid #4a4a4a; /* subtle material border */
+      border: 2px solid #4a4a4a;
       padding: 20px;
       display: flex;
       align-items: center;
@@ -56,36 +56,9 @@
 
     const EMOJIS = ["🐱","🐈","🐈‍⬛","🐾","😸"];
 
-    // Deep Winter matte palette shades
-    const BG_COLORS = ["#1c1c1c", "#2a2a2a", "#3a3a3a", "#44475a", "#373737"];
+    // Deep Winter matte palette, desaturated by ~50%
+    const BG_COLORS = ["#262626", "#353535", "#4a4a4a", "#52526f", "#5a5a5a"];
 
     function getContrastYIQ(hexcolor){
         hexcolor = hexcolor.replace('#','');
-        let r = parseInt(hexcolor.substr(0,2),16);
-        let g = parseInt(hexcolor.substr(2,2),16);
-        let b = parseInt(hexcolor.substr(4,2),16);
-        let yiq = ((r*299)+(g*587)+(b*114))/1000;
-        return (yiq >= 128) ? '#000000' : '#ffffff';
-    }
-
-    const quoteEl = document.getElementById('quote');
-    const catEl = document.getElementById('catEmoji');
-    const widgetEl = document.getElementById('widget');
-
-    let index = 0;
-
-    function render(nextIndex){
-      index = (nextIndex + QUOTES.length) % QUOTES.length;
-      quoteEl.textContent = QUOTES[index];
-      catEl.textContent = EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
-
-      const bg = BG_COLORS[index % BG_COLORS.length];
-      widgetEl.style.backgroundColor = bg;
-      widgetEl.style.color = getContrastYIQ(bg);
-    }
-
-    setInterval(()=>render(index+1), 5000);
-    render(0);
-  </script>
-</body>
-</html>
+        let r = parseInt(hexcolor.subst
