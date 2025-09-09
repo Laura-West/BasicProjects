@@ -1,80 +1,26 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cat Quote Widget</title>
-  <style>
-    html, body {
-      height: 100%;
-      width: 100%;
-      margin: 0;
-      font-family: Roboto, Arial, sans-serif;
-      background-color: #ffffff; /* Fill whole iframe white */
-      color: #000000; /* Plain black text */
-    }
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  font-family: Roboto, Arial, sans-serif;
+  background: transparent;
+}
 
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    .widget {
-      width: 100%;
-      height: 100%;
-      box-sizing: border-box;
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .quote {
-      font-size: clamp(16px, 2.4vw, 22px);
-      font-weight: 600;
-      line-height: 1.35;
-    }
-
-    .cat {
-      font-size: 28px;
-    }
-  </style>
-</head>
-<body>
-  <div class="widget" id="widget">
-    <div class="cat" id="catEmoji">😺</div>
-    <div class="quote" id="quote">Loading…</div>
-  </div>
-
-  <script>
-    const QUOTES = [
-      "Purr-gress, not purr-fection.",
-      "One task at a time… like batting toys under the couch.",
-      "Stay paw-sitive, you’re claw-ing through it!",
-      "Tackle your tasks, then enjoy a cozy nap.",
-      "Tasks today, catnap later.",
-      "Conquer the list, claim the sunny spot.",
-      "Less hiss, more bliss—get it done.",
-      "Whisker by whisker, you’re making progress."
-    ];
-
-    const EMOJIS = ["🐱","🐈","🐈‍⬛","🐾","😸"];
-
-    const quoteEl = document.getElementById('quote');
-    const catEl = document.getElementById('catEmoji');
-
-    let index = 0;
-
-    function render(nextIndex){
-      index = (nextIndex + QUOTES.length) % QUOTES.length;
-      quoteEl.textContent = QUOTES[index];
-      catEl.textContent = EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
-    }
-
-    // Cycle every 10 seconds (10000 ms)
-    setInterval(()=>render(index+1), 10000);
-    render(0);
-  </script>
-</body>
-</html>
+.widget {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: 12px;
+  border: 2px solid #4a4a4a;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: background-color 0.5s, color 0.5s;
+}
