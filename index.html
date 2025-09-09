@@ -7,10 +7,10 @@
   <style>
     :root {
       --bg: #ffffff;
-      --fg: #0f172a; /* slate-900 */
-      --muted: #475569; /* slate-600 */
-      --ring: rgba(99, 102, 241, 0.35); /* indigo ring */
-      --card: #f8fafc; /* slate-50 */
+      --fg: #0f172a;
+      --muted: #475569;
+      --ring: rgba(99, 102, 241, 0.35);
+      --card: #f8fafc;
       --shadow: 0 10px 25px rgba(2, 6, 23, 0.08);
     }
 
@@ -28,7 +28,7 @@
     html, body {
       height: 100%;
       margin: 0;
-      background: transparent; /* lets Notion's background show through */
+      background: transparent;
       color: var(--fg);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
     }
@@ -75,13 +75,6 @@
       letter-spacing: 0.2px;
     }
 
-    .subtle {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 6px;
-      user-select: none;
-    }
-
     .fade {
       opacity: 0;
       transform: translateY(6px);
@@ -122,17 +115,13 @@
         <button class="btn" id="nextBtn" aria-label="Next quote">▶</button>
       </div>
       <div class="row">
-        <div class="cat" aria-hidden="true">😺</div>
+        <div class="cat" id="catEmoji" aria-hidden="true">😺</div>
         <div class="quote" id="quote">Loading…</div>
       </div>
-      <div class="subtle" id="hint">Hover to pause • Click ◀ ▶ to browse</div>
     </div>
   </div>
 
   <script>
-    // --- Configuration ------------------------------------------------------
-    // You can override these via URL params, e.g.:
-    // ?interval=7000&random=1
     const params = new URLSearchParams(location.search);
     const ROTATE_INTERVAL_MS = Math.max(1500, Number(params.get('interval')) || 6500);
     const RANDOMIZE = params.get('random') === '1' || false;
@@ -148,12 +137,13 @@
       "Whisker by whisker, you’re making progress."
     ];
 
-    // --- Logic --------------------------------------------------------------
+    const EMOJIS = ["🐱","🐈","🐈‍⬛","🐾","😸"];
+
     const quoteEl = document.getElementById('quote');
+    const catEl = document.getElementById('catEmoji');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
-    // Make a deterministic order unless randomize is requested
     let order = QUOTES.map((q, i) => i);
     if (RANDOMIZE) {
       for (let i = order.length - 1; i > 0; i--) {
@@ -169,12 +159,12 @@
     function render(nextIndex) {
       index = (nextIndex + order.length) % order.length;
       const text = QUOTES[order[index]];
+      const emoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
       quoteEl.classList.remove('fade');
-      // Force reflow to restart animation
       void quoteEl.offsetWidth;
       quoteEl.textContent = `“${text}”`;
+      catEl.textContent = emoji;
       quoteEl.classList.add('fade');
-      document.title = text;
     }
 
     function startTimer() {
@@ -182,18 +172,15 @@
       timer = setInterval(() => { if (!paused) render(index + 1); }, ROTATE_INTERVAL_MS);
     }
 
-    // Controls
     prevBtn.addEventListener('click', () => { render(index - 1); startTimer(); });
     nextBtn.addEventListener('click', () => { render(index + 1); startTimer(); });
 
-    // Pause on hover/focus for accessibility and sanity
     const card = document.querySelector('.card');
     card.addEventListener('mouseenter', () => { paused = true; });
     card.addEventListener('mouseleave', () => { paused = false; });
     card.addEventListener('focusin',  () => { paused = true; });
     card.addEventListener('focusout', () => { paused = false; });
 
-    // Initialize
     render(0);
     startTimer();
   </script>
