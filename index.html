@@ -9,19 +9,19 @@
         /* Admin settings dashboard styles */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f4f7f6;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: #333;
+            color: var(--primary-text-color, #333);
+            background-color: var(--primary-bg-color, #f4f7f6);
             transition: background-color 0.5s, color 0.5s;
         }
 
         .container {
             width: min(900px, 95vw);
             padding: 30px;
-            background-color: #ffffff;
+            background-color: var(--secondary-bg-color, #ffffff);
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             display: flex;
@@ -30,16 +30,20 @@
             transition: background-color 0.5s, border-color 0.5s;
         }
 
+        h1, h2 {
+            color: var(--accent-color, #2c3e50);
+            transition: color 0.5s;
+        }
+
         h1 {
             font-size: 2.2em;
             font-weight: 700;
-            color: #2c3e50;
             text-align: center;
             margin-bottom: 20px;
         }
 
         .settings-section {
-            border: 1px solid #e1e4e8;
+            border: 1px solid var(--secondary-bg-color, #e1e4e8);
             border-radius: 8px;
             padding: 20px;
         }
@@ -48,8 +52,7 @@
             margin-top: 0;
             font-size: 1.5em;
             font-weight: 600;
-            color: #34495e;
-            border-bottom: 2px solid #3498db;
+            border-bottom: 2px solid var(--accent-color, #3498db);
             padding-bottom: 10px;
             margin-bottom: 15px;
         }
@@ -72,8 +75,8 @@
             border: 2px solid transparent;
             transition: all 0.2s ease-in-out;
             font-weight: 500;
-            background-color: #ecf0f1;
-            color: #2c3e50;
+            background-color: var(--secondary-bg-color, #ecf0f1);
+            color: var(--primary-text-color, #2c3e50);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -81,40 +84,30 @@
 
         .theme-option:hover,
         .alignment-option:hover {
-            background-color: #dbe4e6;
+            background-color: var(--accent-color);
         }
 
         .theme-option.active,
         .alignment-option.active {
-            border-color: #3498db;
-            background-color: #eaf6fd;
-            color: #2980b9;
+            border-color: var(--accent-color);
+            background-color: var(--primary-bg-color);
+            color: var(--primary-text-color);
         }
 
         .color-swatch {
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            border: 1px solid #bdc3c7;
+            border: 1px solid var(--secondary-bg-color, #bdc3c7);
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
-        /* --- THEME STYLES FROM STYLES.CSS --- */
-        :root {
-            --primary-bg-color: #1a1a2e;
-            --primary-text-color: #e6e6fa;
-            --accent-color: #f7b731;
-            --secondary-bg-color: #2e3a59;
-            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
-
+        /* --- THEME-SPECIFIC COLOR VARIABLES --- */
         body.gilded-iris-theme {
             --primary-bg-color: #4b0082;
             --primary-text-color: #fce883;
             --accent-color: #ffc94b;
             --secondary-bg-color: #3b0066;
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
         }
         
         body.cosmic-dust-theme {
@@ -122,8 +115,6 @@
             --primary-text-color: #e0e6f2;
             --accent-color: #f0a07c;
             --secondary-bg-color: #172a4e;
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
         }
         
         body.twilight-garden-theme {
@@ -131,8 +122,6 @@
             --primary-text-color: #f3e9f1;
             --accent-color: #c16196;
             --secondary-bg-color: #4f1a66;
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
         }
         
         body.blue-lagoon-theme {
@@ -140,8 +129,6 @@
             --primary-text-color: #e1efff;
             --accent-color: #00ffff;
             --secondary-bg-color: #2d2d86;
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
         }
         
         body.midnight-bloom-theme {
@@ -149,8 +136,6 @@
             --primary-text-color: #e6e6fa;
             --accent-color: #ff69b4;
             --secondary-bg-color: #1a1e2f;
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
         }
         
         body.deep-sea-pearl-theme {
@@ -158,8 +143,6 @@
             --primary-text-color: #f0f8ff;
             --accent-color: #c0fefe;
             --secondary-bg-color: #2c445c;
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
         }
         
         body.amethyst-mist-theme {
@@ -167,8 +150,6 @@
             --primary-text-color: #f0f0ff;
             --accent-color: #1e1e1e;
             --secondary-bg-color: #8a7cde;
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
         }
         
         body.starlight-theme {
@@ -176,8 +157,6 @@
             --primary-text-color: #f1c40f;
             --accent-color: #f39c12;
             --secondary-bg-color: #34495e;
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
         }
         
         body.sunset-haze-theme {
@@ -185,8 +164,6 @@
             --primary-text-color: #fbe9e7;
             --accent-color: #f39c12;
             --secondary-bg-color: #c0392b;
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
         }
         
         body.light-mode {
@@ -194,8 +171,6 @@
             --primary-text-color: #2c3e50;
             --accent-color: #3498db;
             --secondary-bg-color: #bdc3c7;
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
         }
         
         body.dark-mode {
@@ -203,8 +178,6 @@
             --primary-text-color: #ecf0f1;
             --accent-color: #3498db;
             --secondary-bg-color: #bdc3c7;
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
         }
         
         body.forest-green {
@@ -212,81 +185,6 @@
             --primary-text-color: #264639;
             --accent-color: #558269;
             --secondary-bg-color: #558269;
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
-        }
-
-        /* Update container styles for each theme */
-        body.gilded-iris-theme .container {
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
-            border: 2px solid var(--secondary-bg-color);
-        }
-
-        body.cosmic-dust-theme .container {
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
-            border: 2px solid var(--secondary-bg-color);
-        }
-        
-        body.twilight-garden-theme .container {
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
-            border: 2px solid var(--secondary-bg-color);
-        }
-        
-        body.blue-lagoon-theme .container {
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
-            border: 2px solid var(--secondary-bg-color);
-        }
-        
-        body.midnight-bloom-theme .container {
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
-            border: 2px solid var(--secondary-bg-color);
-        }
-        
-        body.deep-sea-pearl-theme .container {
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
-            border: 2px solid var(--secondary-bg-color);
-        }
-        
-        body.amethyst-mist-theme .container {
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
-            border: 2px solid var(--secondary-bg-color);
-        }
-        
-        body.starlight-theme .container {
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
-            border: 2px solid var(--secondary-bg-color);
-        }
-        
-        body.sunset-haze-theme .container {
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
-            border: 2px solid var(--secondary-bg-color);
-        }
-
-        body.light-mode .container {
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
-            border: 2px solid var(--secondary-bg-color);
-        }
-        
-        body.dark-mode .container {
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
-            border: 2px solid var(--secondary-bg-color);
-        }
-
-        body.forest-green .container {
-            background-color: var(--primary-bg-color);
-            color: var(--primary-text-color);
-            border: 2px solid var(--secondary-bg-color);
         }
     </style>
 </head>
@@ -318,7 +216,7 @@
             const themeControls = document.getElementById('theme-controls');
             const alignmentControls = document.getElementById('alignment-controls');
             const bodyElement = document.body;
-        
+
             // Theme data
             const allThemes = {
                 'light-mode': { class: 'light-mode', name: 'Light Mode', colors: ['#ffffff', '#2c3e50', '#3498db', '#bdc3c7'] },
@@ -334,7 +232,7 @@
                 'starlight-theme': { class: 'starlight-theme', name: 'Starlight', colors: ['#2c3e50', '#f1c40f', '#f39c12', '#34495e'] },
                 'sunset-haze-theme': { class: 'sunset-haze-theme', name: 'Sunset Haze', colors: ['#e74c3c', '#fbe9e7', '#f39c12', '#c0392b'] }
             };
-        
+
             // Set initial selected values from localStorage, or use defaults
             let selectedTheme = localStorage.getItem('selectedTheme') || 'gilded-iris-theme';
             let selectedAlignment = localStorage.getItem('selectedAlignment') || 'center';
@@ -348,7 +246,7 @@
                     }
                 });
                 bodyElement.className = selectedTheme;
-                
+
                 // Update alignment active state
                 document.querySelectorAll('.alignment-option').forEach(el => {
                     el.classList.remove('active');
@@ -404,7 +302,7 @@ const widgetConfig = {
                     updateActiveControls();
                 });
             });
-            
+
             // Function to apply a random theme
             function applyRandomTheme() {
                 const themeKeys = Object.keys(allThemes);
@@ -412,12 +310,6 @@ const widgetConfig = {
                 selectedTheme = themeKeys[randomIndex];
                 localStorage.setItem('selectedTheme', selectedTheme);
                 updateActiveControls();
-            }
-
-            // Check if there's a button for randomization and add event listener
-            const randomizeButton = document.getElementById('randomize-btn');
-            if (randomizeButton) {
-                randomizeButton.addEventListener('click', applyRandomTheme);
             }
 
             // Initial render on page load
