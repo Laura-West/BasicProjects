@@ -81,7 +81,7 @@
 
     async function fetchQuotes() {
       try {
-        const response = await fetch('QuotesSept25.txt');
+        const response = await fetch('ScriptureQuotes.txt');
         const data = await response.json();
         if (data.quotes) {
           QUOTES = data.quotes;
