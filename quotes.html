@@ -41,23 +41,54 @@
       font-style: italic;
       margin-top: 8px;
     }
+
+    .text-alignment-toggle {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-color);
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+
+    .text-alignment-toggle:hover {
+      opacity: 1;
+    }
+
+    .quote-container {
+      flex-grow: 1;
+    }
   </style>
 </head>
 
 <body>
   <div class="widget" id="widget">
-    <div class="icon" id="icon"></div>
-    <div class="quote" id="quote">Loading...</div>
+    <div class="quote-container">
+      <div class="icon" id="icon"></div>
+      <div class="quote" id="quote">Loading...</div>
+    </div>
+    <div class="text-alignment-toggle" id="text-alignment-toggle">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <line x1="2" y1="6" x2="16" y2="6"></line>
+        <line x1="2" y1="18" x2="16" y2="18"></line>
+      </svg>
+    </div>
   </div>
 
   <script>
-    const EMOJIS = ["✨", "💡", "🧠", "🌱", "🔑"];
     let QUOTES = [];
     let index = 0;
+    let alignmentIndex = 0;
+    const alignments = ['left', 'center', 'right'];
 
     const quoteEl = document.getElementById('quote');
     const iconEl = document.getElementById('icon');
     const widgetEl = document.getElementById('widget');
+    const toggleEl = document.getElementById('text-alignment-toggle');
+    const quoteContainerEl = document.querySelector('.quote-container');
 
     // A function to set the theme of the widget.
     function applyTheme(themeClass, colors) {
@@ -79,7 +110,6 @@
         index = (nextIndex + QUOTES.length) % QUOTES.length;
         const currentQuote = QUOTES[index];
         quoteEl.innerHTML = `<span>"${currentQuote.quote}"</span><span class="verse-reference">${currentQuote.author}</span>`;
-        iconEl.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
       } else {
         quoteEl.textContent = "Error: Quotes not loaded.";
         iconEl.textContent = "⚠️";
@@ -102,7 +132,7 @@
         return;
       }
       render(0);
-      setInterval(() => render(index + 1), 10000);
+      setInterval(() => render(index + 1), 300000); // 300000 ms = 5 minutes
     }
 
     function initializeWidget() {
@@ -132,6 +162,12 @@
       }
       fetchQuotes();
     }
+
+    // Alignment toggle functionality
+    toggleEl.addEventListener('click', () => {
+      alignmentIndex = (alignmentIndex + 1) % alignments.length;
+      quoteContainerEl.style.textAlign = alignments[alignmentIndex];
+    });
 
     initializeWidget();
   </script>
