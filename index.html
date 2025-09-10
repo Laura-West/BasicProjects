@@ -51,7 +51,7 @@
         align-items: center;
         margin-top: 24px;
       }
-      #theme-select, #duration-select {
+      #theme-select {
         margin-bottom: 12px;
         padding: 8px 12px;
         border-radius: 6px;
@@ -61,7 +61,6 @@
       }
       .theme-preview {
         display: flex;
-        /* Updated: No gap between squares */
         gap: 0;
         border-radius: 8px;
         padding: 4px;
@@ -69,12 +68,11 @@
         border: 1px solid var(--accent-color);
       }
       .preview-square {
-        /* Updated: Larger squares without borders */
         width: 50px;
         height: 50px;
         border: none;
       }
-      #save-btn {
+      #save-btn, #edit-btn {
         margin-top: 20px;
         padding: 10px 20px;
         font-size: 1rem;
@@ -86,11 +84,75 @@
         cursor: pointer;
         transition: background-color 0.3s ease;
       }
-      #save-btn:hover {
+      #save-btn:hover, #edit-btn:hover {
         background-color: color-mix(in srgb, var(--accent-color) 80%, black);
       }
-      .hidden {
+      .edit-panel {
+        margin-top: 20px;
         display: none;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 400px;
+      }
+      .edit-panel.active {
+        display: flex;
+      }
+      .edit-group {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-bottom: 12px;
+        align-items: center;
+      }
+      .edit-group label {
+        margin-bottom: 8px;
+      }
+      .edit-group input[type="text"], .edit-group input[type="color"] {
+        width: 100%;
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid var(--accent-color);
+        background-color: var(--primary-bg-color);
+        color: var(--primary-text-color);
+        box-sizing: border-box;
+      }
+      .color-inputs {
+        display: flex;
+        gap: 8px;
+        width: 100%;
+        justify-content: space-between;
+      }
+      .color-inputs input[type="color"] {
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+      }
+      .edit-actions button, .delete-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .delete-btn {
+        background-color: #e74c3c;
+        color: white;
+      }
+      .delete-btn:hover {
+        background-color: #c0392b;
+      }
+      .add-btn {
+        background-color: #27ae60;
+        color: white;
+        margin-top: 10px;
+      }
+      .add-btn:hover {
+        background-color: #229954;
       }
     </style>
 </head>
@@ -104,7 +166,34 @@
       <label for="theme-select">Select a Theme:</label>
       <select id="theme-select"></select>
       <div class="theme-preview" id="theme-preview"></div>
-      <button id="save-btn">Save Theme</button>
+      <div>
+        <button id="save-btn">Save Theme</button>
+        <button id="edit-btn">Edit Themes</button>
+      </div>
+    </div>
+
+    <div class="edit-panel" id="edit-panel">
+      <h2>Edit Themes</h2>
+      <div class="edit-group">
+        <label for="new-theme-name">New Theme Name:</label>
+        <input type="text" id="new-theme-name" placeholder="e.g., Ocean Breeze">
+      </div>
+      <div class="edit-group">
+        <label>New Theme Colors (4):</label>
+        <div class="color-inputs">
+          <input type="color" id="color1" value="#ffffff">
+          <input type="color" id="color2" value="#ffffff">
+          <input type="color" id="color3" value="#ffffff">
+          <input type="color" id="color4" value="#ffffff">
+        </div>
+      </div>
+      <button class="add-btn" id="add-theme-btn">Add New Theme</button>
+      
+      <div class="edit-group">
+        <h3>Delete a Theme</h3>
+        <p>Select a theme from the dropdown above and click "Delete".</p>
+        <button class="delete-btn" id="delete-theme-btn">Delete Selected Theme</button>
+      </div>
     </div>
   </div>
 
@@ -114,8 +203,21 @@
       const themeSelect = document.getElementById('theme-select');
       const themePreview = document.getElementById('theme-preview');
       const saveBtn = document.getElementById('save-btn');
+      const editBtn = document.getElementById('edit-btn');
+      const editPanel = document.getElementById('edit-panel');
+      const newThemeNameInput = document.getElementById('new-theme-name');
+      const colorInputs = [
+        document.getElementById('color1'),
+        document.getElementById('color2'),
+        document.getElementById('color3'),
+        document.getElementById('color4')
+      ];
+      const addThemeBtn = document.getElementById('add-theme-btn');
+      const deleteThemeBtn = document.getElementById('delete-theme-btn');
       
-      const themes = {
+      let allThemes = {};
+
+      const defaultThemes = {
         "Gilded Iris": { class: "gilded-iris-theme", colors: ["#4b0082", "#fce883", "#ffc94b", "#3b0066"] },
         "Cosmic Dust": { class: "cosmic-dust-theme", colors: ["#0c1c38", "#e0e6f2", "#f0a07c", "#172a4e"] },
         "Twilight Garden": { class: "twilight-garden-theme", colors: ["#2b004a", "#f0e6f7", "#ff4500", "#43126f"] },
@@ -127,39 +229,55 @@
         "Ruby Radiance": { class: "ruby-radiance-theme", colors: ["#3f1e1e", "#f5f5f5", "#e74c3c", "#5d3333"] },
         "Azure Dream": { class: "azure-dream-theme", colors: ["#87cefa", "#1e2a3a", "#34495e", "#b0e0e6"] }
       };
-      
+
+      // Load themes from local storage or use defaults
+      try {
+        const storedThemes = JSON.parse(localStorage.getItem('savedThemes'));
+        allThemes = storedThemes || defaultThemes;
+      } catch (e) {
+        console.error("Could not parse saved themes from localStorage.", e);
+        allThemes = defaultThemes;
+      }
+
+      function slugify(text) {
+        return text.toString().toLowerCase()
+          .replace(/\s+/g, '-')           // Replace spaces with -
+          .replace(/[^\w-]+/g, '')       // Remove all non-word chars
+          .replace(/--+/g, '-')         // Replace multiple - with single -
+          .replace(/^-+/, '')             // Trim - from start of text
+          .replace(/-+$/, '');            // Trim - from end of text
+      }
+
       function setupThemeSelector() {
-        // Add a "Random" option first
+        themeSelect.innerHTML = '';
         const randomOption = document.createElement('option');
         randomOption.value = 'random';
         randomOption.textContent = 'Random';
         themeSelect.appendChild(randomOption);
         
-        for (const [name, data] of Object.entries(themes)) {
+        for (const [name, data] of Object.entries(allThemes)) {
           const option = document.createElement('option');
           option.value = data.class;
           option.textContent = name;
           themeSelect.appendChild(option);
         }
         
-        // Initial theme application and preview
-        const initialTheme = localStorage.getItem('selectedTheme') || Object.values(themes)[0].class;
+        const initialTheme = localStorage.getItem('selectedTheme') || Object.values(allThemes)[0].class;
         themeSelect.value = initialTheme;
-        body.classList.add(initialTheme);
+        body.className = initialTheme;
         updateThemePreview(initialTheme);
       }
       
       function updateThemePreview(themeClass) {
         themePreview.innerHTML = '';
         let themeData;
-
-        // If 'random' is selected, we show a random theme preview
+        
         if (themeClass === 'random') {
-          const themeKeys = Object.keys(themes);
+          const themeKeys = Object.keys(allThemes);
           const randomKey = themeKeys[Math.floor(Math.random() * themeKeys.length)];
-          themeData = themes[randomKey];
+          themeData = allThemes[randomKey];
         } else {
-          themeData = Object.values(themes).find(t => t.class === themeClass);
+          themeData = Object.values(allThemes).find(t => t.class === themeClass);
         }
       
         if (themeData) {
@@ -174,38 +292,66 @@
       
       themeSelect.addEventListener('change', (event) => {
         const selectedClass = event.target.value;
-        
-        // Clear all existing theme classes
-        for (const data of Object.values(themes)) {
-          body.classList.remove(data.class);
-        }
-
-        // Apply a new class if not "random"
         if (selectedClass !== 'random') {
-          body.classList.add(selectedClass);
+          body.className = selectedClass;
+        }
+        updateThemePreview(selectedClass);
+      });
+
+      editBtn.addEventListener('click', () => {
+        editPanel.classList.toggle('active');
+      });
+
+      addThemeBtn.addEventListener('click', () => {
+        const name = newThemeNameInput.value.trim();
+        if (!name) {
+          console.error("Theme name cannot be empty.");
+          return;
+        }
+        const themeClass = slugify(name);
+        const colors = colorInputs.map(input => input.value);
+        
+        allThemes[name] = { class: themeClass, colors: colors };
+        
+        localStorage.setItem('savedThemes', JSON.stringify(allThemes));
+        setupThemeSelector();
+        updateThemePreview(themeClass);
+        newThemeNameInput.value = '';
+        console.log(`Theme "${name}" added!`);
+      });
+
+      deleteThemeBtn.addEventListener('click', () => {
+        const selectedName = themeSelect.options[themeSelect.selectedIndex].textContent;
+        if (selectedName === 'Random') {
+          console.error("Cannot delete the Random option.");
+          return;
         }
         
-        updateThemePreview(selectedClass);
+        delete allThemes[selectedName];
+        
+        localStorage.setItem('savedThemes', JSON.stringify(allThemes));
+        setupThemeSelector();
+        updateThemePreview(Object.values(allThemes)[0].class);
+        console.log(`Theme "${selectedName}" deleted.`);
       });
       
       saveBtn.addEventListener('click', () => {
         const selectedOption = themeSelect.value;
-        const fileContent = `const selectedTheme = '${selectedOption}';`;
+        const fileContent = `const allThemes = ${JSON.stringify(allThemes, null, 2)};\nconst selectedTheme = '${selectedOption}';`;
         
         const blob = new Blob([fileContent], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'theme-config.js';
+        a.download = 'themes.js';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       
-        // Update localStorage as well for persistence between sessions
         localStorage.setItem('selectedTheme', selectedOption);
       
-        alert('theme-config.js has been generated. Please download it and upload it to your GitHub repository.');
+        console.log('themes.js has been generated. Please download it and upload it to your GitHub repository.');
       });
       
       setupThemeSelector();
