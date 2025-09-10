@@ -1,67 +1,20 @@
-<!--
-  This is the updated Cat Quotes Widget.
-  It is a single, self-contained HTML file that can be embedded directly into Notion.
-  It now links to your styles.css file to use the new theme palettes.
--->
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cat Quote Widget</title>
-  <!-- 
-    This links to your shared stylesheet.
-    Make sure to use the raw GitHub URL for this to work in Notion.
-  -->
-  <link rel="stylesheet" href="styles.css">
-
-  <style>
-    /* General body styling */
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: var(--font-family);
-      display: grid;
-      place-items: center;
-      background-color: var(--primary-bg-color);
-      color: var(--primary-text-color);
-      transition: background-color 0.5s ease, color 0.5s ease;
-    }
-
-    .widget {
-      width: min(720px, 92vw);
-      border-radius: 12px;
-      border: 2px solid var(--accent-color);
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background-color: var(--secondary-bg-color);
-      transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
-    }
-
-    .quote {
-      font-size: clamp(16px, 2.4vw, 22px);
-      font-weight: 600;
-      line-height: 1.35;
-      color: var(--primary-text-color);
-    }
-
-    .cat {
-      font-size: 28px;
-      color: var(--accent-color);
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="themes.js"></script>
 </head>
-<body>
 
+<body>
   <div class="widget" id="widget">
-    <div class="cat" id="catEmoji">😺</div>
-    <div class="quote" id="quote">Loading…</div>
+    <div class="cat" id="catEmoji"></div>
+    <div class="quote" id="quote"></div>
   </div>
-  
-  <script src="theme-config.js"></script>
+
   <script>
     const QUOTES = [
       "Purr-gress, not purr-fection.",
@@ -74,28 +27,68 @@
       "Whisker by whisker, you’re making progress."
     ];
 
-    const EMOJIS = ["🐱","🐈","🐈‍⬛","🐾","😸"];
-    
+    const EMOJIS = ["🐱", "🐈", "🐈‍⬛", "🐾", "😸"];
+
     const quoteEl = document.getElementById('quote');
     const catEl = document.getElementById('catEmoji');
-    const body = document.body;
-
-    // Apply the selected theme from our central config file
-    if (typeof selectedTheme !== 'undefined') {
-        body.classList.add(selectedTheme);
-    }
+    const widgetEl = document.getElementById('widget');
 
     let index = 0;
 
-    function render(nextIndex){
-      index = (nextIndex + QUOTES.length) % QUOTES.length;
-      quoteEl.textContent = QUOTES[index];
-      catEl.textContent = EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
+    // A function to set the theme of the widget.
+    function applyTheme(themeClass, colors) {
+      document.body.className = themeClass;
+      document.documentElement.style.setProperty('--widget-bg-color', colors[0]);
+      document.documentElement.style.setProperty('--text-color', colors[1]);
+      document.documentElement.style.setProperty('--accent-color', colors[2]);
+      document.documentElement.style.setProperty('--widget-border-color', colors[3]);
+      widgetEl.style.color = colors[1];
     }
 
-    // Cycle every 10 seconds (10000 ms)
-    setInterval(() => render(index + 1), 10000);
-    render(0);
+    // Function to get a random theme.
+    function getRandomTheme() {
+      const themesArray = Object.values(allThemes);
+      const randomTheme = themesArray[Math.floor(Math.random() * themesArray.length)];
+      return randomTheme;
+    }
+
+    function render(nextIndex) {
+      index = (nextIndex + QUOTES.length) % QUOTES.length;
+      quoteEl.textContent = QUOTES[index];
+      catEl.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+    }
+
+    function initializeWidget() {
+      // Check if a theme is selected.
+      if (typeof selectedTheme !== 'undefined' && selectedTheme !== null) {
+        if (selectedTheme === 'random') {
+          // If "random" is selected, get a random theme from allThemes.
+          const theme = getRandomTheme();
+          applyTheme(theme.class, theme.colors);
+        } else {
+          // Otherwise, get the selected theme from the allThemes object.
+          const theme = Object.values(allThemes).find(t => t.class === selectedTheme);
+          if (theme) {
+            applyTheme(theme.class, theme.colors);
+          } else {
+            // Fallback to a default theme if the selected theme is not found.
+            const defaultTheme = getRandomTheme();
+            applyTheme(defaultTheme.class, defaultTheme.colors);
+            console.log("Error: Selected theme not found. Applying random theme as fallback.");
+          }
+        }
+      } else {
+        // Fallback to a random theme if no theme is defined.
+        const defaultTheme = getRandomTheme();
+        applyTheme(defaultTheme.class, defaultTheme.colors);
+        console.log("No theme selected. Applying random theme as fallback.");
+      }
+      render(0);
+      setInterval(() => render(index + 1), 10000);
+    }
+
+    initializeWidget();
   </script>
 </body>
+
 </html>
