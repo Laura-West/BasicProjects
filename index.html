@@ -1,90 +1,181 @@
+<!--
+  This is your Theme Control Panel.
+  Use this file to select a theme for all your widgets and generate the
+  configuration file that all widgets will use.
+-->
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cat Quote Widget</title>
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: Roboto, Arial, sans-serif;
-      display: grid;
-      place-items: center;
-      background: #1c1c1c;
-    }
-
-    .widget {
-      width: min(720px, 92vw);
-      border-radius: 12px;
-      border: 2px solid #4a4a4a;
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      transition: background-color 0.5s, color 0.5s;
-    }
-
-    .quote {
-      font-size: clamp(16px, 2.4vw, 22px);
-      font-weight: 600;
-      line-height: 1.35;
-    }
-
-    .cat {
-      font-size: 28px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Control Panel</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: var(--font-family);
+        background-color: var(--primary-bg-color);
+        color: var(--primary-text-color);
+        transition: background-color 0.5s ease, color 0.5s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        text-align: center;
+      }
+      .container {
+        max-width: 600px;
+        width: 90%;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: var(--secondary-bg-color);
+        border: 1px solid var(--accent-color);
+      }
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 12px;
+        color: var(--primary-text-color);
+      }
+      p {
+        font-size: 1rem;
+        color: var(--primary-text-color);
+      }
+      .theme-selector-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 24px;
+      }
+      #theme-select {
+        margin-bottom: 12px;
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1px solid var(--accent-color);
+        background-color: var(--primary-bg-color);
+        color: var(--primary-text-color);
+      }
+      .theme-preview {
+        display: flex;
+        /* Updated: No gap between squares */
+        gap: 0;
+        border-radius: 8px;
+        padding: 4px;
+        background-color: var(--secondary-bg-color);
+        border: 1px solid var(--accent-color);
+      }
+      .preview-square {
+        /* Updated: Larger squares without borders */
+        width: 50px;
+        height: 50px;
+        border: none;
+      }
+      #save-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        color: var(--secondary-bg-color);
+        background-color: var(--accent-color);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      #save-btn:hover {
+        background-color: color-mix(in srgb, var(--accent-color) 80%, black);
+      }
+    </style>
 </head>
 <body>
-  <div class="widget" id="widget">
-    <div class="cat" id="catEmoji">😺</div>
-    <div class="quote" id="quote">Loading…</div>
+
+  <div class="container">
+    <h1>Theme Control Panel</h1>
+    <p>Select a theme below. When you're happy with your choice, click "Save Theme" to update all your widgets.</p>
+
+    <div class="theme-selector-container">
+      <label for="theme-select">Select a Theme:</label>
+      <select id="theme-select"></select>
+      <div class="theme-preview" id="theme-preview"></div>
+      <button id="save-btn">Save Theme</button>
+    </div>
   </div>
 
   <script>
-    const QUOTES = [
-      "Purr-gress, not purr-fection.",
-      "One task at a time… like batting toys under the couch.",
-      "Stay paw-sitive, you’re claw-ing through it!",
-      "Tackle your tasks, then enjoy a cozy nap.",
-      "Tasks today, catnap later.",
-      "Conquer the list, claim the sunny spot.",
-      "Less hiss, more bliss—get it done.",
-      "Whisker by whisker, you’re making progress."
-    ];
+    document.addEventListener('DOMContentLoaded', () => {
+      const body = document.body;
+      const themeSelect = document.getElementById('theme-select');
+      const themePreview = document.getElementById('theme-preview');
+      const saveBtn = document.getElementById('save-btn');
+      
+      const themes = {
+        "Gilded Iris": { class: "gilded-iris-theme", colors: ["#4b0082", "#fce883", "#ffc94b", "#3b0066"] },
+        "Cosmic Dust": { class: "cosmic-dust-theme", colors: ["#0c1c38", "#e0e6f2", "#f0a07c", "#172a4e"] },
+        "Twilight Garden": { class: "twilight-garden-theme", colors: ["#2b004a", "#f0e6f7", "#ff4500", "#43126f"] },
+        "Sapphire Night": { class: "sapphire-night-theme", colors: ["#191970", "#e1efff", "#00ffff", "#2d2d86"] },
+        "Midnight Bloom": { class: "midnight-bloom-theme", colors: ["#0d0f19", "#e6e6fa", "#ff69b4", "#1a1e2f"] },
+        "Deep Sea Pearl": { class: "deep-sea-pearl-theme", colors: ["#1c3144", "#f0f8ff", "#c0fefe", "#2c445c"] },
+        "Amethyst Mist": { class: "amethyst-mist-theme", colors: ["#6a5acd", "#f0f0ff", "#1e1e1e", "#8a7cde"] },
+        "Starlight": { class: "starlight-theme", colors: ["#0c1223", "#f8f8ff", "#d1b281", "#1a243e"] },
+        "Ruby Radiance": { class: "ruby-radiance-theme", colors: ["#3f1e1e", "#f5f5f5", "#e74c3c", "#5d3333"] },
+        "Azure Dream": { class: "azure-dream-theme", colors: ["#87cefa", "#1e2a3a", "#34495e", "#b0e0e6"] }
+      };
+      
+      function setupThemeSelector() {
+        for (const [name, data] of Object.entries(themes)) {
+          const option = document.createElement('option');
+          option.value = data.class;
+          option.textContent = name;
+          themeSelect.appendChild(option);
+        }
+        updateThemePreview(themeSelect.value);
+        body.classList.add(themeSelect.value);
+      }
+      
+      function updateThemePreview(themeClass) {
+        themePreview.innerHTML = '';
+        const themeData = Object.values(themes).find(t => t.class === themeClass);
+        if (themeData) {
+          themeData.colors.forEach(color => {
+            const square = document.createElement('div');
+            square.className = 'preview-square';
+            square.style.backgroundColor = color;
+            themePreview.appendChild(square);
+          });
+        }
+      }
+      
+      themeSelect.addEventListener('change', (event) => {
+        for (const data of Object.values(themes)) {
+          body.classList.remove(data.class);
+        }
+        body.classList.add(event.target.value);
+        updateThemePreview(event.target.value);
+      });
+      
+      saveBtn.addEventListener('click', () => {
+        const selectedTheme = themeSelect.value;
+        const fileContent = `const selectedTheme = '${selectedTheme}';`;
+        const blob = new Blob([fileContent], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'theme-config.js';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
 
-    const EMOJIS = ["🐱","🐈","🐈‍⬛","🐾","😸"];
-
-    const BG_COLORS = ["#262626", "#353535", "#4a4a4a", "#52526f", "#5a5a5a"];
-
-    function getContrastYIQ(hexcolor){
-        hexcolor = hexcolor.replace('#','');
-        let r = parseInt(hexcolor.substr(0,2),16);
-        let g = parseInt(hexcolor.substr(2,2),16);
-        let b = parseInt(hexcolor.substr(4,2),16);
-        let yiq = ((r*299)+(g*587)+(b*114))/1000;
-        return (yiq >= 128) ? '#000000' : '#ffffff';
-    }
-
-    const quoteEl = document.getElementById('quote');
-    const catEl = document.getElementById('catEmoji');
-    const widgetEl = document.getElementById('widget');
-
-    let index = 0;
-
-    function render(nextIndex){
-      index = (nextIndex + QUOTES.length) % QUOTES.length;
-      quoteEl.textContent = QUOTES[index];
-      catEl.textContent = EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
-
-      const bg = BG_COLORS[index % BG_COLORS.length];
-      widgetEl.style.backgroundColor = bg;
-      widgetEl.style.color = getContrastYIQ(bg);
-    }
-
-    // Cycle every 10 seconds (10000 ms)
-    setInterval(()=>render(index+1), 10000);
-    render(0);
+        alert('theme-config.js has been generated. Please download it and upload it to your GitHub repository.');
+      });
+      
+      setupThemeSelector();
+    });
   </script>
+
 </body>
 </html>
