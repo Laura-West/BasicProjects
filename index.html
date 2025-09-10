@@ -74,6 +74,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            position: relative;
         }
 
         .theme-option:hover,
@@ -149,16 +150,21 @@
             justify-content: flex-end;
             gap: 10px;
         }
-
+        
         /* Styles for action icons next to theme names */
         .theme-action-buttons {
-            display: none;
             margin-left: auto;
             gap: 5px;
+            /* New properties for smooth show/hide */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease-in-out;
         }
 
-        .theme-option:hover .theme-action-buttons {
-            display: flex;
+        .theme-option:hover .theme-action-buttons,
+        .theme-option.active .theme-action-buttons {
+            opacity: 1;
+            visibility: visible;
         }
 
         .theme-action-buttons button {
@@ -289,7 +295,7 @@
                 'midnight-bloom-theme': { class: 'midnight-bloom-theme', name: 'Midnight Bloom', colors: ['#0d0f19', '#e6e6fa', '#ff69b4', '#1a1e2f'] },
                 'deep-sea-pearl-theme': { class: 'deep-sea-pearl-theme', name: 'Deep Sea Pearl', colors: ['#1c3144', '#f0f8ff', '#c0fefe', '#2c445c'] },
                 'amethyst-mist-theme': { class: 'amethyst-mist-theme', name: 'Amethyst Mist', colors: ['#6a5acd', '#f0f0ff', '#1e1e1e', '#8a7cde'] },
-                'starlight-theme': { class: 'starlight-theme', name: 'Starlight', colors: ['#2c3e50', '#eaf6fd', '#f1c40f', '#2c3e50'] },
+                'starlight-theme': { class: 'starlight-theme', name: 'Starlight', colors: ['#2c3e50', '#eaf6fd', '#f1c40f', '#bdc3c7'] },
                 'sunset-haze-theme': { class: 'sunset-haze-theme', name: 'Sunset Haze', colors: ['#e74c3c', '#ffffff', '#f1c40f', '#bdc3c7'] }
             };
 
