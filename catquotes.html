@@ -1,46 +1,67 @@
+<!--
+  This is the updated Cat Quotes Widget.
+  It is a single, self-contained HTML file that can be embedded directly into Notion.
+  It now links to your styles.css file to use the new theme palettes.
+-->
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cat Quote Widget</title>
+  <!-- 
+    This links to your shared stylesheet.
+    Make sure to use the raw GitHub URL for this to work in Notion.
+  -->
+  <link rel="stylesheet" href="styles.css">
+
   <style>
+    /* General body styling */
     html, body {
       height: 100%;
       margin: 0;
-      font-family: Roboto, Arial, sans-serif;
+      font-family: var(--font-family);
       display: grid;
       place-items: center;
-      background: #1c1c1c;
+      background-color: var(--primary-bg-color);
+      color: var(--primary-text-color);
+      transition: background-color 0.5s ease, color 0.5s ease;
     }
 
     .widget {
       width: min(720px, 92vw);
       border-radius: 12px;
-      border: 2px solid #4a4a4a;
+      border: 2px solid var(--accent-color);
       padding: 20px;
       display: flex;
       align-items: center;
       gap: 12px;
-      transition: background-color 0.5s, color 0.5s;
+      background-color: var(--secondary-bg-color);
+      transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
     }
 
     .quote {
       font-size: clamp(16px, 2.4vw, 22px);
       font-weight: 600;
       line-height: 1.35;
+      color: var(--primary-text-color);
     }
 
     .cat {
       font-size: 28px;
+      color: var(--accent-color);
     }
   </style>
 </head>
 <body>
+
   <div class="widget" id="widget">
     <div class="cat" id="catEmoji">😺</div>
     <div class="quote" id="quote">Loading…</div>
   </div>
-
+  
+  <script src="theme-config.js"></script>
   <script>
     const QUOTES = [
       "Purr-gress, not purr-fection.",
@@ -54,21 +75,15 @@
     ];
 
     const EMOJIS = ["🐱","🐈","🐈‍⬛","🐾","😸"];
-
-    const BG_COLORS = ["#262626", "#353535", "#4a4a4a", "#52526f", "#5a5a5a"];
-
-    function getContrastYIQ(hexcolor){
-        hexcolor = hexcolor.replace('#','');
-        let r = parseInt(hexcolor.substr(0,2),16);
-        let g = parseInt(hexcolor.substr(2,2),16);
-        let b = parseInt(hexcolor.substr(4,2),16);
-        let yiq = ((r*299)+(g*587)+(b*114))/1000;
-        return (yiq >= 128) ? '#000000' : '#ffffff';
-    }
-
+    
     const quoteEl = document.getElementById('quote');
     const catEl = document.getElementById('catEmoji');
-    const widgetEl = document.getElementById('widget');
+    const body = document.body;
+
+    // Apply the selected theme from our central config file
+    if (typeof selectedTheme !== 'undefined') {
+        body.classList.add(selectedTheme);
+    }
 
     let index = 0;
 
@@ -76,14 +91,10 @@
       index = (nextIndex + QUOTES.length) % QUOTES.length;
       quoteEl.textContent = QUOTES[index];
       catEl.textContent = EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
-
-      const bg = BG_COLORS[index % BG_COLORS.length];
-      widgetEl.style.backgroundColor = bg;
-      widgetEl.style.color = getContrastYIQ(bg);
     }
 
     // Cycle every 10 seconds (10000 ms)
-    setInterval(()=>render(index+1), 10000);
+    setInterval(() => render(index + 1), 10000);
     render(0);
   </script>
 </body>
