@@ -12,29 +12,55 @@
       The widget now uses CSS custom properties (variables) defined in themes.js.
       This allows the theme to be changed by simply updating the themes.js file.
     */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: sans-serif;
+      background-color: #f0f0f0; /* Fallback background */
+    }
+
     .widget {
+      position: relative;
       width: min(720px, 92vw);
       border-radius: 12px;
       border: 2px solid var(--widget-border-color);
       padding: 20px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       gap: 12px;
       transition: background-color 0.5s, color 0.5s, border-color 0.5s;
       background-color: var(--widget-bg-color);
       color: var(--text-color);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
+    .quote-container {
+      flex-grow: 1;
+      width: 100%;
+      position: relative;
+      text-align: center;
+    }
+
+    .quote-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background-color: var(--text-color);
+      transform: translateY(-10px);
+    }
+    
     .quote {
       font-size: clamp(16px, 2.4vw, 22px);
       font-weight: 600;
       line-height: 1.35;
     }
 
-    .icon {
-      font-size: 28px;
-    }
-    
     .verse-reference {
       display: block;
       font-size: clamp(14px, 2vw, 18px);
@@ -44,7 +70,7 @@
 
     .text-alignment-toggle {
       position: absolute;
-      bottom: 8px;
+      top: 8px;
       right: 8px;
       cursor: pointer;
       font-size: 14px;
@@ -57,16 +83,12 @@
       opacity: 1;
     }
 
-    .quote-container {
-      flex-grow: 1;
-    }
   </style>
 </head>
 
 <body>
   <div class="widget" id="widget">
     <div class="quote-container">
-      <div class="icon" id="icon"></div>
       <div class="quote" id="quote">Loading...</div>
     </div>
     <div class="text-alignment-toggle" id="text-alignment-toggle">
@@ -85,7 +107,6 @@
     const alignments = ['left', 'center', 'right'];
 
     const quoteEl = document.getElementById('quote');
-    const iconEl = document.getElementById('icon');
     const widgetEl = document.getElementById('widget');
     const toggleEl = document.getElementById('text-alignment-toggle');
     const quoteContainerEl = document.querySelector('.quote-container');
@@ -112,7 +133,6 @@
         quoteEl.innerHTML = `<span>"${currentQuote.quote}"</span><span class="verse-reference">${currentQuote.author}</span>`;
       } else {
         quoteEl.textContent = "Error: Quotes not loaded.";
-        iconEl.textContent = "⚠️";
       }
     }
 
@@ -128,7 +148,6 @@
       } catch (error) {
         console.error("Failed to fetch quotes:", error);
         quoteEl.textContent = "Error loading quotes.";
-        iconEl.textContent = "❌";
         return;
       }
       render(0);
