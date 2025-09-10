@@ -88,6 +88,15 @@ const allThemes = {
       "#34495e",
       "#b0e0e6"
     ]
+  },
+  "Fresh Spring": {
+    "class": "fresh-spring",
+    "colors": [
+      "#24ffb6",
+      "#ba1285",
+      "#a18c8c",
+      "#ffffff"
+    ]
   }
 };
-const selectedTheme = 'gilded-iris-theme';
+const selectedTheme = 'random';
