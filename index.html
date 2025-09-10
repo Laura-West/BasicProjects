@@ -58,7 +58,7 @@
             padding: 20px;
             margin-bottom: 20px;
         }
-        
+
         .theme-section .settings-section {
             border: none;
             padding: 0;
@@ -148,7 +148,7 @@
             text-align: right;
             font-weight: 600;
         }
-        
+
         .form-row input[type="color"] {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -160,7 +160,7 @@
             cursor: pointer;
             padding: 0;
         }
-        
+
         .form-row input[type="color"]::-webkit-color-swatch {
             border-radius: 50%;
             border: 1px solid #ccc;
@@ -183,11 +183,11 @@
             justify-content: flex-end;
             gap: 10px;
         }
-        
+
         #delete-theme-button {
             background-color: #e74c3c;
         }
-        
+
         #delete-theme-button:hover {
             background-color: #c0392b;
         }
@@ -235,20 +235,6 @@
         button:hover {
             background-color: #2980b9;
         }
-
-        /* --- THEME-SPECIFIC BACKGROUND COLORS FOR LIVE PREVIEW --- */
-        body.gilded-iris-theme { background-color: #4b0082; }
-        body.cosmic-dust-theme { background-color: #0c1c38; }
-        body.twilight-garden-theme { background-color: #2b0d36; }
-        body.blue-lagoon-theme { background-color: #2a52be; }
-        body.midnight-bloom-theme { background-color: #0d0f19; }
-        body.deep-sea-pearl-theme { background-color: #1c3144; }
-        body.amethyst-mist-theme { background-color: #6a5acd; }
-        body.starlight-theme { background-color: #2c3e50; }
-        body.sunset-haze-theme { background-color: #e74c3c; }
-        body.light-mode { background-color: #ffffff; }
-        body.dark-mode { background-color: #2c3e50; }
-        body.forest-green { background-color: #ecf0e6; }
     </style>
     <style id="dynamic-themes-style"></style>
 </head>
@@ -256,10 +242,10 @@
 <body>
     <div class="container">
         <h1>Admin Settings</h1>
-        
+
         <div class="settings-section">
             <h2>Theme</h2>
-            
+
             <div class="settings-section">
                 <h3>Selection</h3>
                 <div class="controls-grid" id="theme-controls">
@@ -283,19 +269,24 @@
                         <input type="text" id="theme-name" required>
                     </div>
                     <div class="form-row">
-                        <label for="theme-color1">Color 1:</label>
+                        <label for="theme-color1">Background:</label>
                         <input type="color" id="theme-color1-picker" required>
                         <input type="text" id="theme-color1" required placeholder="#RRGGBB">
                     </div>
                     <div class="form-row">
-                        <label for="theme-color2">Color 2:</label>
-                        <input type="color" id="theme-color2-picker">
-                        <input type="text" id="theme-color2" placeholder="#RRGGBB (optional)">
+                        <label for="theme-color2">Font:</label>
+                        <input type="color" id="theme-color2-picker" required>
+                        <input type="text" id="theme-color2" required placeholder="#RRGGBB">
                     </div>
                     <div class="form-row">
-                        <label for="theme-color3">Color 3:</label>
+                        <label for="theme-color3">Accent:</label>
                         <input type="color" id="theme-color3-picker">
-                        <input type="text" id="theme-color3" placeholder="#RRGGBB (optional)">
+                        <input type="text" id="theme-color3" placeholder="#RRGGBB">
+                    </div>
+                    <div class="form-row">
+                        <label for="theme-color4">Headers:</label>
+                        <input type="color" id="theme-color4-picker">
+                        <input type="text" id="theme-color4" placeholder="#RRGGBB">
                     </div>
                     <div class="form-actions">
                         <button type="submit" id="save-theme-button">Save New Theme</button>
@@ -332,9 +323,11 @@
             const themeColor1Input = document.getElementById('theme-color1');
             const themeColor2Input = document.getElementById('theme-color2');
             const themeColor3Input = document.getElementById('theme-color3');
+            const themeColor4Input = document.getElementById('theme-color4');
             const themeColor1Picker = document.getElementById('theme-color1-picker');
             const themeColor2Picker = document.getElementById('theme-color2-picker');
             const themeColor3Picker = document.getElementById('theme-color3-picker');
+            const themeColor4Picker = document.getElementById('theme-color4-picker');
             const addThemeButton = document.getElementById('add-theme-button');
             const saveThemeButton = document.getElementById('save-theme-button');
             const deleteThemeButton = document.getElementById('delete-theme-button');
@@ -350,24 +343,80 @@
             };
 
             const defaultThemes = {
-                'light-mode': { class: 'light-mode', name: 'Light Mode', colors: ['#ffffff', '#2c3e50', '#3498db', '#bdc3c7'] },
-                'dark-mode': { class: 'dark-mode', name: 'Dark Mode', colors: ['#2c3e50', '#ecf0f1', '#3498db', '#bdc3c7'] },
-                'forest-green': { class: 'forest-green', name: 'Forest Green', colors: ['#ecf0e6', '#264639', '#558269', '#558269'] },
-                'gilded-iris-theme': { class: 'gilded-iris-theme', name: 'Gilded Iris', colors: ['#4b0082', '#fce883', '#ffc94b', '#3b0066'] },
-                'cosmic-dust-theme': { class: 'cosmic-dust-theme', name: 'Cosmic Dust', colors: ['#0c1c38', '#e0e6f2', '#f0a07c', '#172a4e'] },
-                'twilight-garden-theme': { class: 'twilight-garden-theme', name: 'Twilight Garden', colors: ['#2b0d36', '#e1efff', '#00ffff', '#2d2d86'] },
-                'blue-lagoon-theme': { class: 'blue-lagoon-theme', name: 'Blue Lagoon', colors: ['#2a52be', '#e1efff', '#00ffff', '#2d2d86'] },
-                'midnight-bloom-theme': { class: 'midnight-bloom-theme', name: 'Midnight Bloom', colors: ['#0d0f19', '#e6e6fa', '#ff69b4', '#1a1e2f'] },
-                'deep-sea-pearl-theme': { class: 'deep-sea-pearl-theme', name: 'Deep Sea Pearl', colors: ['#1c3144', '#f0f8ff', '#c0fefe', '#2c445c'] },
-                'amethyst-mist-theme': { class: 'amethyst-mist-theme', name: 'Amethyst Mist', colors: ['#6a5acd', '#f0f0ff', '#1e1e1e', '#8a7cde'] },
-                'starlight-theme': { class: 'starlight-theme', name: 'Starlight', colors: ['#2c3e50', '#eaf6fd', '#f1c40f', '#bdc3c7'] },
-                'sunset-haze-theme': { class: 'sunset-haze-theme', name: 'Sunset Haze', colors: ['#e74c3c', '#ffffff', '#f1c40f', '#bdc3c7'] }
+                'gilded-iris-theme': {
+                    class: 'gilded-iris-theme',
+                    name: 'Gilded Iris',
+                    colors: ['#4b0082', '#fce883', '#ffc94b', '#3b0066']
+                },
+                'cosmic-dust-theme': {
+                    class: 'cosmic-dust-theme',
+                    name: 'Cosmic Dust',
+                    colors: ['#0c1c38', '#e0e6f2', '#f0a07c', '#172a4e']
+                },
+                'twilight-garden-theme': {
+                    class: 'twilight-garden-theme',
+                    name: 'Twilight Garden',
+                    colors: ['#2b004a', '#f0e6f7', '#ff4500', '#43126f']
+                },
+                'sapphire-night-theme': {
+                    class: 'sapphire-night-theme',
+                    name: 'Sapphire Night',
+                    colors: ['#191970', '#e1efff', '#00ffff', '#2d2d86']
+                },
+                'midnight-bloom-theme': {
+                    class: 'midnight-bloom-theme',
+                    name: 'Midnight Bloom',
+                    colors: ['#0d0f19', '#e6e6fa', '#ff69b4', '#1a1e2f']
+                },
+                'deep-sea-pearl-theme': {
+                    class: 'deep-sea-pearl-theme',
+                    name: 'Deep Sea Pearl',
+                    colors: ['#1c3144', '#f0f8ff', '#c0fefe', '#2c445c']
+                },
+                'amethyst-mist-theme': {
+                    class: 'amethyst-mist-theme',
+                    name: 'Amethyst Mist',
+                    colors: ['#6a5acd', '#f0f0ff', '#1e1e1e', '#8a7cde']
+                },
+                'starlight-theme': {
+                    class: 'starlight-theme',
+                    name: 'Starlight',
+                    colors: ['#0c1223', '#f8f8ff', '#d1b281', '#1a243e']
+                },
+                'ruby-radiance-theme': {
+                    class: 'ruby-radiance-theme',
+                    name: 'Ruby Radiance',
+                    colors: ['#3f1e1e', '#f5f5f5', '#e74c3c', '#5d3333']
+                },
+                'azure-dream-theme': {
+                    class: 'azure-dream-theme',
+                    name: 'Azure Dream',
+                    colors: ['#87cefa', '#1e2a3a', '#34495e', '#b0e0e6']
+                }
             };
 
-            function initializeState() {
+            async function initializeState() {
+                // Fetch the config.js file to get the current settings
+                try {
+                    const response = await fetch('config.js');
+                    if (response.ok) {
+                        const scriptContent = await response.text();
+                        const config = {};
+                        // A simple way to parse the config object from the script
+                        const matchTheme = scriptContent.match(/theme: '(.+?)'/);
+                        const matchAlignment = scriptContent.match(/alignment: '(.+?)'/);
+                        if (matchTheme) config.theme = matchTheme[1];
+                        if (matchAlignment) config.alignment = matchAlignment[1];
+
+                        state.selectedTheme = config.theme || 'gilded-iris-theme';
+                        state.selectedAlignment = config.alignment || 'center';
+                    }
+                } catch (error) {
+                    console.warn('config.js not found or failed to load. Using defaults.');
+                }
+                
                 state.allThemes = JSON.parse(localStorage.getItem('allThemes')) || defaultThemes;
-                state.selectedTheme = localStorage.getItem('selectedTheme') || 'gilded-iris-theme';
-                state.selectedAlignment = localStorage.getItem('selectedAlignment') || 'center';
+                renderThemes();
             }
 
             function saveState() {
@@ -380,13 +429,16 @@
                 let css = '';
                 for (const themeKey in state.allThemes) {
                     const theme = state.allThemes[themeKey];
-                    if (defaultThemes[themeKey]) continue;
-
-                    if (theme.colors && theme.colors[0]) {
-                        css += `body.${themeKey} { background-color: ${theme.colors[0]}; }\n`;
-                    }
+                    css += `
+                        body.${themeKey} {
+                            --primary-bg-color: ${theme.colors[0]};
+                            --font-color: ${theme.colors[1]};
+                            --accent-color: ${theme.colors[2]};
+                            --header-color: ${theme.colors[3]};
+                        }`;
                 }
                 dynamicStyles.innerHTML = css;
+                document.body.className = state.selectedTheme;
             }
 
             function renderThemes() {
@@ -396,26 +448,27 @@
                     const option = document.createElement('div');
                     option.className = 'theme-option';
                     option.dataset.theme = themeKey;
-                    
+
                     const colorSwatch = document.createElement('span');
                     colorSwatch.className = 'color-swatch';
                     colorSwatch.style.backgroundColor = theme.colors[0];
 
                     const themeName = document.createElement('span');
                     themeName.textContent = theme.name;
-                    
+
                     option.appendChild(colorSwatch);
                     option.appendChild(themeName);
-                    
+
                     const actionButtons = document.createElement('div');
                     actionButtons.className = 'theme-action-buttons';
                     actionButtons.innerHTML = `
-                        <button class="edit-btn" data-theme-key="${themeKey}">✏️</button>
-                        <button class="delete-btn" data-theme-key="${themeKey}">🗑️</button>
+                        <button class="edit-btn" data-theme-key="${themeKey}" aria-label="Edit Theme">✏️</button>
+                        <button class="delete-btn" data-theme-key="${themeKey}" aria-label="Delete Theme">🗑️</button>
                     `;
                     option.appendChild(actionButtons);
-                    
-                    option.addEventListener('click', () => {
+
+                    option.addEventListener('click', (e) => {
+                        e.stopPropagation();
                         state.selectedTheme = themeKey;
                         updateActiveControls();
                     });
@@ -423,8 +476,7 @@
                 }
                 themeControls.innerHTML = '';
                 themeControls.appendChild(fragment);
-                
-                // Attach event listeners to the new buttons
+
                 document.querySelectorAll('.edit-btn').forEach(button => {
                     button.addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -439,7 +491,6 @@
                 });
 
                 updateActiveControls();
-                generateThemeCSS();
             }
 
             function renderPalettePreview(themeKey) {
@@ -471,6 +522,7 @@
                 });
                 renderPalettePreview(state.selectedTheme);
                 saveState();
+                generateThemeCSS(); // This applies the current theme's CSS to the page
             }
 
             addThemeButton.addEventListener('click', () => {
@@ -480,10 +532,15 @@
                 themeColor1Input.value = '';
                 themeColor2Input.value = '';
                 themeColor3Input.value = '';
+                themeColor4Input.value = '';
+                themeColor1Picker.value = '#000000';
+                themeColor2Picker.value = '#000000';
+                themeColor3Picker.value = '#000000';
+                themeColor4Picker.value = '#000000';
                 saveThemeButton.textContent = 'Save New Theme';
                 deleteThemeButton.style.display = 'none';
             });
-            
+
             cancelButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 themeForm.classList.remove('active');
@@ -493,16 +550,19 @@
                 const theme = state.allThemes[themeKey];
                 themeKeyInput.value = themeKey;
                 themeNameInput.value = theme.name;
-                
+
                 themeColor1Input.value = theme.colors[0] || '';
                 themeColor1Picker.value = theme.colors[0] || '#000000';
-                
+
                 themeColor2Input.value = theme.colors[1] || '';
                 themeColor2Picker.value = theme.colors[1] || '#000000';
 
                 themeColor3Input.value = theme.colors[2] || '';
                 themeColor3Picker.value = theme.colors[2] || '#000000';
-                
+
+                themeColor4Input.value = theme.colors[3] || '';
+                themeColor4Picker.value = theme.colors[3] || '#000000';
+
                 themeForm.classList.add('active');
                 saveThemeButton.textContent = 'Update Theme';
                 deleteThemeButton.style.display = 'inline-block';
@@ -512,7 +572,7 @@
                 const themeToDelete = state.allThemes[themeKey];
                 if (confirm(`Are you sure you want to delete the theme "${themeToDelete.name}"?`)) {
                     delete state.allThemes[themeKey];
-                    
+
                     if (state.selectedTheme === themeKey) {
                         const remainingKeys = Object.keys(state.allThemes);
                         state.selectedTheme = remainingKeys.length > 0 ? remainingKeys[0] : 'light-mode';
@@ -523,7 +583,7 @@
                     themeForm.classList.remove('active');
                 }
             };
-            
+
             deleteThemeButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 const themeKey = themeKeyInput.value;
@@ -535,7 +595,12 @@
             themeForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const newThemeName = themeNameInput.value.trim();
-                const newColors = [themeColor1Input.value, themeColor2Input.value, themeColor3Input.value].filter(c => c);
+                const newColors = [
+                    themeColor1Input.value,
+                    themeColor2Input.value,
+                    themeColor3Input.value,
+                    themeColor4Input.value
+                ].filter(c => c);
                 const themeKey = newThemeName.toLowerCase().replace(/\s/g, '-') + '-theme';
 
                 if (!themeKeyInput.value && state.allThemes[themeKey]) {
@@ -548,20 +613,22 @@
                     name: newThemeName,
                     colors: newColors
                 };
-                
+
                 state.selectedTheme = themeKey;
                 renderThemes();
                 themeForm.classList.remove('active');
                 alert(`Theme "${newThemeName}" saved successfully.`);
             });
-            
+
             themeColor1Picker.addEventListener('input', (e) => themeColor1Input.value = e.target.value);
             themeColor2Picker.addEventListener('input', (e) => themeColor2Input.value = e.target.value);
             themeColor3Picker.addEventListener('input', (e) => themeColor3Input.value = e.target.value);
+            themeColor4Picker.addEventListener('input', (e) => themeColor4Input.value = e.target.value);
 
             themeColor1Input.addEventListener('input', (e) => themeColor1Picker.value = e.target.value || '#000000');
             themeColor2Input.addEventListener('input', (e) => themeColor2Picker.value = e.target.value || '#000000');
             themeColor3Input.addEventListener('input', (e) => themeColor3Picker.value = e.target.value || '#000000');
+            themeColor4Input.addEventListener('input', (e) => themeColor4Picker.value = e.target.value || '#000000');
 
             randomizeButton.addEventListener('click', () => {
                 const themeKeys = Object.keys(state.allThemes);
@@ -571,22 +638,40 @@
             });
 
             downloadButton.addEventListener('click', () => {
-                const configContent = `// This file is generated by the Admin Dashboard.
-const widgetConfig = {
-  theme: '${state.selectedTheme}',
-  alignment: '${state.selectedAlignment}'
-};
-`;
-                const blob = new Blob([configContent], { type: 'text/javascript' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'config.js';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                console.log('Config file downloaded successfully.');
+                const configContent = `// This file is generated by the Admin Dashboard.\nconst widgetConfig = {\n  theme: '${state.selectedTheme}',\n  alignment: '${state.selectedAlignment}'\n};\n`;
+                const configBlob = new Blob([configContent], {
+                    type: 'text/javascript'
+                });
+
+                const allThemeCss = [];
+                for (const themeKey in state.allThemes) {
+                    const theme = state.allThemes[themeKey];
+                    allThemeCss.push(`\n/* ${theme.name} */\nbody.${themeKey} {\n  --primary-bg-color: ${theme.colors[0]};\n  --font-color: ${theme.colors[1]};\n  --accent-color: ${theme.colors[2]};\n  --header-color: ${theme.colors[3]};\n}\n`);
+                }
+                const cssContent = `/* This file is generated by the Admin Dashboard. */\n\n:root {\n  --primary-bg-color: #1a1a2e;\n  --font-color: #e6e6fa;\n  --accent-color: #f7b731;\n  --header-color: #2e3a59;\n  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;\n}\n\n${allThemeCss.join('\n')}`;
+                const cssBlob = new Blob([cssContent], {
+                    type: 'text/css'
+                });
+
+                const configUrl = URL.createObjectURL(configBlob);
+                const configLink = document.createElement('a');
+                configLink.href = configUrl;
+                configLink.download = 'config.js';
+                document.body.appendChild(configLink);
+                configLink.click();
+                document.body.removeChild(configLink);
+                URL.revokeObjectURL(configUrl);
+
+                const cssUrl = URL.createObjectURL(cssBlob);
+                const cssLink = document.createElement('a');
+                cssLink.href = cssUrl;
+                cssLink.download = 'styles.css';
+                document.body.appendChild(cssLink);
+                cssLink.click();
+                document.body.removeChild(cssLink);
+                URL.revokeObjectURL(cssUrl);
+
+                console.log('Configuration and Styles files downloaded successfully.');
             });
 
             document.querySelectorAll('.alignment-option').forEach(option => {
@@ -597,7 +682,6 @@ const widgetConfig = {
             });
 
             initializeState();
-            renderThemes();
         });
     </script>
 </body>

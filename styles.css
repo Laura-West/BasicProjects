@@ -1,0 +1,93 @@
+/*
+ * This file sets up a consistent color palette using CSS Custom Properties (variables).
+ * You can link this file to any of your widget HTML files to apply the same theme.
+ */
+
+ :root {
+    /* Default colors - these will be used if no theme is selected */
+    --primary-bg-color: #1a1a2e;
+    --font-color: #e6e6fa;
+    --accent-color: #f7b731;
+    --header-color: #2e3a59;
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  
+  /* 1. "Gilded Iris" - Inspired by your favorite colors: royal purple with a gold accent */
+  body.gilded-iris-theme {
+    --primary-bg-color: #4b0082;
+    --font-color: #fce883;
+    --accent-color: #ffc94b;
+    --header-color: #3b0066;
+  }
+  
+  /* 2. "Cosmic Dust" - Dark, mysterious navy with a subtle, warm accent */
+  body.cosmic-dust-theme {
+    --primary-bg-color: #0c1c38;
+    --font-color: #e0e6f2;
+    --accent-color: #f0a07c;
+    --header-color: #172a4e;
+  }
+  
+  /* 3. "Twilight Garden" - A deep purple base with a strong, fiery contrast */
+  body.twilight-garden-theme {
+    --primary-bg-color: #2b004a;
+    --font-color: #f0e6f7;
+    --accent-color: #ff4500;
+    --header-color: #43126f;
+  }
+  
+  /* 4. "Sapphire Night" - A bold, all-blue theme with a striking, light accent */
+  body.sapphire-night-theme {
+    --primary-bg-color: #191970;
+    --font-color: #e1efff;
+    --accent-color: #00ffff;
+    --header-color: #2d2d86;
+  }
+  
+  /* 5. "Midnight Bloom" - Very dark background with a vibrant, glowing accent */
+  body.midnight-bloom-theme {
+    --primary-bg-color: #0d0f19;
+    --font-color: #e6e6fa;
+    --accent-color: #ff69b4;
+    --header-color: #1a1e2f;
+  }
+  
+  /* 6. "Deep Sea Pearl" - Cool, deep blues with a pearlescent light accent */
+  body.deep-sea-pearl-theme {
+    --primary-bg-color: #1c3144;
+    --font-color: #f0f8ff;
+    --accent-color: #c0fefe;
+    --header-color: #2c445c;
+  }
+  
+  /* 7. "Amethyst Mist" - Lighter purple base, with a dark accent */
+  body.amethyst-mist-theme {
+    --primary-bg-color: #6a5acd;
+    --font-color: #f0f0ff;
+    --accent-color: #1e1e1e;
+    --header-color: #8a7cde;
+  }
+  
+  /* 8. "Starlight" - Classic dark navy with a sparkling golden-white accent */
+  body.starlight-theme {
+    --primary-bg-color: #0c1223;
+    --font-color: #f8f8ff;
+    --accent-color: #d1b281;
+    --header-color: #1a243e;
+  }
+  
+  /* 9. "Ruby Radiance" - A dark, warm theme with a bold red accent */
+  body.ruby-radiance-theme {
+    --primary-bg-color: #3f1e1e;
+    --font-color: #f5f5f5;
+    --accent-color: #e74c3c;
+    --header-color: #5d3333;
+  }
+  
+  /* 10. "Azure Dream" - Light blue with a vibrant contrasting dark blue */
+  body.azure-dream-theme {
+    --primary-bg-color: #87cefa;
+    --font-color: #1e2a3a;
+    --accent-color: #34495e;
+    --header-color: #b0e0e6;
+  }

@@ -2,122 +2,122 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Main Quote Widget</title>
-  <link rel="stylesheet" href="styles.css" />
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      font-family: sans-serif;
-      background-color: var(--primary-bg-color);
-      color: var(--primary-text-color);
-      transition: background-color 0.5s, color 0.5s;
-    }
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Main Quote Widget</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: sans-serif;
+            background-color: var(--primary-bg-color);
+            color: var(--font-color);
+            transition: background-color 0.5s, color 0.5s;
+        }
 
-    .widget {
-      position: relative;
-      width: min(720px, 92vw);
-      border-radius: 12px;
-      border: 2px solid var(--secondary-bg-color);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      background-color: var(--primary-bg-color);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: background-color 0.5s, border-color 0.5s;
-    }
+        .widget {
+            position: relative;
+            width: min(720px, 92vw);
+            border-radius: 12px;
+            border: 2px solid var(--header-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            background-color: var(--primary-bg-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.5s, border-color 0.5s;
+        }
 
-    .quote-content {
-      font-size: clamp(16px, 2.4vw, 22px);
-      font-weight: 600;
-      line-height: 1.35;
-      text-align: center;
-    }
+        .quote-content {
+            font-size: clamp(16px, 2.4vw, 22px);
+            font-weight: 600;
+            line-height: 1.35;
+            text-align: center;
+        }
 
-    .author {
-      font-size: clamp(14px, 1.8vw, 18px);
-      font-weight: 400;
-      font-style: italic;
-      margin-top: 10px;
-      color: var(--accent-color);
-    }
-  </style>
+        .author {
+            font-size: clamp(14px, 1.8vw, 18px);
+            font-weight: 400;
+            font-style: italic;
+            margin-top: 10px;
+            color: var(--accent-color);
+        }
+    </style>
 </head>
 
 <body>
-  <div class="widget" id="widget">
-    <div class="quote-content" id="quote-content"></div>
-    <div class="author" id="author"></div>
-  </div>
+    <div class="widget" id="widget">
+        <div class="quote-content" id="quote-content"></div>
+        <div class="author" id="author"></div>
+    </div>
 
-  <script src="config.js"></script>
-  <script>
-    let QUOTES = [];
-    const quoteContentEl = document.getElementById('quote-content');
-    const authorEl = document.getElementById('author');
-    let index = 0;
+    <script src="config.js"></script>
+    <script>
+        let QUOTES = [];
+        const quoteContentEl = document.getElementById('quote-content');
+        const authorEl = document.getElementById('author');
+        let index = 0;
 
-    function render(nextIndex) {
-      if (QUOTES.length === 0) {
-        quoteContentEl.textContent = "Loading...";
-        authorEl.textContent = "";
-        return;
-      }
+        function render(nextIndex) {
+            if (QUOTES.length === 0) {
+                quoteContentEl.textContent = "Loading...";
+                authorEl.textContent = "";
+                return;
+            }
 
-      index = (nextIndex + QUOTES.length) % QUOTES.length;
-      const quote = QUOTES[index];
-      quoteContentEl.textContent = `\"${quote.quote}\"`;
-      authorEl.textContent = quote.author;
-    }
-
-    async function fetchQuotes() {
-      try {
-        const response = await fetch('ScriptureQuotes.json');
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+            index = (nextIndex + QUOTES.length) % QUOTES.length;
+            const quote = QUOTES[index];
+            quoteContentEl.textContent = `\"${quote.quote}\"`;
+            authorEl.textContent = quote.author;
         }
-        const data = await response.json();
-        if (data.quotes && Array.isArray(data.quotes)) {
-          QUOTES = data.quotes;
-        } else {
-          throw new Error("Invalid quotes format.");
-        }
-      } catch (error) {
-        console.error("Failed to fetch quotes:", error);
-        quoteContentEl.textContent = "Error loading quotes.";
-        authorEl.textContent = "";
-        return;
-      }
-      render(0);
-      setInterval(() => render(index + 1), 300000); // 300000 ms = 5 minutes
-    }
 
-    function initializeWidget() {
-      // Check if the widgetConfig object exists and apply settings
-      if (typeof widgetConfig !== 'undefined') {
-        if (widgetConfig.theme) {
-          document.body.className = widgetConfig.theme;
+        async function fetchQuotes() {
+            try {
+                const response = await fetch('ScriptureQuotes.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (data.quotes && Array.isArray(data.quotes)) {
+                    QUOTES = data.quotes;
+                } else {
+                    throw new Error("Invalid quotes format.");
+                }
+            } catch (error) {
+                console.error("Failed to fetch quotes:", error);
+                quoteContentEl.textContent = "Error loading quotes.";
+                authorEl.textContent = "";
+                return;
+            }
+            render(0);
+            setInterval(() => render(index + 1), 300000); // 300000 ms = 5 minutes
         }
-        if (widgetConfig.alignment) {
-          quoteContentEl.style.textAlign = widgetConfig.alignment;
+
+        function initializeWidget() {
+            // Check if the widgetConfig object exists and apply settings
+            if (typeof widgetConfig !== 'undefined') {
+                if (widgetConfig.theme) {
+                    document.body.className = widgetConfig.theme;
+                }
+                if (widgetConfig.alignment) {
+                    quoteContentEl.style.textAlign = widgetConfig.alignment;
+                }
+            } else {
+                // Fallback to a default theme if config.js is not loaded
+                document.body.className = 'gilded-iris-theme';
+                quoteContentEl.style.textAlign = 'center';
+            }
+
+            fetchQuotes();
         }
-      } else {
-        // Fallback to a default theme if config.js is not loaded
-        document.body.className = 'gilded-iris-theme';
-        quoteContentEl.style.textAlign = 'center';
-      }
 
-      fetchQuotes();
-    }
-
-    initializeWidget();
-  </script>
+        initializeWidget();
+    </script>
 </body>
 
 </html>
