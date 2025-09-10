@@ -13,7 +13,7 @@
             align-items: center;
             min-height: 100vh;
             font-family: sans-serif;
-            background-color: var(--primary-bg-color);
+            background-color: var(--bg-color);
             color: var(--font-color);
             transition: background-color 0.5s, color 0.5s;
         }
@@ -27,35 +27,39 @@
             flex-direction: column;
             align-items: center;
             gap: 12px;
-            background-color: var(--primary-bg-color);
+            background-color: var(--bg-color);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: background-color 0.5s, border-color 0.5s;
         }
 
         .cat {
             font-size: 3em;
-            transition: color 0.5s;
             color: var(--accent-color);
+            transition: color 0.5s;
         }
 
-        .quote {
-            font-size: clamp(16px, 2.4vw, 22px);
-            font-weight: 600;
-            line-height: 1.35;
+        .cat-quote {
+            font-family: var(--font-family);
+            font-size: 1.8em;
+            line-height: 1.4;
+            color: var(--font-color);
+            text-align: center;
+            transition: color 0.5s;
         }
     </style>
+    <script src="config.js"></script>
 </head>
 
 <body>
-    <div class="widget" id="widget">
-        <div class="cat" id="catEmoji"></div>
-        <div class="quote" id="quote"></div>
+    <div class="widget">
+        <div id="catEmoji" class="cat"></div>
+        <div id="quote" class="cat-quote"></div>
     </div>
 
-    <script src="config.js"></script>
     <script>
         const QUOTES = [
-            "Purr-gress, not purr-fection.",
+            "Purr-fectly productive.",
+            "Stay paw-sitive!",
             "One task at a time… like batting toys under the couch.",
             "Stay paw-sitive, you’re claw-ing through it!",
             "Tackle your tasks, then enjoy a cozy nap.",
@@ -90,13 +94,10 @@
             } else {
                 // Fallback to a default theme if config.js is not loaded
                 document.body.className = 'gilded-iris-theme';
-                quoteEl.style.textAlign = 'center';
             }
-
             render(0);
-            setInterval(() => render(index + 1), 10000); // 10000ms = 10 seconds
+            setInterval(() => render(index + 1), 30000); // 30000ms = 30 seconds
         }
-
         initializeWidget();
     </script>
 </body>

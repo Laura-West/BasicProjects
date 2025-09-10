@@ -300,11 +300,6 @@
                         <input type="color" id="accent-colour-picker">
                         <input type="text" id="accent-colour" placeholder="#RRGGBB">
                     </div>
-                    <div class="form-row">
-                        <label for="header-colour">Header Colour:</label>
-                        <input type="color" id="header-colour-picker">
-                        <input type="text" id="header-colour" placeholder="#RRGGBB">
-                    </div>
                     <div class="form-actions">
                         <button type="submit" id="save-theme-button">Save New Theme</button>
                         <button type="button" id="delete-theme-button" style="display: none;">Delete</button>
@@ -358,15 +353,12 @@
             }, {
                 id: 'accent-colour',
                 purpose: 'Accent Colour'
-            }, {
-                id: 'header-colour',
-                purpose: 'Header Colour'
             }];
 
             const state = {
                 allThemes: {},
                 selectedTheme: 'gilded-iris-theme',
-                selectedAlignment: 'centre'
+                selectedAlignment: 'center'
             };
 
             const defaultThemes = {
@@ -374,103 +366,115 @@
                     class: 'gilded-iris-theme',
                     name: 'Gilded Iris',
                     colors: {
-                        bgColour: '#4b0082',
-                        fontColour: '#fce883',
-                        accentColour: '#ffc94b',
-                        headerColour: '#3b0066'
+                        bgColor: '#4b0082',
+                        fontColor: '#fce883',
+                        accentColor: '#ffc94b'
                     }
                 },
                 'cosmic-dust-theme': {
                     class: 'cosmic-dust-theme',
                     name: 'Cosmic Dust',
                     colors: {
-                        bgColour: '#0c1c38',
-                        fontColour: '#e0e6f2',
-                        accentColour: '#f0a07c',
-                        headerColour: '#172a4e'
+                        bgColor: '#0c1c38',
+                        fontColor: '#e0e6f2',
+                        accentColor: '#f0a07c'
                     }
                 },
                 'twilight-garden-theme': {
                     class: 'twilight-garden-theme',
                     name: 'Twilight Garden',
                     colors: {
-                        bgColour: '#2b004a',
-                        fontColour: '#f0e6f7',
-                        accentColour: '#ff4500',
-                        headerColour: '#43126f'
+                        bgColor: '#2b004a',
+                        fontColor: '#f0e6f7',
+                        accentColor: '#ff4500'
                     }
                 },
                 'sapphire-night-theme': {
                     class: 'sapphire-night-theme',
                     name: 'Sapphire Night',
                     colors: {
-                        bgColour: '#191970',
-                        fontColour: '#e1efff',
-                        accentColour: '#00ffff',
-                        headerColour: '#2d2d86'
+                        bgColor: '#191970',
+                        fontColor: '#e1efff',
+                        accentColor: '#00ffff'
                     }
                 },
                 'midnight-bloom-theme': {
                     class: 'midnight-bloom-theme',
                     name: 'Midnight Bloom',
                     colors: {
-                        bgColour: '#0d0f19',
-                        fontColour: '#e6e6fa',
-                        accentColour: '#ff69b4',
-                        headerColour: '#1a1e2f'
+                        bgColor: '#0d0f19',
+                        fontColor: '#e6e6fa',
+                        accentColor: '#ff69b4'
                     }
                 },
                 'deep-sea-pearl-theme': {
                     class: 'deep-sea-pearl-theme',
                     name: 'Deep Sea Pearl',
                     colors: {
-                        bgColour: '#1c3144',
-                        fontColour: '#f0f8ff',
-                        accentColour: '#c0fefe',
-                        headerColour: '#2c445c'
+                        bgColor: '#1c3144',
+                        fontColor: '#f0f8ff',
+                        accentColor: '#c0fefe'
                     }
                 },
                 'amethyst-mist-theme': {
                     class: 'amethyst-mist-theme',
                     name: 'Amethyst Mist',
                     colors: {
-                        bgColour: '#6a5acd',
-                        fontColour: '#f0f0ff',
-                        accentColour: '#1e1e1e',
-                        headerColour: '#8a7cde'
+                        bgColor: '#6a5acd',
+                        fontColor: '#f0f0ff',
+                        accentColor: '#1e1e1e'
                     }
                 },
                 'starlight-theme': {
                     class: 'starlight-theme',
                     name: 'Starlight',
                     colors: {
-                        bgColour: '#0c1223',
-                        fontColour: '#f8f8ff',
-                        accentColour: '#d1b281',
-                        headerColour: '#1a243e'
+                        bgColor: '#0c1223',
+                        fontColor: '#f8f8ff',
+                        accentColor: '#d1b281'
                     }
                 },
                 'ruby-radiance-theme': {
                     class: 'ruby-radiance-theme',
                     name: 'Ruby Radiance',
                     colors: {
-                        bgColour: '#3f1e1e',
-                        fontColour: '#f5f5f5',
-                        accentColour: '#e74c3c',
-                        headerColour: '#5d3333'
+                        bgColor: '#3f1e1e',
+                        fontColor: '#f5f5f5',
+                        accentColor: '#e74c3c'
                     }
                 },
                 'azure-dream-theme': {
                     class: 'azure-dream-theme',
                     name: 'Azure Dream',
                     colors: {
-                        bgColour: '#87cefa',
-                        fontColour: '#1e2a3a',
-                        accentColour: '#34495e',
-                        headerColour: '#b0e0e6'
+                        bgColor: '#87cefa',
+                        fontColor: '#1e2a3a',
+                        accentColor: '#34495e'
                     }
                 }
             };
+
+            function hexToRgb(hex) {
+                const r = parseInt(hex.substring(1, 3), 16);
+                const g = parseInt(hex.substring(3, 5), 16);
+                const b = parseInt(hex.substring(5, 7), 16);
+                return [r, g, b];
+            }
+
+            function rgbToHex(r, g, b) {
+                return '#' + [r, g, b].map(x => {
+                    const hex = x.toString(16);
+                    return hex.length === 1 ? '0' + hex : hex;
+                }).join('');
+            }
+
+            function adjustColor(hex, amount) {
+                const [r, g, b] = hexToRgb(hex);
+                const newR = Math.min(255, Math.max(0, r + amount));
+                const newG = Math.min(255, Math.max(0, g + amount));
+                const newB = Math.min(255, Math.max(0, b + amount));
+                return rgbToHex(newR, newG, newB);
+            }
 
             async function initializeState() {
                 try {
@@ -484,7 +488,7 @@
                         if (matchAlignment) config.alignment = matchAlignment[1];
 
                         state.selectedTheme = config.theme || 'gilded-iris-theme';
-                        state.selectedAlignment = config.alignment || 'centre';
+                        state.selectedAlignment = config.alignment || 'center';
                     }
                 } catch (error) {
                     console.warn('config.js not found or failed to load. Using defaults.');
@@ -502,7 +506,7 @@
             function generateThemeCSS() {
                 let css = `
                     :root {
-                        --primary-bg-color: #1a1a2e;
+                        --bg-color: #1a1a2e;
                         --font-color: #e6e6fa;
                         --accent-color: #f7b731;
                         --header-color: #2e3a59;
@@ -511,12 +515,13 @@
                 `;
                 for (const themeKey in state.allThemes) {
                     const theme = state.allThemes[themeKey];
+                    const headerColor = adjustColor(theme.colors.bgColor, isDark(theme.colors.bgColor) ? 20 : -20);
                     css += `
                         body.${themeKey} {
-                            --primary-bg-color: ${theme.colors.bgColour};
-                            --font-color: ${theme.colors.fontColour};
-                            --accent-color: ${theme.colors.accentColour};
-                            --header-color: ${theme.colors.headerColour};
+                            --bg-color: ${theme.colors.bgColor};
+                            --font-color: ${theme.colors.fontColor};
+                            --accent-color: ${theme.colors.accentColor};
+                            --header-color: ${headerColor};
                         }`;
                 }
                 const existingStyleTag = document.getElementById('dynamic-themes-style');
@@ -530,6 +535,12 @@
                 }
                 bodyElement.className = state.selectedTheme;
             }
+            
+            function isDark(hex) {
+                const [r, g, b] = hexToRgb(hex);
+                const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+                return luminance < 0.5;
+            }
 
             function renderThemes() {
                 const fragment = document.createDocumentFragment();
@@ -541,7 +552,7 @@
 
                     const colorSwatch = document.createElement('span');
                     colorSwatch.className = 'color-swatch';
-                    colorSwatch.style.backgroundColor = theme.colors.bgColour;
+                    colorSwatch.style.backgroundColor = theme.colors.bgColor;
 
                     const themeName = document.createElement('span');
                     themeName.textContent = theme.name;
@@ -585,7 +596,11 @@
                 palettePreview.innerHTML = '';
                 const theme = state.allThemes[themeKey];
                 if (theme && theme.colors) {
-                    Object.values(theme.colors).forEach(colour => {
+                    const headerColor = adjustColor(theme.colors.bgColor, isDark(theme.colors.bgColor) ? 20 : -20);
+                    Object.values({
+                        ...theme.colors,
+                        headerColor
+                    }).forEach(colour => {
                         const swatch = document.createElement('div');
                         swatch.className = 'palette-swatch';
                         swatch.style.backgroundColor = colour;
@@ -609,7 +624,13 @@
                     }
                 });
                 renderPalettePreview(state.selectedTheme);
-                headerColourSwatch.style.backgroundColor = state.allThemes[state.selectedTheme]?.colors?.headerColour || '#000000';
+                const selectedThemeColors = state.allThemes[state.selectedTheme]?.colors;
+                if (selectedThemeColors) {
+                    const headerColor = adjustColor(selectedThemeColors.bgColor, isDark(selectedThemeColors.bgColor) ? 20 : -20);
+                    headerColourSwatch.style.backgroundColor = headerColor;
+                } else {
+                    headerColourSwatch.style.backgroundColor = '#000000';
+                }
                 saveState();
                 generateThemeCSS();
             }
@@ -726,9 +747,10 @@
                 const allThemeCss = [];
                 for (const themeKey in state.allThemes) {
                     const theme = state.allThemes[themeKey];
-                    allThemeCss.push(`\n/* ${theme.name} */\nbody.${themeKey} {\n  --primary-bg-color: ${theme.colors.bgColour};\n  --font-color: ${theme.colors.fontColour};\n  --accent-color: ${theme.colors.accentColour};\n  --header-color: ${theme.colors.headerColour};\n}\n`);
+                    const headerColor = adjustColor(theme.colors.bgColor, isDark(theme.colors.bgColor) ? 20 : -20);
+                    allThemeCss.push(`\n/* ${theme.name} */\nbody.${themeKey} {\n  --bg-color: ${theme.colors.bgColor};\n  --font-color: ${theme.colors.fontColor};\n  --accent-color: ${theme.colors.accentColor};\n  --header-color: ${headerColor};\n}\n`);
                 }
-                const cssContent = `/* This file is generated by the Admin Dashboard. */\n\n:root {\n  --primary-bg-color: #1a1a2e;\n  --font-color: #e6e6fa;\n  --accent-color: #f7b731;\n  --header-color: #2e3a59;\n  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;\n}\n\n${allThemeCss.join('\n')}`;
+                const cssContent = `/* This file is generated by the Admin Dashboard. */\n\n:root {\n  --bg-color: #1a1a2e;\n  --font-color: #e6e6fa;\n  --accent-color: #f7b731;\n  --header-color: #2e3a59;\n  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;\n}\n\n${allThemeCss.join('\n')}`;
                 const cssBlob = new Blob([cssContent], {
                     type: 'text/css'
                 });

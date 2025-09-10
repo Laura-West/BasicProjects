@@ -13,7 +13,7 @@
             align-items: center;
             min-height: 100vh;
             font-family: sans-serif;
-            background-color: var(--primary-bg-color);
+            background-color: var(--bg-color);
             color: var(--font-color);
             transition: background-color 0.5s, color 0.5s;
         }
@@ -28,48 +28,46 @@
             flex-direction: column;
             align-items: center;
             gap: 12px;
-            background-color: var(--primary-bg-color);
+            background-color: var(--bg-color);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: background-color 0.5s, border-color 0.5s;
         }
 
         .quote-content {
-            font-size: clamp(16px, 2.4vw, 22px);
-            font-weight: 600;
-            line-height: 1.35;
-            text-align: center;
+            font-family: var(--font-family);
+            font-size: 2em;
+            font-weight: 500;
+            line-height: 1.4;
+            color: var(--font-color);
+            transition: color 0.5s;
         }
 
-        .author {
-            font-size: clamp(14px, 1.8vw, 18px);
-            font-weight: 400;
+        .quote-author {
+            font-family: var(--font-family);
+            font-size: 1.2em;
             font-style: italic;
-            margin-top: 10px;
+            font-weight: 400;
             color: var(--accent-color);
+            transition: color 0.5s;
         }
     </style>
+    <script src="config.js"></script>
 </head>
 
 <body>
-    <div class="widget" id="widget">
-        <div class="quote-content" id="quote-content"></div>
-        <div class="author" id="author"></div>
+    <div class="widget">
+        <div id="quote-content" class="quote-content"></div>
+        <div id="quote-author" class="quote-author"></div>
     </div>
 
-    <script src="config.js"></script>
     <script>
-        let QUOTES = [];
         const quoteContentEl = document.getElementById('quote-content');
-        const authorEl = document.getElementById('author');
+        const authorEl = document.getElementById('quote-author');
+        let QUOTES = [];
         let index = 0;
 
         function render(nextIndex) {
-            if (QUOTES.length === 0) {
-                quoteContentEl.textContent = "Loading...";
-                authorEl.textContent = "";
-                return;
-            }
-
+            if (QUOTES.length === 0) return;
             index = (nextIndex + QUOTES.length) % QUOTES.length;
             const quote = QUOTES[index];
             quoteContentEl.textContent = `\"${quote.quote}\"`;
@@ -110,12 +108,9 @@
             } else {
                 // Fallback to a default theme if config.js is not loaded
                 document.body.className = 'gilded-iris-theme';
-                quoteContentEl.style.textAlign = 'center';
             }
-
             fetchQuotes();
         }
-
         initializeWidget();
     </script>
 </body>
