@@ -13,12 +13,13 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            transition: background-color 0.5s;
+            transition: background-color 0.5s ease-in-out;
         }
 
         .container {
             width: min(900px, 95vw);
             padding: 30px;
+            background-color: #ffffff;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             display: flex;
@@ -27,73 +28,30 @@
             transition: background-color 0.5s, border-color 0.5s;
         }
 
-        /* Dark UI styles for light backgrounds */
-        .container.dark-ui {
-            background-color: #ffffff;
-            color: #333;
+        h1 {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .settings-section {
             border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 20px;
         }
 
-        .container.dark-ui h1,
-        .container.dark-ui h2 {
-            color: #2c3e50;
-        }
-
-        .container.dark-ui .settings-section {
-            border-color: #e1e4e8;
-        }
-
-        .container.dark-ui .settings-section h2 {
-            border-bottom-color: #3498db;
-        }
-
-        .container.dark-ui .theme-option,
-        .container.dark-ui .alignment-option {
-            background-color: #ecf0f1;
-            color: #2c3e50;
-        }
-
-        .container.dark-ui .theme-option.active,
-        .container.dark-ui .alignment-option.active {
-            border-color: #3498db;
-            background-color: #eaf6fd;
-            color: #2980b9;
-        }
-
-        /* Light UI styles for dark backgrounds */
-        .container.light-ui {
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            border: 1px solid #34495e;
-        }
-
-        .container.light-ui h1,
-        .container.light-ui h2 {
-            color: #ecf0f1;
-        }
-
-        .container.light-ui .settings-section {
-            border-color: #34495e;
-        }
-
-        .container.light-ui .settings-section h2 {
-            border-bottom-color: #f1c40f;
-        }
-
-        .container.light-ui .theme-option,
-        .container.light-ui .alignment-option {
-            background-color: #34495e;
-            color: #ecf0f1;
-        }
-
-        .container.light-ui .theme-option.active,
-        .container.light-ui .alignment-option.active {
-            border-color: #f1c40f;
-            background-color: #2c3e50;
-            color: #f1c40f;
-        }
-
-        /* Common styles */
         .controls-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -112,9 +70,23 @@
             border: 2px solid transparent;
             transition: all 0.2s ease-in-out;
             font-weight: 500;
+            background-color: #ecf0f1;
+            color: #2c3e50;
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .theme-option:hover,
+        .alignment-option:hover {
+            background-color: #dbe4e6;
+        }
+
+        .theme-option.active,
+        .alignment-option.active {
+            border-color: #3498db;
+            background-color: #eaf6fd;
+            color: #2980b9;
         }
 
         .color-swatch {
@@ -125,7 +97,7 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
-        /* --- THEME-SPECIFIC COLOR VARIABLES --- */
+        /* --- THEME-SPECIFIC BACKGROUND COLORS FOR LIVE PREVIEW --- */
         body.gilded-iris-theme { background-color: #4b0082; }
         body.cosmic-dust-theme { background-color: #0c1c38; }
         body.twilight-garden-theme { background-color: #2b0d36; }
@@ -142,7 +114,7 @@
 </head>
 
 <body>
-    <div class="container" id="dashboard-container">
+    <div class="container">
         <h1>Admin Settings</h1>
         <div class="settings-section">
             <h2>Theme Selection</h2>
@@ -168,22 +140,21 @@
             const themeControls = document.getElementById('theme-controls');
             const alignmentControls = document.getElementById('alignment-controls');
             const bodyElement = document.body;
-            const container = document.getElementById('dashboard-container');
 
-            // Theme data - now with a luminance property
+            // Theme data
             const allThemes = {
-                'light-mode': { class: 'light-mode', name: 'Light Mode', colors: ['#ffffff'], luminance: 1 },
-                'dark-mode': { class: 'dark-mode', name: 'Dark Mode', colors: ['#2c3e50'], luminance: 0 },
-                'forest-green': { class: 'forest-green', name: 'Forest Green', colors: ['#ecf0e6'], luminance: 1 },
-                'gilded-iris-theme': { class: 'gilded-iris-theme', name: 'Gilded Iris', colors: ['#4b0082'], luminance: 0 },
-                'cosmic-dust-theme': { class: 'cosmic-dust-theme', name: 'Cosmic Dust', colors: ['#0c1c38'], luminance: 0 },
-                'twilight-garden-theme': { class: 'twilight-garden-theme', name: 'Twilight Garden', colors: ['#2b0d36'], luminance: 0 },
-                'blue-lagoon-theme': { class: 'blue-lagoon-theme', name: 'Blue Lagoon', colors: ['#2a52be'], luminance: 0 },
-                'midnight-bloom-theme': { class: 'midnight-bloom-theme', name: 'Midnight Bloom', colors: ['#0d0f19'], luminance: 0 },
-                'deep-sea-pearl-theme': { class: 'deep-sea-pearl-theme', name: 'Deep Sea Pearl', colors: ['#1c3144'], luminance: 0 },
-                'amethyst-mist-theme': { class: 'amethyst-mist-theme', name: 'Amethyst Mist', colors: ['#6a5acd'], luminance: 0 },
-                'starlight-theme': { class: 'starlight-theme', name: 'Starlight', colors: ['#2c3e50'], luminance: 0 },
-                'sunset-haze-theme': { class: 'sunset-haze-theme', name: 'Sunset Haze', colors: ['#e74c3c'], luminance: 0 }
+                'light-mode': { class: 'light-mode', name: 'Light Mode', colors: ['#ffffff'] },
+                'dark-mode': { class: 'dark-mode', name: 'Dark Mode', colors: ['#2c3e50'] },
+                'forest-green': { class: 'forest-green', name: 'Forest Green', colors: ['#ecf0e6'] },
+                'gilded-iris-theme': { class: 'gilded-iris-theme', name: 'Gilded Iris', colors: ['#4b0082'] },
+                'cosmic-dust-theme': { class: 'cosmic-dust-theme', name: 'Cosmic Dust', colors: ['#0c1c38'] },
+                'twilight-garden-theme': { class: 'twilight-garden-theme', name: 'Twilight Garden', colors: ['#2b0d36'] },
+                'blue-lagoon-theme': { class: 'blue-lagoon-theme', name: 'Blue Lagoon', colors: ['#2a52be'] },
+                'midnight-bloom-theme': { class: 'midnight-bloom-theme', name: 'Midnight Bloom', colors: ['#0d0f19'] },
+                'deep-sea-pearl-theme': { class: 'deep-sea-pearl-theme', name: 'Deep Sea Pearl', colors: ['#1c3144'] },
+                'amethyst-mist-theme': { class: 'amethyst-mist-theme', name: 'Amethyst Mist', colors: ['#6a5acd'] },
+                'starlight-theme': { class: 'starlight-theme', name: 'Starlight', colors: ['#2c3e50'] },
+                'sunset-haze-theme': { class: 'sunset-haze-theme', name: 'Sunset Haze', colors: ['#e74c3c'] }
             };
 
             // Set initial selected values from localStorage, or use defaults
@@ -200,5 +171,66 @@
                 });
                 bodyElement.className = selectedTheme;
 
-                // Apply the correct UI style to the container based on theme luminance
-                const themeData = allThemes
+                // Update alignment active state
+                document.querySelectorAll('.alignment-option').forEach(el => {
+                    el.classList.remove('active');
+                    if (el.dataset.alignment === selectedAlignment) {
+                        el.classList.add('active');
+                    }
+                });
+            }
+
+            // Function to download the configuration file
+            window.downloadConfig = function() {
+                const configContent = `// This file is generated by the Admin Dashboard.
+const widgetConfig = {
+  theme: '${selectedTheme}',
+  alignment: '${selectedAlignment}'
+};
+`;
+                const blob = new Blob([configContent], { type: 'text/javascript' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'config.js';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                console.log('Config file downloaded successfully.');
+            };
+
+            // Render themes
+            for (const themeKey in allThemes) {
+                const theme = allThemes[themeKey];
+                const option = document.createElement('div');
+                option.className = 'theme-option';
+                option.dataset.theme = theme.class;
+                option.innerHTML = `
+                    <span class="color-swatch" style="background-color: ${theme.colors[0]};"></span>
+                    <span>${theme.name}</span>
+                `;
+                option.addEventListener('click', () => {
+                    selectedTheme = theme.class;
+                    localStorage.setItem('selectedTheme', selectedTheme);
+                    updateActiveControls();
+                });
+                themeControls.appendChild(option);
+            }
+
+            // Handle alignment controls
+            document.querySelectorAll('.alignment-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    selectedAlignment = option.dataset.alignment;
+                    localStorage.setItem('selectedAlignment', selectedAlignment);
+                    updateActiveControls();
+                });
+            });
+
+            // Initial render on page load
+            updateActiveControls();
+        });
+    </script>
+</body>
+
+</html>
