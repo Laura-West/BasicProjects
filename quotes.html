@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Main Quote Widget</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="themes.js"></script>
+  <style>
+    /*
+      The widget now uses CSS custom properties (variables) defined in themes.js.
+      This allows the theme to be changed by simply updating the themes.js file.
+    */
+    .widget {
+      width: min(720px, 92vw);
+      border-radius: 12px;
+      border: 2px solid var(--widget-border-color);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background-color 0.5s, color 0.5s, border-color 0.5s;
+      background-color: var(--widget-bg-color);
+      color: var(--text-color);
+    }
+
+    .quote {
+      font-size: clamp(16px, 2.4vw, 22px);
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .icon {
+      font-size: 28px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="widget" id="widget">
+    <div class="icon" id="icon"></div>
+    <div class="quote" id="quote">Loading...</div>
+  </div>
+
+  <script>
+    const EMOJIS = ["✨", "💡", "🧠", "🌱", "🔑"];
+    let QUOTES = [];
+    let index = 0;
+
+    const quoteEl = document.getElementById('quote');
+    const iconEl = document.getElementById('icon');
+    const widgetEl = document.getElementById('widget');
+
+    // A function to set the theme of the widget.
+    function applyTheme(themeClass, colors) {
+      document.documentElement.style.setProperty('--widget-bg-color', colors[0]);
+      document.documentElement.style.setProperty('--text-color', colors[1]);
+      document.documentElement.style.setProperty('--accent-color', colors[2]);
+      document.documentElement.style.setProperty('--widget-border-color', colors[3]);
+    }
+
+    // Function to get a random theme.
+    function getRandomTheme() {
+      const themesArray = Object.values(allThemes);
+      const randomTheme = themesArray[Math.floor(Math.random() * themesArray.length)];
+      return randomTheme;
+    }
+
+    function render(nextIndex) {
+      if (QUOTES.length > 0) {
+        index = (nextIndex + QUOTES.length) % QUOTES.length;
+        const currentQuote = QUOTES[index];
+        quoteEl.innerHTML = `"${currentQuote.quote}" - ${currentQuote.author}`;
+        iconEl.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+      } else {
+        quoteEl.textContent = "Error: Quotes not loaded.";
+        iconEl.textContent = "⚠️";
+      }
+    }
+
+    async function fetchQuotes() {
+      try {
+        const response = await fetch('QuotesSept25.txt');
+        const data = await response.json();
+        if (data.quotes) {
+          QUOTES = data.quotes;
+        } else {
+          throw new Error("Invalid quotes format.");
+        }
+      } catch (error) {
+        console.error("Failed to fetch quotes:", error);
+        quoteEl.textContent = "Error loading quotes.";
+        iconEl.textContent = "❌";
+        return;
+      }
+      render(0);
+      setInterval(() => render(index + 1), 10000);
+    }
+
+    function initializeWidget() {
+      // Check if a theme is selected.
+      if (typeof selectedTheme !== 'undefined' && selectedTheme !== null) {
+        if (selectedTheme === 'random') {
+          // If "random" is selected, get a random theme from allThemes.
+          const theme = getRandomTheme();
+          applyTheme(theme.class, theme.colors);
+        } else {
+          // Otherwise, get the selected theme from the allThemes object.
+          const theme = Object.values(allThemes).find(t => t.class === selectedTheme);
+          if (theme) {
+            applyTheme(theme.class, theme.colors);
+          } else {
+            // Fallback to a default theme if the selected theme is not found.
+            const defaultTheme = getRandomTheme();
+            applyTheme(defaultTheme.class, defaultTheme.colors);
+            console.log("Error: Selected theme not found. Applying random theme as fallback.");
+          }
+        }
+      } else {
+        // Fallback to a random theme if no theme is defined.
+        const defaultTheme = getRandomTheme();
+        applyTheme(defaultTheme.class, defaultTheme.colors);
+        console.log("No theme selected. Applying random theme as fallback.");
+      }
+      fetchQuotes();
+    }
+
+    initializeWidget();
+  </script>
+</body>
+
+</html>
