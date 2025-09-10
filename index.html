@@ -38,28 +38,29 @@
     }
 
     .settings-section {
-      border: 1px solid #e0e0e0;
+      border: 1px solid #e1e4e8;
       border-radius: 8px;
       padding: 20px;
-      background-color: #fafafa;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
     }
 
-    h2 {
+    .settings-section h2 {
+      margin-top: 0;
       font-size: 1.5em;
       font-weight: 600;
       color: #34495e;
-      border-bottom: 2px solid #bdc3c7;
-      padding-bottom: 5px;
-      margin-bottom: 10px;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
     }
 
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    .controls-grid.alignment {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     }
 
     .theme-option,
@@ -104,21 +105,105 @@
     <h1>Admin Settings</h1>
     <div class="settings-section">
       <h2>Theme Selection</h2>
-      <div class="controls" id="theme-controls">
-        <!-- Theme options will be dynamically added here -->
+      <div class="controls-grid" id="theme-controls">
+        </div>
+    </div>
+
+    <div class="settings-section">
+      <h2>Alignment</h2>
+      <div class="controls-grid alignment" id="alignment-controls">
+        <div class="alignment-option" data-alignment="left">Left</div>
+        <div class="alignment-option" data-alignment="center">Center</div>
+        <div class="alignment-option" data-alignment="right">Right</div>
       </div>
     </div>
-    <div class="settings-section">
-      <h2>Scripture Alignment</h2>
-      <div class="controls" id="alignment-controls">
-        <div class="alignment-option" data-alignment="left">Align Left</div>
-        <div class="alignment-option" data-alignment="center">Align Center</div>
-        <div class="alignment-option" data-alignment="right">Align Right</div>
-      </div>
+    <div style="text-align: center;">
+      <button onclick="downloadConfig()">Download Configuration</button>
     </div>
   </div>
 
-  <script src="settings.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const themeControls = document.getElementById('theme-controls');
+      const alignmentControls = document.getElementById('alignment-controls');
+
+      // Theme data
+      const allThemes = {
+        'light-mode': { class: 'light-mode', name: 'Light Mode', colors: ['#ffffff', '#2c3e50', '#3498db', '#bdc3c7'] },
+        'dark-mode': { class: 'dark-mode', name: 'Dark Mode', colors: ['#2c3e50', '#ecf0f1', '#3498db', '#bdc3c7'] },
+        'forest-green': { class: 'forest-green', name: 'Forest Green', colors: ['#ecf0e6', '#264639', '#558269', '#558269'] },
+        'gilded-iris-theme': { class: 'gilded-iris-theme', name: 'Gilded Iris', colors: ['#4b0082', '#fce883', '#ffc94b', '#3b0066'] },
+        'cosmic-dust-theme': { class: 'cosmic-dust-theme', name: 'Cosmic Dust', colors: ['#0c1c38', '#e0e6f2', '#f0a07c', '#172a4e'] },
+        'twilight-garden-theme': { class: 'twilight-garden-theme', name: 'Twilight Garden', colors: ['#2b0d36', '#f3e9f1', '#c16196', '#4f1a66'] },
+        'blue-lagoon-theme': { class: 'blue-lagoon-theme', name: 'Blue Lagoon', colors: ['#2a52be', '#e1efff', '#00ffff', '#2d2d86'] },
+        'midnight-bloom-theme': { class: 'midnight-bloom-theme', name: 'Midnight Bloom', colors: ['#0d0f19', '#e6e6fa', '#ff69b4', '#1a1e2f'] },
+        'deep-sea-pearl-theme': { class: 'deep-sea-pearl-theme', name: 'Deep Sea Pearl', colors: ['#1c3144', '#f0f8ff', '#c0fefe', '#2c445c'] },
+        'amethyst-mist-theme': { class: 'amethyst-mist-theme', name: 'Amethyst Mist', colors: ['#6a5acd', '#f0f0ff', '#1e1e1e', '#8a7cde'] },
+        'starlight-theme': { class: 'starlight-theme', name: 'Starlight', colors: ['#2c3e50', '#f1c40f', '#f39c12', '#34495e'] },
+        'sunset-haze-theme': { class: 'sunset-haze-theme', name: 'Sunset Haze', colors: ['#e74c3c', '#fbe9e7', '#f39c12', '#c0392b'] }
+      };
+
+      // Set initial selected values based on your default config.js
+      let selectedTheme = 'gilded-iris-theme';
+      let selectedAlignment = 'center';
+
+      function updateActiveControls() {
+        document.querySelectorAll('.theme-option').forEach(el => {
+          el.classList.remove('active');
+          if (el.dataset.theme === selectedTheme) {
+            el.classList.add('active');
+          }
+        });
+        document.querySelectorAll('.alignment-option').forEach(el => {
+          el.classList.remove('active');
+          if (el.dataset.alignment === selectedAlignment) {
+            el.classList.add('active');
+          }
+        });
+      }
+
+      function downloadConfig() {
+        const configContent = `// Default settings. This file will be updated when you save changes from the Admin Dashboard.\nconst widgetConfig = {\n  theme: '${selectedTheme}',\n  alignment: '${selectedAlignment}'\n};`;
+        const blob = new Blob([configContent], { type: 'text/javascript' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'config.js';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        console.log('Config file downloaded successfully.');
+      }
+
+      // Render themes
+      for (const themeKey in allThemes) {
+        const theme = allThemes[themeKey];
+        const option = document.createElement('div');
+        option.className = 'theme-option';
+        option.dataset.theme = theme.class;
+        option.innerHTML = `
+          <span class="color-swatch" style="background-color: ${theme.colors[0]};"></span>
+          <span>${theme.name}</span>
+        `;
+        option.addEventListener('click', () => {
+          selectedTheme = theme.class;
+          updateActiveControls();
+        });
+        themeControls.appendChild(option);
+      }
+
+      // Handle alignment controls
+      document.querySelectorAll('.alignment-option').forEach(option => {
+        option.addEventListener('click', () => {
+          selectedAlignment = option.dataset.alignment;
+          updateActiveControls();
+        });
+      });
+
+      updateActiveControls();
+    });
+  </script>
 </body>
 
 </html>
