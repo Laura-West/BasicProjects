@@ -51,7 +51,7 @@
         align-items: center;
         margin-top: 24px;
       }
-      #theme-select {
+      #theme-select, #duration-select {
         margin-bottom: 12px;
         padding: 8px 12px;
         border-radius: 6px;
@@ -88,6 +88,9 @@
       }
       #save-btn:hover {
         background-color: color-mix(in srgb, var(--accent-color) 80%, black);
+      }
+      .hidden {
+        display: none;
       }
     </style>
 </head>
@@ -126,19 +129,39 @@
       };
       
       function setupThemeSelector() {
+        // Add a "Random" option first
+        const randomOption = document.createElement('option');
+        randomOption.value = 'random';
+        randomOption.textContent = 'Random';
+        themeSelect.appendChild(randomOption);
+        
         for (const [name, data] of Object.entries(themes)) {
           const option = document.createElement('option');
           option.value = data.class;
           option.textContent = name;
           themeSelect.appendChild(option);
         }
-        updateThemePreview(themeSelect.value);
-        body.classList.add(themeSelect.value);
+        
+        // Initial theme application and preview
+        const initialTheme = localStorage.getItem('selectedTheme') || Object.values(themes)[0].class;
+        themeSelect.value = initialTheme;
+        body.classList.add(initialTheme);
+        updateThemePreview(initialTheme);
       }
       
       function updateThemePreview(themeClass) {
         themePreview.innerHTML = '';
-        const themeData = Object.values(themes).find(t => t.class === themeClass);
+        let themeData;
+
+        // If 'random' is selected, we show a random theme preview
+        if (themeClass === 'random') {
+          const themeKeys = Object.keys(themes);
+          const randomKey = themeKeys[Math.floor(Math.random() * themeKeys.length)];
+          themeData = themes[randomKey];
+        } else {
+          themeData = Object.values(themes).find(t => t.class === themeClass);
+        }
+      
         if (themeData) {
           themeData.colors.forEach(color => {
             const square = document.createElement('div');
@@ -150,16 +173,25 @@
       }
       
       themeSelect.addEventListener('change', (event) => {
+        const selectedClass = event.target.value;
+        
+        // Clear all existing theme classes
         for (const data of Object.values(themes)) {
           body.classList.remove(data.class);
         }
-        body.classList.add(event.target.value);
-        updateThemePreview(event.target.value);
+
+        // Apply a new class if not "random"
+        if (selectedClass !== 'random') {
+          body.classList.add(selectedClass);
+        }
+        
+        updateThemePreview(selectedClass);
       });
       
       saveBtn.addEventListener('click', () => {
-        const selectedTheme = themeSelect.value;
-        const fileContent = `const selectedTheme = '${selectedTheme}';`;
+        const selectedOption = themeSelect.value;
+        const fileContent = `const selectedTheme = '${selectedOption}';`;
+        
         const blob = new Blob([fileContent], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -169,7 +201,10 @@
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-
+      
+        // Update localStorage as well for persistence between sessions
+        localStorage.setItem('selectedTheme', selectedOption);
+      
         alert('theme-config.js has been generated. Please download it and upload it to your GitHub repository.');
       });
       
