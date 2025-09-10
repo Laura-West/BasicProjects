@@ -15,6 +15,7 @@
             min-height: 100vh;
             transition: background-color 0.5s ease-in-out;
             background-color: #f4f7f6;
+            color: #333;
         }
 
         .container {
@@ -253,7 +254,6 @@
             background-color: black;
         }
     </style>
-    <style id="dynamic-themes-style"></style>
 </head>
 
 <body>
@@ -342,14 +342,12 @@
             const themeNameInput = document.getElementById('theme-name');
             const themeKeyInput = document.getElementById('theme-key');
             const headerColourSwatch = document.getElementById('header-colour-swatch');
-            const headerPreviewSection = document.getElementById('header-preview-section');
             const saveThemeButton = document.getElementById('save-theme-button');
             const deleteThemeButton = document.getElementById('delete-theme-button');
             const addThemeButton = document.getElementById('add-theme-button');
             const cancelButton = document.getElementById('cancel-button');
             const randomiseButton = document.getElementById('randomise-button');
             const downloadButton = document.getElementById('download-button');
-            const dynamicStyles = document.getElementById('dynamic-themes-style');
 
             const colourFields = [{
                 id: 'bg-colour',
@@ -502,7 +500,15 @@
             }
 
             function generateThemeCSS() {
-                let css = '';
+                let css = `
+                    :root {
+                        --primary-bg-color: #1a1a2e;
+                        --font-color: #e6e6fa;
+                        --accent-color: #f7b731;
+                        --header-color: #2e3a59;
+                        --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                    }
+                `;
                 for (const themeKey in state.allThemes) {
                     const theme = state.allThemes[themeKey];
                     css += `
@@ -513,7 +519,15 @@
                             --header-color: ${theme.colors.headerColour};
                         }`;
                 }
-                dynamicStyles.innerHTML = css;
+                const existingStyleTag = document.getElementById('dynamic-themes-style');
+                if (existingStyleTag) {
+                    existingStyleTag.innerHTML = css;
+                } else {
+                    const newStyleTag = document.createElement('style');
+                    newStyleTag.id = 'dynamic-themes-style';
+                    newStyleTag.innerHTML = css;
+                    document.head.appendChild(newStyleTag);
+                }
                 bodyElement.className = state.selectedTheme;
             }
 
@@ -571,3 +585,185 @@
                 palettePreview.innerHTML = '';
                 const theme = state.allThemes[themeKey];
                 if (theme && theme.colors) {
+                    Object.values(theme.colors).forEach(colour => {
+                        const swatch = document.createElement('div');
+                        swatch.className = 'palette-swatch';
+                        swatch.style.backgroundColor = colour;
+                        palettePreview.appendChild(swatch);
+                    });
+                }
+            }
+
+            function updateActiveControls() {
+                document.querySelectorAll('.theme-option').forEach(el => {
+                    el.classList.remove('active');
+                    if (el.dataset.theme === state.selectedTheme) {
+                        el.classList.add('active');
+                    }
+                });
+                bodyElement.className = state.selectedTheme;
+                document.querySelectorAll('.alignment-option').forEach(el => {
+                    el.classList.remove('active');
+                    if (el.dataset.alignment === state.selectedAlignment) {
+                        el.classList.add('active');
+                    }
+                });
+                renderPalettePreview(state.selectedTheme);
+                headerColourSwatch.style.backgroundColor = state.allThemes[state.selectedTheme]?.colors?.headerColour || '#000000';
+                saveState();
+                generateThemeCSS();
+            }
+
+            function updateThemeForm(theme = null) {
+                themeManagementForm.classList.add('active');
+                if (theme) {
+                    themeKeyInput.value = theme.class;
+                    themeNameInput.value = theme.name;
+                    document.getElementById('save-theme-button').textContent = 'Update Theme';
+                    document.getElementById('delete-theme-button').style.display = 'inline-block';
+                    colourFields.forEach(field => {
+                        const colourValue = theme.colors[field.id.replace('-', '')] || '';
+                        document.getElementById(field.id).value = colourValue;
+                        document.getElementById(`${field.id}-picker`).value = colourValue;
+                    });
+                } else {
+                    themeKeyInput.value = '';
+                    themeNameInput.value = '';
+                    document.getElementById('save-theme-button').textContent = 'Save New Theme';
+                    document.getElementById('delete-theme-button').style.display = 'none';
+                    colourFields.forEach(field => {
+                        document.getElementById(field.id).value = '';
+                        document.getElementById(`${field.id}-picker`).value = '#000000';
+                    });
+                }
+            }
+
+            addThemeButton.addEventListener('click', () => {
+                updateThemeForm();
+            });
+
+            cancelButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                themeManagementForm.classList.remove('active');
+            });
+
+            window.editTheme = function(themeKey) {
+                const theme = state.allThemes[themeKey];
+                updateThemeForm(theme);
+            };
+
+            window.deleteTheme = function(themeKey) {
+                const themeToDelete = state.allThemes[themeKey];
+                if (confirm(`Are you sure you want to delete the theme "${themeToDelete.name}"?`)) {
+                    delete state.allThemes[themeKey];
+                    if (state.selectedTheme === themeKey) {
+                        const remainingKeys = Object.keys(state.allThemes);
+                        state.selectedTheme = remainingKeys.length > 0 ? remainingKeys[0] : 'gilded-iris-theme';
+                    }
+                    renderThemes();
+                    updateActiveControls();
+                    alert(`Theme "${themeToDelete.name}" deleted successfully.`);
+                    themeManagementForm.classList.remove('active');
+                }
+            };
+
+            deleteThemeButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                const themeKey = themeKeyInput.value;
+                if (themeKey) {
+                    deleteTheme(themeKey);
+                }
+            });
+
+            themeManagementForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newThemeName = themeNameInput.value.trim();
+                const newThemeKey = newThemeName.toLowerCase().replace(/\s/g, '-') + '-theme';
+
+                if (!themeKeyInput.value && state.allThemes[newThemeKey]) {
+                    alert('A theme with this name already exists. Please choose a different name.');
+                    return;
+                }
+
+                const newColors = {};
+                colourFields.forEach(field => {
+                    newColors[field.id.replace('-', '')] = document.getElementById(field.id).value;
+                });
+
+                state.allThemes[newThemeKey] = {
+                    class: newThemeKey,
+                    name: newThemeName,
+                    colors: newColors
+                };
+
+                state.selectedTheme = newThemeKey;
+                renderThemes();
+                updateActiveControls();
+                themeManagementForm.classList.remove('active');
+                alert(`Theme "${newThemeName}" saved successfully.`);
+            });
+
+            colourFields.forEach(field => {
+                const picker = document.getElementById(`${field.id}-picker`);
+                const input = document.getElementById(field.id);
+                picker.addEventListener('input', () => input.value = picker.value);
+                input.addEventListener('input', () => picker.value = input.value || '#000000');
+            });
+
+            randomiseButton.addEventListener('click', () => {
+                const themeKeys = Object.keys(state.allThemes);
+                const randomIndex = Math.floor(Math.random() * themeKeys.length);
+                state.selectedTheme = themeKeys[randomIndex];
+                updateActiveControls();
+            });
+
+            downloadButton.addEventListener('click', () => {
+                const configContent = `// This file is generated by the Admin Dashboard.\nconst widgetConfig = {\n  theme: '${state.selectedTheme}',\n  alignment: '${state.selectedAlignment}'\n};\n`;
+                const configBlob = new Blob([configContent], {
+                    type: 'text/javascript'
+                });
+
+                const allThemeCss = [];
+                for (const themeKey in state.allThemes) {
+                    const theme = state.allThemes[themeKey];
+                    allThemeCss.push(`\n/* ${theme.name} */\nbody.${themeKey} {\n  --primary-bg-color: ${theme.colors.bgColour};\n  --font-color: ${theme.colors.fontColour};\n  --accent-color: ${theme.colors.accentColour};\n  --header-color: ${theme.colors.headerColour};\n}\n`);
+                }
+                const cssContent = `/* This file is generated by the Admin Dashboard. */\n\n:root {\n  --primary-bg-color: #1a1a2e;\n  --font-color: #e6e6fa;\n  --accent-color: #f7b731;\n  --header-color: #2e3a59;\n  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;\n}\n\n${allThemeCss.join('\n')}`;
+                const cssBlob = new Blob([cssContent], {
+                    type: 'text/css'
+                });
+
+                const configUrl = URL.createObjectURL(configBlob);
+                const configLink = document.createElement('a');
+                configLink.href = configUrl;
+                configLink.download = 'config.js';
+                document.body.appendChild(configLink);
+                configLink.click();
+                document.body.removeChild(configLink);
+                URL.revokeObjectURL(configUrl);
+
+                const cssUrl = URL.createObjectURL(cssBlob);
+                const cssLink = document.createElement('a');
+                cssLink.href = cssUrl;
+                cssLink.download = 'styles.css';
+                document.body.appendChild(cssLink);
+                cssLink.click();
+                document.body.removeChild(cssLink);
+                URL.revokeObjectURL(cssUrl);
+
+                console.log('Configuration and Styles files downloaded successfully.');
+            });
+
+            document.querySelectorAll('.alignment-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    state.selectedAlignment = option.dataset.alignment;
+                    updateActiveControls();
+                });
+            });
+
+            initializeState();
+        });
+    </script>
+</body>
+
+</html>
