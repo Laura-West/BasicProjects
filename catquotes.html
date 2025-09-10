@@ -6,7 +6,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cat Quote Widget</title>
   <link rel="stylesheet" href="styles.css" />
-  <script src="themes.js"></script>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: sans-serif;
+      background-color: var(--primary-bg-color);
+      color: var(--primary-text-color);
+      transition: background-color 0.5s, color 0.5s;
+    }
+
+    .widget {
+      width: min(720px, 92vw);
+      border-radius: 12px;
+      border: 2px solid var(--secondary-bg-color);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      background-color: var(--primary-bg-color);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.5s, border-color 0.5s;
+    }
+
+    .cat {
+      font-size: 3em;
+      transition: color 0.5s;
+      color: var(--accent-color);
+    }
+
+    .quote {
+      font-size: clamp(16px, 2.4vw, 22px);
+      font-weight: 600;
+      line-height: 1.35;
+    }
+  </style>
 </head>
 
 <body>
@@ -15,6 +52,7 @@
     <div class="quote" id="quote"></div>
   </div>
 
+  <script src="config.js"></script>
   <script>
     const QUOTES = [
       "Purr-gress, not purr-fection.",
@@ -31,26 +69,8 @@
 
     const quoteEl = document.getElementById('quote');
     const catEl = document.getElementById('catEmoji');
-    const widgetEl = document.getElementById('widget');
 
     let index = 0;
-
-    // A function to set the theme of the widget.
-    function applyTheme(themeClass, colors) {
-      document.body.className = themeClass;
-      document.documentElement.style.setProperty('--widget-bg-color', colors[0]);
-      document.documentElement.style.setProperty('--text-color', colors[1]);
-      document.documentElement.style.setProperty('--accent-color', colors[2]);
-      document.documentElement.style.setProperty('--widget-border-color', colors[3]);
-      widgetEl.style.color = colors[1];
-    }
-
-    // Function to get a random theme.
-    function getRandomTheme() {
-      const themesArray = Object.values(allThemes);
-      const randomTheme = themesArray[Math.floor(Math.random() * themesArray.length)];
-      return randomTheme;
-    }
 
     function render(nextIndex) {
       index = (nextIndex + QUOTES.length) % QUOTES.length;
@@ -59,32 +79,22 @@
     }
 
     function initializeWidget() {
-      // Check if a theme is selected.
-      if (typeof selectedTheme !== 'undefined' && selectedTheme !== null) {
-        if (selectedTheme === 'random') {
-          // If "random" is selected, get a random theme from allThemes.
-          const theme = getRandomTheme();
-          applyTheme(theme.class, theme.colors);
-        } else {
-          // Otherwise, get the selected theme from the allThemes object.
-          const theme = Object.values(allThemes).find(t => t.class === selectedTheme);
-          if (theme) {
-            applyTheme(theme.class, theme.colors);
-          } else {
-            // Fallback to a default theme if the selected theme is not found.
-            const defaultTheme = getRandomTheme();
-            applyTheme(defaultTheme.class, defaultTheme.colors);
-            console.log("Error: Selected theme not found. Applying random theme as fallback.");
-          }
+      // Check if the widgetConfig object exists and apply settings
+      if (typeof widgetConfig !== 'undefined') {
+        if (widgetConfig.theme) {
+          document.body.className = widgetConfig.theme;
+        }
+        if (widgetConfig.alignment) {
+          quoteEl.style.textAlign = widgetConfig.alignment;
         }
       } else {
-        // Fallback to a random theme if no theme is defined.
-        const defaultTheme = getRandomTheme();
-        applyTheme(defaultTheme.class, defaultTheme.colors);
-        console.log("No theme selected. Applying random theme as fallback.");
+        // Fallback to a default theme if config.js is not loaded
+        document.body.className = 'gilded-iris-theme';
+        quoteEl.style.textAlign = 'center';
       }
+
       render(0);
-      setInterval(() => render(index + 1), 10000);
+      setInterval(() => render(index + 1), 10000); // 10000ms = 10 seconds
     }
 
     initializeWidget();
