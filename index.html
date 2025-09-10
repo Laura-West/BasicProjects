@@ -571,6 +571,3 @@
                 palettePreview.innerHTML = '';
                 const theme = state.allThemes[themeKey];
                 if (theme && theme.colors) {
-                    Object.values(theme.colors).forEach(colour => {
-                        const swatch = document.createElement('div');
-                        swatch.className = 'palette-swatch';
