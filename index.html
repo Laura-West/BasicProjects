@@ -183,6 +183,14 @@
             justify-content: flex-end;
             gap: 10px;
         }
+        
+        #delete-theme-button {
+            background-color: #e74c3c;
+        }
+        
+        #delete-theme-button:hover {
+            background-color: #c0392b;
+        }
 
         .theme-action-buttons {
             margin-left: auto;
@@ -249,7 +257,7 @@
     <div class="container">
         <h1>Admin Settings</h1>
         
-        <div class="settings-section theme-section">
+        <div class="settings-section">
             <h2>Theme</h2>
             
             <div class="settings-section">
@@ -259,14 +267,14 @@
                 <div id="palette-preview">
                     </div>
                 <div style="text-align: right; margin-top: 15px;">
-                    <button onclick="applyRandomTheme()">Randomize</button>
+                    <button id="randomize-button">Randomize</button>
                 </div>
             </div>
 
             <div class="settings-section">
                 <h3>Management</h3>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <button onclick="toggleThemeForm()">Add/Edit Theme</button>
+                    <button id="add-theme-button">Add New Theme</button>
                 </div>
                 <form id="theme-management-form">
                     <input type="hidden" id="theme-key">
@@ -290,8 +298,9 @@
                         <input type="text" id="theme-color3" placeholder="#RRGGBB (optional)">
                     </div>
                     <div class="form-actions">
-                        <button type="submit" id="save-theme-button">Save Theme</button>
-                        <button type="button" onclick="cancelForm()">Cancel</button>
+                        <button type="submit" id="save-theme-button">Save New Theme</button>
+                        <button type="button" id="delete-theme-button" style="display: none;">Delete</button>
+                        <button type="button" id="cancel-button">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -307,7 +316,7 @@
         </div>
 
         <div style="text-align: center;">
-            <button onclick="downloadConfig()">Download Configuration</button>
+            <button id="download-button">Download Configuration</button>
         </div>
     </div>
 
@@ -326,7 +335,19 @@
             const themeColor1Picker = document.getElementById('theme-color1-picker');
             const themeColor2Picker = document.getElementById('theme-color2-picker');
             const themeColor3Picker = document.getElementById('theme-color3-picker');
+            const addThemeButton = document.getElementById('add-theme-button');
+            const saveThemeButton = document.getElementById('save-theme-button');
+            const deleteThemeButton = document.getElementById('delete-theme-button');
+            const cancelButton = document.getElementById('cancel-button');
+            const randomizeButton = document.getElementById('randomize-button');
+            const downloadButton = document.getElementById('download-button');
             const dynamicStyles = document.getElementById('dynamic-themes-style');
+
+            const state = {
+                allThemes: {},
+                selectedTheme: 'gilded-iris-theme',
+                selectedAlignment: 'center'
+            };
 
             const defaultThemes = {
                 'light-mode': { class: 'light-mode', name: 'Light Mode', colors: ['#ffffff', '#2c3e50', '#3498db', '#bdc3c7'] },
@@ -343,18 +364,22 @@
                 'sunset-haze-theme': { class: 'sunset-haze-theme', name: 'Sunset Haze', colors: ['#e74c3c', '#ffffff', '#f1c40f', '#bdc3c7'] }
             };
 
-            let allThemes = JSON.parse(localStorage.getItem('allThemes')) || defaultThemes;
-            let selectedTheme = localStorage.getItem('selectedTheme') || 'gilded-iris-theme';
-            let selectedAlignment = localStorage.getItem('selectedAlignment') || 'center';
+            function initializeState() {
+                state.allThemes = JSON.parse(localStorage.getItem('allThemes')) || defaultThemes;
+                state.selectedTheme = localStorage.getItem('selectedTheme') || 'gilded-iris-theme';
+                state.selectedAlignment = localStorage.getItem('selectedAlignment') || 'center';
+            }
 
-            function saveThemes() {
-                localStorage.setItem('allThemes', JSON.stringify(allThemes));
+            function saveState() {
+                localStorage.setItem('allThemes', JSON.stringify(state.allThemes));
+                localStorage.setItem('selectedTheme', state.selectedTheme);
+                localStorage.setItem('selectedAlignment', state.selectedAlignment);
             }
 
             function generateThemeCSS() {
                 let css = '';
-                for (const themeKey in allThemes) {
-                    const theme = allThemes[themeKey];
+                for (const themeKey in state.allThemes) {
+                    const theme = state.allThemes[themeKey];
                     if (defaultThemes[themeKey]) continue;
 
                     if (theme.colors && theme.colors[0]) {
@@ -365,9 +390,9 @@
             }
 
             function renderThemes() {
-                themeControls.innerHTML = '';
-                for (const themeKey in allThemes) {
-                    const theme = allThemes[themeKey];
+                const fragment = document.createDocumentFragment();
+                for (const themeKey in state.allThemes) {
+                    const theme = state.allThemes[themeKey];
                     const option = document.createElement('div');
                     option.className = 'theme-option';
                     option.dataset.theme = themeKey;
@@ -385,25 +410,41 @@
                     const actionButtons = document.createElement('div');
                     actionButtons.className = 'theme-action-buttons';
                     actionButtons.innerHTML = `
-                        <button onclick="event.stopPropagation(); editTheme('${themeKey}')">✏️</button>
-                        <button onclick="event.stopPropagation(); deleteTheme('${themeKey}')">🗑️</button>
+                        <button class="edit-btn" data-theme-key="${themeKey}">✏️</button>
+                        <button class="delete-btn" data-theme-key="${themeKey}">🗑️</button>
                     `;
                     option.appendChild(actionButtons);
                     
                     option.addEventListener('click', () => {
-                        selectedTheme = themeKey;
-                        localStorage.setItem('selectedTheme', selectedTheme);
+                        state.selectedTheme = themeKey;
                         updateActiveControls();
                     });
-                    themeControls.appendChild(option);
+                    fragment.appendChild(option);
                 }
+                themeControls.innerHTML = '';
+                themeControls.appendChild(fragment);
+                
+                // Attach event listeners to the new buttons
+                document.querySelectorAll('.edit-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        editTheme(e.target.dataset.themeKey);
+                    });
+                });
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        deleteTheme(e.target.dataset.themeKey);
+                    });
+                });
+
                 updateActiveControls();
                 generateThemeCSS();
             }
 
             function renderPalettePreview(themeKey) {
                 palettePreview.innerHTML = '';
-                const theme = allThemes[themeKey];
+                const theme = state.allThemes[themeKey];
                 if (theme && theme.colors) {
                     theme.colors.forEach(color => {
                         const swatch = document.createElement('div');
@@ -417,29 +458,39 @@
             function updateActiveControls() {
                 document.querySelectorAll('.theme-option').forEach(el => {
                     el.classList.remove('active');
-                    if (el.dataset.theme === selectedTheme) {
+                    if (el.dataset.theme === state.selectedTheme) {
                         el.classList.add('active');
                     }
                 });
-                bodyElement.className = selectedTheme;
+                bodyElement.className = state.selectedTheme;
                 document.querySelectorAll('.alignment-option').forEach(el => {
                     el.classList.remove('active');
-                    if (el.dataset.alignment === selectedAlignment) {
+                    if (el.dataset.alignment === state.selectedAlignment) {
                         el.classList.add('active');
                     }
                 });
-                renderPalettePreview(selectedTheme);
+                renderPalettePreview(state.selectedTheme);
+                saveState();
             }
 
-            window.toggleThemeForm = function() {
-                themeForm.classList.toggle('active');
-                if (!themeForm.classList.contains('active')) {
-                    cancelForm();
-                }
-            };
+            addThemeButton.addEventListener('click', () => {
+                themeForm.classList.add('active');
+                themeKeyInput.value = '';
+                themeNameInput.value = '';
+                themeColor1Input.value = '';
+                themeColor2Input.value = '';
+                themeColor3Input.value = '';
+                saveThemeButton.textContent = 'Save New Theme';
+                deleteThemeButton.style.display = 'none';
+            });
+            
+            cancelButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                themeForm.classList.remove('active');
+            });
 
             window.editTheme = function(themeKey) {
-                const theme = allThemes[themeKey];
+                const theme = state.allThemes[themeKey];
                 themeKeyInput.value = themeKey;
                 themeNameInput.value = theme.name;
                 
@@ -453,51 +504,54 @@
                 themeColor3Picker.value = theme.colors[2] || '#000000';
                 
                 themeForm.classList.add('active');
+                saveThemeButton.textContent = 'Update Theme';
+                deleteThemeButton.style.display = 'inline-block';
             };
 
             window.deleteTheme = function(themeKey) {
-                const themeToDelete = allThemes[themeKey];
+                const themeToDelete = state.allThemes[themeKey];
                 if (confirm(`Are you sure you want to delete the theme "${themeToDelete.name}"?`)) {
-                    delete allThemes[themeKey];
+                    delete state.allThemes[themeKey];
                     
-                    if (selectedTheme === themeKey) {
-                        const remainingThemes = Object.keys(allThemes);
-                        selectedTheme = remainingThemes.length > 0 ? remainingThemes[0] : 'light-mode';
+                    if (state.selectedTheme === themeKey) {
+                        const remainingKeys = Object.keys(state.allThemes);
+                        state.selectedTheme = remainingKeys.length > 0 ? remainingKeys[0] : 'light-mode';
                     }
 
-                    saveThemes();
-                    localStorage.setItem('selectedTheme', selectedTheme);
                     renderThemes();
                     alert(`Theme "${themeToDelete.name}" deleted successfully.`);
+                    themeForm.classList.remove('active');
                 }
             };
-
-            window.cancelForm = function() {
-                themeKeyInput.value = '';
-                themeNameInput.value = '';
-                themeColor1Input.value = '';
-                themeColor2Input.value = '';
-                themeColor3Input.value = '';
-                themeForm.classList.remove('active');
-            };
+            
+            deleteThemeButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                const themeKey = themeKeyInput.value;
+                if (themeKey) {
+                    deleteTheme(themeKey);
+                }
+            });
 
             themeForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const newThemeName = themeNameInput.value;
+                const newThemeName = themeNameInput.value.trim();
                 const newColors = [themeColor1Input.value, themeColor2Input.value, themeColor3Input.value].filter(c => c);
-                const themeKey = themeKeyInput.value || newThemeName.toLowerCase().replace(/\s/g, '-') + '-theme';
+                const themeKey = newThemeName.toLowerCase().replace(/\s/g, '-') + '-theme';
 
-                allThemes[themeKey] = {
+                if (!themeKeyInput.value && state.allThemes[themeKey]) {
+                    alert('A theme with this name already exists. Please choose a different name.');
+                    return;
+                }
+
+                state.allThemes[themeKey] = {
                     class: themeKey,
                     name: newThemeName,
                     colors: newColors
                 };
                 
-                saveThemes();
-                selectedTheme = themeKey;
-                localStorage.setItem('selectedTheme', selectedTheme);
+                state.selectedTheme = themeKey;
                 renderThemes();
-                cancelForm();
+                themeForm.classList.remove('active');
                 alert(`Theme "${newThemeName}" saved successfully.`);
             });
             
@@ -509,19 +563,18 @@
             themeColor2Input.addEventListener('input', (e) => themeColor2Picker.value = e.target.value || '#000000');
             themeColor3Input.addEventListener('input', (e) => themeColor3Picker.value = e.target.value || '#000000');
 
-            window.applyRandomTheme = function() {
-                const themeKeys = Object.keys(allThemes);
+            randomizeButton.addEventListener('click', () => {
+                const themeKeys = Object.keys(state.allThemes);
                 const randomIndex = Math.floor(Math.random() * themeKeys.length);
-                selectedTheme = themeKeys[randomIndex];
-                localStorage.setItem('selectedTheme', selectedTheme);
+                state.selectedTheme = themeKeys[randomIndex];
                 updateActiveControls();
-            };
+            });
 
-            window.downloadConfig = function() {
+            downloadButton.addEventListener('click', () => {
                 const configContent = `// This file is generated by the Admin Dashboard.
 const widgetConfig = {
-  theme: '${selectedTheme}',
-  alignment: '${selectedAlignment}'
+  theme: '${state.selectedTheme}',
+  alignment: '${state.selectedAlignment}'
 };
 `;
                 const blob = new Blob([configContent], { type: 'text/javascript' });
@@ -534,16 +587,16 @@ const widgetConfig = {
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 console.log('Config file downloaded successfully.');
-            };
+            });
 
             document.querySelectorAll('.alignment-option').forEach(option => {
                 option.addEventListener('click', () => {
-                    selectedAlignment = option.dataset.alignment;
-                    localStorage.setItem('selectedAlignment', selectedAlignment);
+                    state.selectedAlignment = option.dataset.alignment;
                     updateActiveControls();
                 });
             });
 
+            initializeState();
             renderThemes();
         });
     </script>
