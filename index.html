@@ -15,6 +15,7 @@
             align-items: center;
             min-height: 100vh;
             color: #333;
+            transition: background-color 0.5s, color 0.5s;
         }
 
         .container {
@@ -26,6 +27,7 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            transition: background-color 0.5s, border-color 0.5s;
         }
 
         h1 {
@@ -97,16 +99,15 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
-        /* LIVE PREVIEW STYLES FROM STYLES.CSS */
+        /* --- THEME STYLES FROM STYLES.CSS --- */
         :root {
-            /* Default colors - these will be used if no theme is selected */
             --primary-bg-color: #1a1a2e;
             --primary-text-color: #e6e6fa;
             --accent-color: #f7b731;
             --secondary-bg-color: #2e3a59;
             --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
-        
+
         body.gilded-iris-theme {
             --primary-bg-color: #4b0082;
             --primary-text-color: #fce883;
@@ -115,7 +116,7 @@
             background-color: var(--primary-bg-color);
             color: var(--primary-text-color);
         }
-
+        
         body.cosmic-dust-theme {
             --primary-bg-color: #0c1c38;
             --primary-text-color: #e0e6f2;
@@ -124,7 +125,7 @@
             background-color: var(--primary-bg-color);
             color: var(--primary-text-color);
         }
-
+        
         body.twilight-garden-theme {
             --primary-bg-color: #2b0d36;
             --primary-text-color: #f3e9f1;
@@ -133,7 +134,7 @@
             background-color: var(--primary-bg-color);
             color: var(--primary-text-color);
         }
-        
+
         body.blue-lagoon-theme {
             --primary-bg-color: #2a52be;
             --primary-text-color: #e1efff;
@@ -142,7 +143,7 @@
             background-color: var(--primary-bg-color);
             color: var(--primary-text-color);
         }
-
+        
         body.midnight-bloom-theme {
             --primary-bg-color: #0d0f19;
             --primary-text-color: #e6e6fa;
@@ -169,7 +170,7 @@
             background-color: var(--primary-bg-color);
             color: var(--primary-text-color);
         }
-        
+
         body.starlight-theme {
             --primary-bg-color: #2c3e50;
             --primary-text-color: #f1c40f;
@@ -187,7 +188,7 @@
             background-color: var(--primary-bg-color);
             color: var(--primary-text-color);
         }
-
+        
         body.light-mode {
             --primary-bg-color: #ffffff;
             --primary-text-color: #2c3e50;
@@ -205,7 +206,7 @@
             background-color: var(--primary-bg-color);
             color: var(--primary-text-color);
         }
-
+        
         body.forest-green {
             --primary-bg-color: #ecf0e6;
             --primary-text-color: #264639;
@@ -213,6 +214,79 @@
             --secondary-bg-color: #558269;
             background-color: var(--primary-bg-color);
             color: var(--primary-text-color);
+        }
+
+        /* Update container styles for each theme */
+        body.gilded-iris-theme .container {
+            background-color: var(--primary-bg-color);
+            color: var(--primary-text-color);
+            border: 2px solid var(--secondary-bg-color);
+        }
+
+        body.cosmic-dust-theme .container {
+            background-color: var(--primary-bg-color);
+            color: var(--primary-text-color);
+            border: 2px solid var(--secondary-bg-color);
+        }
+        
+        body.twilight-garden-theme .container {
+            background-color: var(--primary-bg-color);
+            color: var(--primary-text-color);
+            border: 2px solid var(--secondary-bg-color);
+        }
+        
+        body.blue-lagoon-theme .container {
+            background-color: var(--primary-bg-color);
+            color: var(--primary-text-color);
+            border: 2px solid var(--secondary-bg-color);
+        }
+        
+        body.midnight-bloom-theme .container {
+            background-color: var(--primary-bg-color);
+            color: var(--primary-text-color);
+            border: 2px solid var(--secondary-bg-color);
+        }
+        
+        body.deep-sea-pearl-theme .container {
+            background-color: var(--primary-bg-color);
+            color: var(--primary-text-color);
+            border: 2px solid var(--secondary-bg-color);
+        }
+        
+        body.amethyst-mist-theme .container {
+            background-color: var(--primary-bg-color);
+            color: var(--primary-text-color);
+            border: 2px solid var(--secondary-bg-color);
+        }
+        
+        body.starlight-theme .container {
+            background-color: var(--primary-bg-color);
+            color: var(--primary-text-color);
+            border: 2px solid var(--secondary-bg-color);
+        }
+        
+        body.sunset-haze-theme .container {
+            background-color: var(--primary-bg-color);
+            color: var(--primary-text-color);
+            border: 2px solid var(--secondary-bg-color);
+        }
+
+        body.light-mode .container {
+            background-color: var(--primary-bg-color);
+            color: var(--primary-text-color);
+            border: 2px solid var(--secondary-bg-color);
+        }
+
+        body.dark-mode .container {
+            background-color: var(--primary-bg-color);
+            color: var(--primary-text-color);
+            border: 2px solid var(--secondary-bg-color);
+        }
+
+        body.forest-green .container {
+            background-color: var(--primary-bg-color);
+            color: var(--primary-text-color);
+            border: 2px solid var(--secondary-bg-color);
         }
     </style>
 </head>
@@ -244,7 +318,7 @@
             const themeControls = document.getElementById('theme-controls');
             const alignmentControls = document.getElementById('alignment-controls');
             const bodyElement = document.body;
-
+        
             // Theme data
             const allThemes = {
                 'light-mode': { class: 'light-mode', name: 'Light Mode', colors: ['#ffffff', '#2c3e50', '#3498db', '#bdc3c7'] },
@@ -258,7 +332,7 @@
                 'deep-sea-pearl-theme': { class: 'deep-sea-pearl-theme', name: 'Deep Sea Pearl', colors: ['#1c3144', '#f0f8ff', '#c0fefe', '#2c445c'] },
                 'amethyst-mist-theme': { class: 'amethyst-mist-theme', name: 'Amethyst Mist', colors: ['#6a5acd', '#f0f0ff', '#1e1e1e', '#8a7cde'] },
                 'starlight-theme': { class: 'starlight-theme', name: 'Starlight', colors: ['#2c3e50', '#f1c40f', '#f39c12', '#34495e'] },
-                'sunset-haze-theme': { class: 'sunset-haze-theme', name: 'Sunset Haze', colors: ['#e74c3c', '#fbe9e7', '#f39c12', '#c0392b'] }
+                'sunset-haze-theme': { class: 'sunset-haze-theme', name: 'Sunset Haze', colors: ['#e74c3c', 'fbe9e7', '#f39c12', '#c0392b'] }
             };
 
             // Set initial selected values from localStorage, or use defaults
@@ -273,8 +347,8 @@
                         el.classList.add('active');
                     }
                 });
-                bodyElement.className = selectedTheme; // This applies the theme to the body for a live preview
-
+                bodyElement.className = selectedTheme;
+                
                 // Update alignment active state
                 document.querySelectorAll('.alignment-option').forEach(el => {
                     el.classList.remove('active');
@@ -330,6 +404,21 @@ const widgetConfig = {
                     updateActiveControls();
                 });
             });
+            
+            // Function to apply a random theme
+            function applyRandomTheme() {
+                const themeKeys = Object.keys(allThemes);
+                const randomIndex = Math.floor(Math.random() * themeKeys.length);
+                selectedTheme = themeKeys[randomIndex];
+                localStorage.setItem('selectedTheme', selectedTheme);
+                updateActiveControls();
+            }
+
+            // Check if there's a button for randomization and add event listener
+            const randomizeButton = document.getElementById('randomize-btn');
+            if (randomizeButton) {
+                randomizeButton.addEventListener('click', applyRandomTheme);
+            }
 
             // Initial render on page load
             updateActiveControls();
