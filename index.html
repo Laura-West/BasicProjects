@@ -96,6 +96,28 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            background-color: #3498db;
+            color: #ffffff;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
         /* --- THEME-SPECIFIC BACKGROUND COLORS FOR LIVE PREVIEW --- */
         body.gilded-iris-theme { background-color: #4b0082; }
         body.cosmic-dust-theme { background-color: #0c1c38; }
@@ -119,6 +141,9 @@
             <h2>Theme Selection</h2>
             <div class="controls-grid" id="theme-controls">
                 </div>
+            <div style="text-align: right; margin-top: 15px;">
+                <button onclick="applyRandomTheme()">Randomize</button>
+            </div>
         </div>
 
         <div class="settings-section">
@@ -129,6 +154,16 @@
                 <div class="alignment-option" data-alignment="right">Right</div>
             </div>
         </div>
+
+        <div class="settings-section">
+            <h2>Theme Management</h2>
+            <div class="button-group">
+                <button onclick="addTheme()">Add New Theme</button>
+                <button onclick="editTheme()">Edit Current Theme</button>
+                <button onclick="deleteTheme()">Delete Current Theme</button>
+            </div>
+        </div>
+
         <div style="text-align: center;">
             <button onclick="downloadConfig()">Download Configuration</button>
         </div>
@@ -140,8 +175,8 @@
             const alignmentControls = document.getElementById('alignment-controls');
             const bodyElement = document.body;
 
-            // Theme data
-            const allThemes = {
+            // Default themes
+            const defaultThemes = {
                 'light-mode': { class: 'light-mode', name: 'Light Mode', colors: ['#ffffff'] },
                 'dark-mode': { class: 'dark-mode', name: 'Dark Mode', colors: ['#2c3e50'] },
                 'forest-green': { class: 'forest-green', name: 'Forest Green', colors: ['#ecf0e6'] },
@@ -156,9 +191,35 @@
                 'sunset-haze-theme': { class: 'sunset-haze-theme', name: 'Sunset Haze', colors: ['#e74c3c'] }
             };
 
-            // Set initial selected values from localStorage, or use defaults
+            // Load themes from localStorage, or use defaults
+            let allThemes = JSON.parse(localStorage.getItem('allThemes')) || defaultThemes;
             let selectedTheme = localStorage.getItem('selectedTheme') || 'gilded-iris-theme';
             let selectedAlignment = localStorage.getItem('selectedAlignment') || 'center';
+
+            function saveThemes() {
+                localStorage.setItem('allThemes', JSON.stringify(allThemes));
+            }
+
+            function renderThemes() {
+                themeControls.innerHTML = '';
+                for (const themeKey in allThemes) {
+                    const theme = allThemes[themeKey];
+                    const option = document.createElement('div');
+                    option.className = 'theme-option';
+                    option.dataset.theme = theme.class;
+                    option.innerHTML = `
+                        <span class="color-swatch" style="background-color: ${theme.colors[0]};"></span>
+                        <span>${theme.name}</span>
+                    `;
+                    option.addEventListener('click', () => {
+                        selectedTheme = theme.class;
+                        localStorage.setItem('selectedTheme', selectedTheme);
+                        updateActiveControls();
+                    });
+                    themeControls.appendChild(option);
+                }
+                updateActiveControls();
+            }
 
             function updateActiveControls() {
                 // Update theme active state and apply theme class to body
@@ -178,6 +239,106 @@
                     }
                 });
             }
+            
+            // --- Theme Management Functions ---
+
+            window.addTheme = function() {
+                const newThemeName = prompt('Enter a name for the new theme:');
+                if (!newThemeName) return;
+
+                const newThemeColor = prompt('Enter a main color (e.g., #RRGGBB):');
+                if (!newThemeColor) return;
+
+                const themeKey = newThemeName.toLowerCase().replace(/\s/g, '-') + '-theme';
+                allThemes[themeKey] = {
+                    class: themeKey,
+                    name: newThemeName,
+                    colors: [newThemeColor]
+                };
+
+                // Add new CSS rule for the new theme's background color
+                const styleSheet = document.styleSheets[0];
+                styleSheet.insertRule(`body.${themeKey} { background-color: ${newThemeColor}; }`, styleSheet.cssRules.length);
+
+                saveThemes();
+                selectedTheme = themeKey;
+                localStorage.setItem('selectedTheme', selectedTheme);
+                renderThemes();
+                alert(`Theme "${newThemeName}" added successfully.`);
+            };
+
+            window.editTheme = function() {
+                const themeToEdit = allThemes[selectedTheme];
+                if (!themeToEdit) {
+                    alert('Please select a theme to edit.');
+                    return;
+                }
+
+                const newColor = prompt(`Enter a new main color for "${themeToEdit.name}":`, themeToEdit.colors[0]);
+                if (!newColor) return;
+
+                // Update theme data
+                themeToEdit.colors[0] = newColor;
+
+                // Update CSS rule
+                const styleSheets = document.styleSheets;
+                for (const sheet of styleSheets) {
+                    try {
+                        for (let i = 0; i < sheet.cssRules.length; i++) {
+                            const rule = sheet.cssRules[i];
+                            if (rule.selectorText && rule.selectorText.includes(`body.${selectedTheme}`)) {
+                                rule.style.backgroundColor = newColor;
+                                break;
+                            }
+                        }
+                    } catch (e) { /* Ignore cross-origin stylesheet errors */ }
+                }
+
+                saveThemes();
+                renderThemes();
+                alert(`Theme "${themeToEdit.name}" updated successfully.`);
+            };
+
+            window.deleteTheme = function() {
+                const themeToDelete = allThemes[selectedTheme];
+                if (!themeToDelete) {
+                    alert('Please select a theme to delete.');
+                    return;
+                }
+
+                if (confirm(`Are you sure you want to delete the theme "${themeToDelete.name}"?`)) {
+                    delete allThemes[selectedTheme];
+                    
+                    // Remove CSS rule
+                    const styleSheets = document.styleSheets;
+                    for (const sheet of styleSheets) {
+                        try {
+                            for (let i = 0; i < sheet.cssRules.length; i++) {
+                                const rule = sheet.cssRules[i];
+                                if (rule.selectorText && rule.selectorText.includes(`body.${selectedTheme}`)) {
+                                    sheet.deleteRule(i);
+                                    break;
+                                }
+                            }
+                        } catch (e) { /* Ignore cross-origin stylesheet errors */ }
+                    }
+
+                    // Select a new default theme if the active one was deleted
+                    selectedTheme = Object.keys(allThemes)[0] || 'light-mode';
+                    localStorage.setItem('selectedTheme', selectedTheme);
+                    saveThemes();
+                    renderThemes();
+                    alert(`Theme "${themeToDelete.name}" deleted successfully.`);
+                }
+            };
+            
+            window.applyRandomTheme = function() {
+                const themeKeys = Object.keys(allThemes);
+                const randomIndex = Math.floor(Math.random() * themeKeys.length);
+                selectedTheme = themeKeys[randomIndex];
+                localStorage.setItem('selectedTheme', selectedTheme);
+                updateActiveControls();
+            };
 
             // Function to download the configuration file
             window.downloadConfig = function() {
@@ -199,24 +360,6 @@ const widgetConfig = {
                 console.log('Config file downloaded successfully.');
             };
 
-            // Render themes
-            for (const themeKey in allThemes) {
-                const theme = allThemes[themeKey];
-                const option = document.createElement('div');
-                option.className = 'theme-option';
-                option.dataset.theme = theme.class;
-                option.innerHTML = `
-                    <span class="color-swatch" style="background-color: ${theme.colors[0]};"></span>
-                    <span>${theme.name}</span>
-                `;
-                option.addEventListener('click', () => {
-                    selectedTheme = theme.class;
-                    localStorage.setItem('selectedTheme', selectedTheme);
-                    updateActiveControls();
-                });
-                themeControls.appendChild(option);
-            }
-
             // Handle alignment controls
             document.querySelectorAll('.alignment-option').forEach(option => {
                 option.addEventListener('click', () => {
@@ -227,7 +370,7 @@ const widgetConfig = {
             });
 
             // Initial render on page load
-            updateActiveControls();
+            renderThemes();
         });
     </script>
 </body>
