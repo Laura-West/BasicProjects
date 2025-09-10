@@ -2,208 +2,222 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Settings</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    /* Admin settings dashboard styles */
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f4f7f6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      color: #333;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Settings</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Admin settings dashboard styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
 
-    .container {
-      width: min(900px, 95vw);
-      padding: 30px;
-      background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
+        .container {
+            width: min(900px, 95vw);
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-    h1 {
-      font-size: 2.2em;
-      font-weight: 700;
-      color: #2c3e50;
-      text-align: center;
-      margin-bottom: 20px;
-    }
+        h1 {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    .settings-section {
-      border: 1px solid #e1e4e8;
-      border-radius: 8px;
-      padding: 20px;
-    }
+        .settings-section {
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 20px;
+        }
 
-    .settings-section h2 {
-      margin-top: 0;
-      font-size: 1.5em;
-      font-weight: 600;
-      color: #34495e;
-      border-bottom: 2px solid #3498db;
-      padding-bottom: 10px;
-      margin-bottom: 15px;
-    }
+        .settings-section h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
 
-    .controls-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 15px;
-    }
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
 
-    .controls-grid.alignment {
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    }
+        .controls-grid.alignment {
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        }
 
-    .theme-option,
-    .alignment-option {
-      padding: 10px 15px;
-      border-radius: 6px;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: all 0.2s ease-in-out;
-      font-weight: 500;
-      background-color: #ecf0f1;
-      color: #2c3e50;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+        .theme-option,
+        .alignment-option {
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease-in-out;
+            font-weight: 500;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    .theme-option:hover,
-    .alignment-option:hover {
-      background-color: #dbe4e6;
-    }
+        .theme-option:hover,
+        .alignment-option:hover {
+            background-color: #dbe4e6;
+        }
 
-    .theme-option.active,
-    .alignment-option.active {
-      border-color: #3498db;
-      background-color: #eaf6fd;
-      color: #2980b9;
-    }
+        .theme-option.active,
+        .alignment-option.active {
+            border-color: #3498db;
+            background-color: #eaf6fd;
+            color: #2980b9;
+        }
 
-    .color-swatch {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      border: 1px solid #bdc3c7;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-  </style>
+        .color-swatch {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid #bdc3c7;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>Admin Settings</h1>
-    <div class="settings-section">
-      <h2>Theme Selection</h2>
-      <div class="controls-grid" id="theme-controls">
+    <div class="container">
+        <h1>Admin Settings</h1>
+        <div class="settings-section">
+            <h2>Theme Selection</h2>
+            <div class="controls-grid" id="theme-controls">
+                </div>
+        </div>
+
+        <div class="settings-section">
+            <h2>Alignment</h2>
+            <div class="controls-grid alignment" id="alignment-controls">
+                <div class="alignment-option" data-alignment="left">Left</div>
+                <div class="alignment-option" data-alignment="center">Center</div>
+                <div class="alignment-option" data-alignment="right">Right</div>
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <button onclick="downloadConfig()">Download Configuration</button>
         </div>
     </div>
 
-    <div class="settings-section">
-      <h2>Alignment</h2>
-      <div class="controls-grid alignment" id="alignment-controls">
-        <div class="alignment-option" data-alignment="left">Left</div>
-        <div class="alignment-option" data-alignment="center">Center</div>
-        <div class="alignment-option" data-alignment="right">Right</div>
-      </div>
-    </div>
-    <div style="text-align: center;">
-      <button onclick="downloadConfig()">Download Configuration</button>
-    </div>
-  </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeControls = document.getElementById('theme-controls');
+            const alignmentControls = document.getElementById('alignment-controls');
+            const bodyElement = document.body;
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const themeControls = document.getElementById('theme-controls');
-      const alignmentControls = document.getElementById('alignment-controls');
+            // Theme data
+            const allThemes = {
+                'light-mode': { class: 'light-mode', name: 'Light Mode', colors: ['#ffffff', '#2c3e50', '#3498db', '#bdc3c7'] },
+                'dark-mode': { class: 'dark-mode', name: 'Dark Mode', colors: ['#2c3e50', '#ecf0f1', '#3498db', '#bdc3c7'] },
+                'forest-green': { class: 'forest-green', name: 'Forest Green', colors: ['#ecf0e6', '#264639', '#558269', '#558269'] },
+                'gilded-iris-theme': { class: 'gilded-iris-theme', name: 'Gilded Iris', colors: ['#4b0082', '#fce883', '#ffc94b', '#3b0066'] },
+                'cosmic-dust-theme': { class: 'cosmic-dust-theme', name: 'Cosmic Dust', colors: ['#0c1c38', '#e0e6f2', '#f0a07c', '#172a4e'] },
+                'twilight-garden-theme': { class: 'twilight-garden-theme', name: 'Twilight Garden', colors: ['#2b0d36', '#f3e9f1', '#c16196', '#4f1a66'] },
+                'blue-lagoon-theme': { class: 'blue-lagoon-theme', name: 'Blue Lagoon', colors: ['#2a52be', '#e1efff', '#00ffff', '#2d2d86'] },
+                'midnight-bloom-theme': { class: 'midnight-bloom-theme', name: 'Midnight Bloom', colors: ['#0d0f19', '#e6e6fa', '#ff69b4', '#1a1e2f'] },
+                'deep-sea-pearl-theme': { class: 'deep-sea-pearl-theme', name: 'Deep Sea Pearl', colors: ['#1c3144', '#f0f8ff', '#c0fefe', '#2c445c'] },
+                'amethyst-mist-theme': { class: 'amethyst-mist-theme', name: 'Amethyst Mist', colors: ['#6a5acd', '#f0f0ff', '#1e1e1e', '#8a7cde'] },
+                'starlight-theme': { class: 'starlight-theme', name: 'Starlight', colors: ['#2c3e50', '#f1c40f', '#f39c12', '#34495e'] },
+                'sunset-haze-theme': { class: 'sunset-haze-theme', name: 'Sunset Haze', colors: ['#e74c3c', '#fbe9e7', '#f39c12', '#c0392b'] }
+            };
 
-      // Theme data
-      const allThemes = {
-        'light-mode': { class: 'light-mode', name: 'Light Mode', colors: ['#ffffff', '#2c3e50', '#3498db', '#bdc3c7'] },
-        'dark-mode': { class: 'dark-mode', name: 'Dark Mode', colors: ['#2c3e50', '#ecf0f1', '#3498db', '#bdc3c7'] },
-        'forest-green': { class: 'forest-green', name: 'Forest Green', colors: ['#ecf0e6', '#264639', '#558269', '#558269'] },
-        'gilded-iris-theme': { class: 'gilded-iris-theme', name: 'Gilded Iris', colors: ['#4b0082', '#fce883', '#ffc94b', '#3b0066'] },
-        'cosmic-dust-theme': { class: 'cosmic-dust-theme', name: 'Cosmic Dust', colors: ['#0c1c38', '#e0e6f2', '#f0a07c', '#172a4e'] },
-        'twilight-garden-theme': { class: 'twilight-garden-theme', name: 'Twilight Garden', colors: ['#2b0d36', '#f3e9f1', '#c16196', '#4f1a66'] },
-        'blue-lagoon-theme': { class: 'blue-lagoon-theme', name: 'Blue Lagoon', colors: ['#2a52be', '#e1efff', '#00ffff', '#2d2d86'] },
-        'midnight-bloom-theme': { class: 'midnight-bloom-theme', name: 'Midnight Bloom', colors: ['#0d0f19', '#e6e6fa', '#ff69b4', '#1a1e2f'] },
-        'deep-sea-pearl-theme': { class: 'deep-sea-pearl-theme', name: 'Deep Sea Pearl', colors: ['#1c3144', '#f0f8ff', '#c0fefe', '#2c445c'] },
-        'amethyst-mist-theme': { class: 'amethyst-mist-theme', name: 'Amethyst Mist', colors: ['#6a5acd', '#f0f0ff', '#1e1e1e', '#8a7cde'] },
-        'starlight-theme': { class: 'starlight-theme', name: 'Starlight', colors: ['#2c3e50', '#f1c40f', '#f39c12', '#34495e'] },
-        'sunset-haze-theme': { class: 'sunset-haze-theme', name: 'Sunset Haze', colors: ['#e74c3c', '#fbe9e7', '#f39c12', '#c0392b'] }
-      };
+            // Set initial selected values from localStorage, or use defaults
+            let selectedTheme = localStorage.getItem('selectedTheme') || 'gilded-iris-theme';
+            let selectedAlignment = localStorage.getItem('selectedAlignment') || 'center';
 
-      // Set initial selected values based on your default config.js
-      let selectedTheme = 'gilded-iris-theme';
-      let selectedAlignment = 'center';
+            function updateActiveControls() {
+                // Update theme active state and apply theme class to body
+                document.querySelectorAll('.theme-option').forEach(el => {
+                    el.classList.remove('active');
+                    if (el.dataset.theme === selectedTheme) {
+                        el.classList.add('active');
+                    }
+                });
+                bodyElement.className = selectedTheme; // This applies the theme to the body for a live preview
 
-      function updateActiveControls() {
-        document.querySelectorAll('.theme-option').forEach(el => {
-          el.classList.remove('active');
-          if (el.dataset.theme === selectedTheme) {
-            el.classList.add('active');
-          }
+                // Update alignment active state
+                document.querySelectorAll('.alignment-option').forEach(el => {
+                    el.classList.remove('active');
+                    if (el.dataset.alignment === selectedAlignment) {
+                        el.classList.add('active');
+                    }
+                });
+            }
+
+            // Function to download the configuration file
+            window.downloadConfig = function() {
+                const configContent = `// This file is generated by the Admin Dashboard.
+const widgetConfig = {
+  theme: '${selectedTheme}',
+  alignment: '${selectedAlignment}'
+};
+`;
+                const blob = new Blob([configContent], { type: 'text/javascript' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'config.js';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                console.log('Config file downloaded successfully.');
+            };
+
+            // Render themes
+            for (const themeKey in allThemes) {
+                const theme = allThemes[themeKey];
+                const option = document.createElement('div');
+                option.className = 'theme-option';
+                option.dataset.theme = theme.class;
+                option.innerHTML = `
+                    <span class="color-swatch" style="background-color: ${theme.colors[0]};"></span>
+                    <span>${theme.name}</span>
+                `;
+                option.addEventListener('click', () => {
+                    selectedTheme = theme.class;
+                    localStorage.setItem('selectedTheme', selectedTheme);
+                    updateActiveControls();
+                });
+                themeControls.appendChild(option);
+            }
+
+            // Handle alignment controls
+            document.querySelectorAll('.alignment-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    selectedAlignment = option.dataset.alignment;
+                    localStorage.setItem('selectedAlignment', selectedAlignment);
+                    updateActiveControls();
+                });
+            });
+
+            // Initial render on page load
+            updateActiveControls();
         });
-        document.querySelectorAll('.alignment-option').forEach(el => {
-          el.classList.remove('active');
-          if (el.dataset.alignment === selectedAlignment) {
-            el.classList.add('active');
-          }
-        });
-      }
-
-      function downloadConfig() {
-        const configContent = `// Default settings. This file will be updated when you save changes from the Admin Dashboard.\nconst widgetConfig = {\n  theme: '${selectedTheme}',\n  alignment: '${selectedAlignment}'\n};`;
-        const blob = new Blob([configContent], { type: 'text/javascript' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'config.js';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        console.log('Config file downloaded successfully.');
-      }
-
-      // Render themes
-      for (const themeKey in allThemes) {
-        const theme = allThemes[themeKey];
-        const option = document.createElement('div');
-        option.className = 'theme-option';
-        option.dataset.theme = theme.class;
-        option.innerHTML = `
-          <span class="color-swatch" style="background-color: ${theme.colors[0]};"></span>
-          <span>${theme.name}</span>
-        `;
-        option.addEventListener('click', () => {
-          selectedTheme = theme.class;
-          updateActiveControls();
-        });
-        themeControls.appendChild(option);
-      }
-
-      // Handle alignment controls
-      document.querySelectorAll('.alignment-option').forEach(option => {
-        option.addEventListener('click', () => {
-          selectedAlignment = option.dataset.alignment;
-          updateActiveControls();
-        });
-      });
-
-      updateActiveControls();
-    });
-  </script>
+    </script>
 </body>
 
 </html>
