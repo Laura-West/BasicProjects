@@ -51,7 +51,6 @@
             padding: 20px;
         }
         
-        /* New section for nested theme controls */
         .theme-section {
             border: 1px solid #e1e4e8;
             border-radius: 8px;
@@ -145,7 +144,6 @@
             font-weight: 600;
         }
         
-        /* Style for the color input */
         .form-row input[type="color"] {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -250,7 +248,7 @@
             <h2>Theme</h2>
             
             <div class="settings-section">
-                <h3>Theme Selection</h3>
+                <h3>Selection</h3>
                 <div class="controls-grid" id="theme-controls">
                     </div>
                 <div id="palette-preview">
@@ -261,7 +259,7 @@
             </div>
 
             <div class="settings-section">
-                <h3>Theme Management</h3>
+                <h3>Management</h3>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <button onclick="toggleThemeForm()">Add/Edit Theme</button>
                 </div>
@@ -295,7 +293,7 @@
         </div>
 
         <div class="settings-section">
-            <h2>Alignment</h2>
+            <h2>Scripture Alignment</h2>
             <div class="controls-grid alignment" id="alignment-controls">
                 <div class="alignment-option" data-alignment="left">Left</div>
                 <div class="alignment-option" data-alignment="center">Center</div>
@@ -311,241 +309,4 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const themeControls = document.getElementById('theme-controls');
-            const palettePreview = document.getElementById('palette-preview');
-            const alignmentControls = document.getElementById('alignment-controls');
-            const bodyElement = document.body;
-            const themeForm = document.getElementById('theme-management-form');
-            const themeNameInput = document.getElementById('theme-name');
-            const themeKeyInput = document.getElementById('theme-key');
-            const themeColor1Input = document.getElementById('theme-color1');
-            const themeColor2Input = document.getElementById('theme-color2');
-            const themeColor3Input = document.getElementById('theme-color3');
-            const themeColor1Picker = document.getElementById('theme-color1-picker');
-            const themeColor2Picker = document.getElementById('theme-color2-picker');
-            const themeColor3Picker = document.getElementById('theme-color3-picker');
-            const dynamicStyles = document.getElementById('dynamic-themes-style');
-
-            const defaultThemes = {
-                'light-mode': { class: 'light-mode', name: 'Light Mode', colors: ['#ffffff', '#2c3e50', '#3498db', '#bdc3c7'] },
-                'dark-mode': { class: 'dark-mode', name: 'Dark Mode', colors: ['#2c3e50', '#ecf0f1', '#3498db', '#bdc3c7'] },
-                'forest-green': { class: 'forest-green', name: 'Forest Green', colors: ['#ecf0e6', '#264639', '#558269', '#558269'] },
-                'gilded-iris-theme': { class: 'gilded-iris-theme', name: 'Gilded Iris', colors: ['#4b0082', '#fce883', '#ffc94b', '#3b0066'] },
-                'cosmic-dust-theme': { class: 'cosmic-dust-theme', name: 'Cosmic Dust', colors: ['#0c1c38', '#e0e6f2', '#f0a07c', '#172a4e'] },
-                'twilight-garden-theme': { class: 'twilight-garden-theme', name: 'Twilight Garden', colors: ['#2b0d36', '#e1efff', '#00ffff', '#2d2d86'] },
-                'blue-lagoon-theme': { class: 'blue-lagoon-theme', name: 'Blue Lagoon', colors: ['#2a52be', '#e1efff', '#00ffff', '#2d2d86'] },
-                'midnight-bloom-theme': { class: 'midnight-bloom-theme', name: 'Midnight Bloom', colors: ['#0d0f19', '#e6e6fa', '#ff69b4', '#1a1e2f'] },
-                'deep-sea-pearl-theme': { class: 'deep-sea-pearl-theme', name: 'Deep Sea Pearl', colors: ['#1c3144', '#f0f8ff', '#c0fefe', '#2c445c'] },
-                'amethyst-mist-theme': { class: 'amethyst-mist-theme', name: 'Amethyst Mist', colors: ['#6a5acd', '#f0f0ff', '#1e1e1e', '#8a7cde'] },
-                'starlight-theme': { class: 'starlight-theme', name: 'Starlight', colors: ['#2c3e50', '#eaf6fd', '#f1c40f', '#bdc3c7'] },
-                'sunset-haze-theme': { class: 'sunset-haze-theme', name: 'Sunset Haze', colors: ['#e74c3c', '#ffffff', '#f1c40f', '#bdc3c7'] }
-            };
-
-            let allThemes = JSON.parse(localStorage.getItem('allThemes')) || defaultThemes;
-            let selectedTheme = localStorage.getItem('selectedTheme') || 'gilded-iris-theme';
-            let selectedAlignment = localStorage.getItem('selectedAlignment') || 'center';
-
-            function saveThemes() {
-                localStorage.setItem('allThemes', JSON.stringify(allThemes));
-            }
-
-            function generateThemeCSS() {
-                let css = '';
-                for (const themeKey in allThemes) {
-                    const theme = allThemes[themeKey];
-                    if (defaultThemes[themeKey]) continue;
-
-                    if (theme.colors && theme.colors[0]) {
-                        css += `body.${themeKey} { background-color: ${theme.colors[0]}; }\n`;
-                    }
-                }
-                dynamicStyles.innerHTML = css;
-            }
-
-            function renderThemes() {
-                themeControls.innerHTML = '';
-                for (const themeKey in allThemes) {
-                    const theme = allThemes[themeKey];
-                    const option = document.createElement('div');
-                    option.className = 'theme-option';
-                    option.dataset.theme = themeKey;
-                    
-                    const colorSwatch = document.createElement('span');
-                    colorSwatch.className = 'color-swatch';
-                    colorSwatch.style.backgroundColor = theme.colors[0];
-
-                    const themeName = document.createElement('span');
-                    themeName.textContent = theme.name;
-                    
-                    option.appendChild(colorSwatch);
-                    option.appendChild(themeName);
-                    
-                    const actionButtons = document.createElement('div');
-                    actionButtons.className = 'theme-action-buttons';
-                    actionButtons.innerHTML = `
-                        <button onclick="event.stopPropagation(); editTheme('${themeKey}')">✏️</button>
-                        <button onclick="event.stopPropagation(); deleteTheme('${themeKey}')">🗑️</button>
-                    `;
-                    option.appendChild(actionButtons);
-                    
-                    option.addEventListener('click', () => {
-                        selectedTheme = themeKey;
-                        localStorage.setItem('selectedTheme', selectedTheme);
-                        updateActiveControls();
-                    });
-                    themeControls.appendChild(option);
-                }
-                updateActiveControls();
-                generateThemeCSS();
-            }
-
-            function renderPalettePreview(themeKey) {
-                palettePreview.innerHTML = '';
-                const theme = allThemes[themeKey];
-                if (theme && theme.colors) {
-                    theme.colors.forEach(color => {
-                        const swatch = document.createElement('div');
-                        swatch.className = 'palette-swatch';
-                        swatch.style.backgroundColor = color;
-                        palettePreview.appendChild(swatch);
-                    });
-                }
-            }
-
-            function updateActiveControls() {
-                document.querySelectorAll('.theme-option').forEach(el => {
-                    el.classList.remove('active');
-                    if (el.dataset.theme === selectedTheme) {
-                        el.classList.add('active');
-                    }
-                });
-                bodyElement.className = selectedTheme;
-                document.querySelectorAll('.alignment-option').forEach(el => {
-                    el.classList.remove('active');
-                    if (el.dataset.alignment === selectedAlignment) {
-                        el.classList.add('active');
-                    }
-                });
-                renderPalettePreview(selectedTheme);
-            }
-
-            window.toggleThemeForm = function() {
-                themeForm.classList.toggle('active');
-                if (!themeForm.classList.contains('active')) {
-                    cancelForm();
-                }
-            };
-
-            window.editTheme = function(themeKey) {
-                const theme = allThemes[themeKey];
-                themeKeyInput.value = themeKey;
-                themeNameInput.value = theme.name;
-                
-                themeColor1Input.value = theme.colors[0] || '';
-                themeColor1Picker.value = theme.colors[0] || '#000000';
-                
-                themeColor2Input.value = theme.colors[1] || '';
-                themeColor2Picker.value = theme.colors[1] || '#000000';
-
-                themeColor3Input.value = theme.colors[2] || '';
-                themeColor3Picker.value = theme.colors[2] || '#000000';
-                
-                themeForm.classList.add('active');
-            };
-
-            window.deleteTheme = function(themeKey) {
-                const themeToDelete = allThemes[themeKey];
-                if (confirm(`Are you sure you want to delete the theme "${themeToDelete.name}"?`)) {
-                    delete allThemes[themeKey];
-                    
-                    if (selectedTheme === themeKey) {
-                        const remainingThemes = Object.keys(allThemes);
-                        selectedTheme = remainingThemes.length > 0 ? remainingThemes[0] : 'light-mode';
-                    }
-
-                    saveThemes();
-                    localStorage.setItem('selectedTheme', selectedTheme);
-                    renderThemes();
-                    alert(`Theme "${themeToDelete.name}" deleted successfully.`);
-                }
-            };
-
-            window.cancelForm = function() {
-                themeKeyInput.value = '';
-                themeNameInput.value = '';
-                themeColor1Input.value = '';
-                themeColor2Input.value = '';
-                themeColor3Input.value = '';
-                themeForm.classList.remove('active');
-            };
-
-            themeForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const newThemeName = themeNameInput.value;
-                const newColors = [themeColor1Input.value, themeColor2Input.value, themeColor3Input.value].filter(c => c);
-                const themeKey = themeKeyInput.value || newThemeName.toLowerCase().replace(/\s/g, '-') + '-theme';
-
-                allThemes[themeKey] = {
-                    class: themeKey,
-                    name: newThemeName,
-                    colors: newColors
-                };
-                
-                saveThemes();
-                selectedTheme = themeKey;
-                localStorage.setItem('selectedTheme', selectedTheme);
-                renderThemes();
-                cancelForm();
-                alert(`Theme "${newThemeName}" saved successfully.`);
-            });
-            
-            // Sync color picker with text input
-            themeColor1Picker.addEventListener('input', (e) => themeColor1Input.value = e.target.value);
-            themeColor2Picker.addEventListener('input', (e) => themeColor2Input.value = e.target.value);
-            themeColor3Picker.addEventListener('input', (e) => themeColor3Input.value = e.target.value);
-
-            // Sync text input with color picker
-            themeColor1Input.addEventListener('input', (e) => themeColor1Picker.value = e.target.value || '#000000');
-            themeColor2Input.addEventListener('input', (e) => themeColor2Picker.value = e.target.value || '#000000');
-            themeColor3Input.addEventListener('input', (e) => themeColor3Picker.value = e.target.value || '#000000');
-
-            window.applyRandomTheme = function() {
-                const themeKeys = Object.keys(allThemes);
-                const randomIndex = Math.floor(Math.random() * themeKeys.length);
-                selectedTheme = themeKeys[randomIndex];
-                localStorage.setItem('selectedTheme', selectedTheme);
-                updateActiveControls();
-            };
-
-            window.downloadConfig = function() {
-                const configContent = `// This file is generated by the Admin Dashboard.
-const widgetConfig = {
-  theme: '${selectedTheme}',
-  alignment: '${selectedAlignment}'
-};
-`;
-                const blob = new Blob([configContent], { type: 'text/javascript' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'config.js';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                console.log('Config file downloaded successfully.');
-            };
-
-            document.querySelectorAll('.alignment-option').forEach(option => {
-                option.addEventListener('click', () => {
-                    selectedAlignment = option.dataset.alignment;
-                    localStorage.setItem('selectedAlignment', selectedAlignment);
-                    updateActiveControls();
-                });
-            });
-
-            renderThemes();
-        });
-    </script>
-</body>
-
-</html>
+            const palettePreview = document.getElementById('palette-
