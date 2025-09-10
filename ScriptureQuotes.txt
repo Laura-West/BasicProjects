@@ -1,0 +1,1020 @@
+{
+  "quotes": [
+    {
+      "quote": "My sheep hear my voice, and I know them, and they follow me: and I give unto them eternal life; and they shall never perish, neither shall any man pluck them out of my hand.",
+      "author": "John 10:27-28"
+    },
+    {
+      "quote": "For I know that in me (that is, in my flesh,) dwelleth no good thing: for to will is present with me; but how to perform that which is good I find not. For the good that I would I do not: but the evil which I would not, that I do. Now if I do that I would not, it is no more I that do it, but sin that dwelleth in me. ",
+      "author": "Romans 7:18-20"
+    },
+    {
+      "quote": "Therefore we ought to give the more earnest heed to the things which we have heard, lest at any time we should let them slip.",
+      "author": "Hebrews 2:1"
+    },
+    {
+      "quote": "Be ye strong therefore, and let not your hands be weak: for your work shall be rewarded.",
+      "author": "2 Chronicles 15:7"
+    },
+    {
+      "quote": "For the eyes of the LORD run to and fro throughout the whole earth, to shew himself strong in the behalf of them whose heart is perfect toward him.",
+      "author": "2 Chronicles 16:9a"
+    },
+    {
+      "quote": "For the truth's sake, which dwelleth in us, and shall be with us forever.",
+      "author": "2 John 2"
+    },
+    {
+      "quote": "What God hath cleansed, that call not thou common.",
+      "author": "Acts 10:15b"
+    },
+    {
+      "quote": "Of a truth I perceive that God is no respecter of persons: But in every nation he that feareth him, and worketh righteousness, is accepted with him.",
+      "author": "Acts 10:34b-35"
+    },
+    {
+      "quote": "What was I, that I could withstand God?",
+      "author": "Acts 11:17b"
+    },
+    {
+      "quote": "I will instruct thee and teach thee in the way which thou shalt go: I will guide thee with mine eye.  Be ye not as the horse, or as the mule, which have no understanding: whose mouth must be held in with bit and bridle, lest they come near unto thee. ",
+      "author": "Psalms 32:8-9"
+    },
+    {
+      "quote": "Trust in the LORD, and do good; so shalt thou dwell in the land, and verily thou shalt be fed.",
+      "author": "Psalm 37:3"
+    },
+    {
+      "quote": "Delight thyself also in the LORD; and he shall give thee the desires of thine heart. ",
+      "author": "Psalm 37:4"
+    },
+    {
+      "quote": "Commit thy way unto the LORD; trust also in him; and he shall bring it to pass.\nAnd he shall bring forth thy righteousness as the light, and thy judgment as the noonday. ",
+      "author": "Psalm 37:5-6"
+    },
+    {
+      "quote": "Rest in the LORD, and wait patiently for him: fret not thyself because of him who prospereth in his way, because of the man who bringeth wicked devices to pass. ",
+      "author": "Psalm 37:7"
+    },
+    {
+      "quote": "I have been young, and now am old; yet have I not seen the righteous forsaken, nor his seed begging bread. ",
+      "author": "Psalm 37:25"
+    },
+    {
+      "quote": "For the LORD loveth judgment, and forsaketh not his saints; they are preserved for ever: but the seed of the wicked shall be cut off. ",
+      "author": "Psalm  37:28"
+    },
+    {
+      "quote": "Wait on the LORD, and keep his way, and he shall exalt thee to inherit the land: when the wicked are cut off, thou shalt see it. ",
+      "author": "Psalm 37:34"
+    },
+    {
+      "quote": "For in thee, O LORD, do I hope: thou wilt hear, O Lord my God. ",
+      "author": "Psalm 38:15"
+    },
+    {
+      "quote": "LORD, make me to know mine end, and the measure of my days, what it is; that I may know how frail I am. ",
+      "author": "Psalm 39:4"
+    },
+    {
+      "quote": "Deliver me from all my transgressions: make me not the reproach of the foolish. ",
+      "author": "Psalm 39:8"
+    },
+    {
+      "quote": "I waited patiently for the LORD; and he inclined unto me, and heard my cry.",
+      "author": "Psalm 40:1"
+    },
+    {
+      "quote": "He brought me up also out of an horrible pit, out of the miry clay, and set my feet upon a rock, and established my goings. ",
+      "author": "Psalm 40:2"
+    },
+    {
+      "quote": "And he hath put a new song in my mouth, even praise unto our God: many shall see it, and fear, and shall trust in the LORD. ",
+      "author": "Psalm 40:3"
+    },
+    {
+      "quote": "Many, O LORD my God, are thy wonderful works which thou hast done, and thy thoughts which are to us-ward: they cannot be reckoned up in order unto thee: if I would declare and speak of them, they are more than can be numbered. ",
+      "author": "Psalm 40:5"
+    },
+    {
+      "quote": "..mine iniquities have taken hold upon me, so that I am not able to look up; they are more than the hairs of mine head: therefore my heart faileth me. ",
+      "author": "Psalm 40:12b"
+    },
+    {
+      "quote": "But I am poor and needy; yet the Lord thinketh upon me: thou art my help and my deliverer; make no tarrying, O my God. ",
+      "author": "Psalm 40:17"
+    },
+    {
+      "quote": "For I will not trust in my bow, neither shall my sword save me. ",
+      "author": "Psalm 44:6"
+    },
+    {
+      "quote": "God is our refuge and strength, a very present help in trouble. ",
+      "author": "Psalm 46:1"
+    },
+    {
+      "quote": "Be still, and know that I am God: I will be exalted among the heathen, I will be exalted in the earth.",
+      "author": "Psalm 46:10"
+    },
+    {
+      "quote": "For this God is our God for ever and ever: he will be our guide even unto death. ",
+      "author": "Psalm 48:14"
+    },
+    {
+      "quote": "And call upon me in the day of trouble: I will deliver thee, and thou shalt glorify me. ",
+      "author": "Psalm 50:15"
+    },
+    {
+      "quote": "Create in me a clean heart, O God; and renew a right spirit within me. ",
+      "author": "Psalm 51:10"
+    },
+    {
+      "quote": "The sacrifices of God are a broken spirit: a broken and a contrite heart, O God, thou wilt not despise. ",
+      "author": "Psalm 51:17"
+    },
+    {
+      "quote": "Behold, God is mine helper: the Lord is with them that uphold my soul. ",
+      "author": "Psalm 54:4"
+    },
+    {
+      "quote": "Cast thy burden upon the LORD, and he shall sustain thee: he shall never suffer the righteous to be moved. ",
+      "author": "Psalm 55:22"
+    },
+    {
+      "quote": "What time I am afraid, I will trust in thee. ",
+      "author": "Psalm 56:3"
+    },
+    {
+      "quote": "For thou hast delivered my soul from death: wilt not thou deliver my feet from falling, that I may walk before God in the light of the living? ",
+      "author": "Psalm 56:13"
+    },
+    {
+      "quote": "I will cry unto God most high; unto God that performeth all things for me.",
+      "author": "Psalm 57:2"
+    },
+    {
+      "quote": "But thou, O LORD, shalt laugh at them; thou shalt have all the heathen in derision. ",
+      "author": "Psalm 59:9 "
+    },
+    {
+      "quote": "In returning and rest shall ye be saved; in quietness and in confidence shall be your strength: and ye would not. ",
+      "author": "Isaiah 30:15b"
+    },
+    {
+      "quote": "My soul, wait thou only upon God; for my expectation is from him.",
+      "author": "Psalm 62:5"
+    },
+    {
+      "quote": "O God, thou knowest my foolishness; and my sins are not hid from thee. ",
+      "author": "Psalm 69:5"
+    },
+    {
+      "quote": "So foolish was I, and ignorant: I was as a beast before thee. Nevertheless I am continually with thee: thou hast holden me by my right hand. ",
+      "author": "Psalm 73:22-23"
+    },
+    {
+      "quote": "My flesh and my heart faileth: but God is the strength of my heart, and my portion for ever. ",
+      "author": "Psalm 73:26 "
+    },
+    {
+      "quote": "But God is the judge: he putteth down one, and setteth up another.",
+      "author": "Psalm 75:7"
+    },
+    {
+      "quote": "Beloved, now are we the sons of God, and it doth not yet appear what we shall be: but we know that, when he shall appear, we shall be like him; for we shall see him as he is. ",
+      "author": "1 John 3:2"
+    },
+    {
+      "quote": "Surely I come quickly. Amen. Even so, come, Lord Jesus.",
+      "author": "Revelation 22:20b"
+    },
+    {
+      "quote": "So he fed them according to the integrity of his heart; and guided them by the skilfulness of his hands. ",
+      "author": "Psalm 78:72"
+    },
+    {
+      "quote": "Arise, O God, judge the earth: for thou shalt inherit all nations. \n",
+      "author": "Psalm 82:8"
+    },
+    {
+      "quote": "For the LORD God is a sun and shield: the LORD will give grace and glory: no good thing will he withhold from them that walk uprightly. ",
+      "author": "Psalm 84:11"
+    },
+    {
+      "quote": "Before the mountains were brought forth... even from everlasting to everlasting, thou art God. ",
+      "author": "Psalm 90:2"
+    },
+    {
+      "quote": "I will say of the LORD, He is my refuge and my fortress: my God; in him will I trust. ",
+      "author": "Psalm 91:2"
+    },
+    {
+      "quote": "He that planted the ear, shall he not hear? he that formed the eye, shall he not see? ",
+      "author": "Psalm 94:9"
+    },
+    {
+      "quote": "When I said, My foot slippeth; thy mercy, O LORD, held me up.",
+      "author": "Psalm 94:18"
+    },
+    {
+      "quote": "He hath not dealt with us after our sins; nor rewarded us according to our iniquities. ",
+      "author": "Psalm 103:10"
+    },
+    {
+      "quote": "Like as a father pitieth his children, so the LORD pitieth them that fear him. For he knoweth our frame; he remembereth that we are dust. ",
+      "author": "Psalm 103:13-14"
+    },
+    {
+      "quote": "As far as the east is from the west, so far hath he removed our transgressions from us. ",
+      "author": "Psalm 103:12"
+    },
+    {
+      "quote": " I must work the works of him that sent me, while it is day: the night cometh, when no man can work. ",
+      "author": "John 9:4"
+    },
+    {
+      "quote": "He shall not be afraid of evil tidings: his heart is fixed, trusting in the LORD.",
+      "author": "Psalm 112:7"
+    },
+    {
+      "quote": "Not unto us, O LORD, not unto us, but unto thy name give glory, for thy mercy, and for thy truth's sake. ",
+      "author": "Psalm 115:1"
+    },
+    {
+      "quote": "The LORD hath been mindful of us: he will bless us",
+      "author": "Psalm 115:12a"
+    },
+    {
+      "quote": "It is better to trust in the LORD than to put confidence in man. ",
+      "author": "Psalm 117:8"
+    },
+    {
+      "quote": "God is the LORD, which hath shewed us light: bind the sacrifice with cords, even unto the horns of the altar. ",
+      "author": "Psalm 118:27"
+    },
+    {
+      "quote": "Blessed are they that keep his testimonies, and that seek him with the whole heart. ",
+      "author": "Psalm 119:2"
+    },
+    {
+      "quote": "Thou hast commanded us to keep thy precepts diligently. ",
+      "author": "Psalm 119:4"
+    },
+    {
+      "quote": "O that my ways were directed to keep thy statutes! Then shall I not be ashamed, when I have respect unto all thy commandments. ",
+      "author": "Psalm 119:5-6"
+    },
+    {
+      "quote": "I will keep thy statutes: O forsake me not utterly. ",
+      "author": "Psalm 119:8"
+    },
+    {
+      "quote": "Wherewithal shall a young man cleanse his way? by taking heed thereto according to thy word. ",
+      "author": "Psalm 119:9"
+    },
+    {
+      "quote": "With my whole heart have I sought thee: O let me not wander from thy commandments. ",
+      "author": "Psalm 119:10"
+    },
+    {
+      "quote": "Thy word have I hid in mine heart, that I might not sin against thee.",
+      "author": "Psalm 119:11"
+    },
+    {
+      "quote": "Open thou mine eyes, that I may behold wondrous things out of thy law. ",
+      "author": "Psalm  119:18"
+    },
+    {
+      "quote": "Deal bountifully with thy servant, that I may live, and keep thy word.",
+      "author": "Psalm  119:17"
+    },
+    {
+      "quote": "I will run the way of thy commandments, when thou shalt enlarge my heart. ",
+      "author": "Psalm 119:32"
+    },
+    {
+      "quote": "Turn away mine eyes from beholding vanity; and quicken thou me in thy way. ",
+      "author": "Psalm 119:37"
+    },
+    {
+      "quote": "So shall I have wherewith to answer him that reproacheth me: for I trust in thy word. ",
+      "author": "Psalm 119:42"
+    },
+    {
+      "quote": "Remember the word unto thy servant, upon which thou hast caused me to hope.",
+      "author": "Psalm 119:49"
+    },
+    {
+      "quote": "It is good for me that I have been afflicted; that I might learn thy statutes. ",
+      "author": "Psalm 119:71"
+    },
+    {
+      "quote": "Thy hands have made me and fashioned me: give me understanding, that I may learn thy commandments.",
+      "author": "Psalm 119:73"
+    },
+    {
+      "quote": "Unless thy law had been my delights, I should then have perished in mine affliction. ",
+      "author": "Psalm 119:92"
+    },
+    {
+      "quote": "I am thine, save me; for I have sought thy precepts.",
+      "author": "Psalm 119:94"
+    },
+    {
+      "quote": "I have not departed from thy judgments: for thou hast taught me. ",
+      "author": "Psalm 119:102"
+    },
+    {
+      "quote": "Through thy precepts I get understanding: therefore I hate every false way. ",
+      "author": "Psalm 119:104"
+    },
+    {
+      "quote": "Thy word is a lamp unto my feet, and a light unto my path. ",
+      "author": "Psalm 119:105"
+    },
+    {
+      "quote": "Thou art my hiding place and my shield: I hope in thy word. ",
+      "author": "Psalm 119:114"
+    },
+    {
+      "quote": "Uphold me according unto thy word, that I may live: and let me not be ashamed of my hope.",
+      "author": "Psalm 119:116"
+    },
+    {
+      "quote": "Hold thou me up, and I shall be safe: and I will have respect unto thy statutes continually.",
+      "author": "Psalm 119:117"
+    },
+    {
+      "quote": "The entrance of thy words giveth light; it giveth understanding unto the simple. ",
+      "author": "Psalm 119:130"
+    },
+    {
+      "quote": "Order my steps in thy word: and let not any iniquity have dominion over me. ",
+      "author": "Psalm 119:133"
+    },
+    {
+      "quote": "Great peace have they which love thy law: and nothing shall offend them. ",
+      "author": "Psalm 119:165"
+    },
+    {
+      "quote": "I have gone astray like a lost sheep; seek thy servant; for I do not forget thy commandments. ",
+      "author": "Psalm 119:176"
+    },
+    {
+      "quote": "I will lift up mine eyes unto the hills, from whence cometh my help. My help cometh from the LORD, which made heaven and earth.",
+      "author": "Psalm 121:1-2"
+    },
+    {
+      "quote": "He will not suffer thy foot to be moved: he that keepeth thee will not slumber. ",
+      "author": "Psalm 121:3"
+    },
+    {
+      "quote": "Except the LORD build the house, they labour in vain that build it: except the LORD keep the city, the watchman waketh but in vain. ",
+      "author": "Psalm 127:1"
+    },
+    {
+      "quote": "It is vain for you to rise up early, to sit up late, to eat the bread of sorrows: for so he giveth his beloved sleep. ",
+      "author": "Psalm 127:2"
+    },
+    {
+      "quote": " If thou, LORD, shouldest mark iniquities, O Lord, who shall stand? But there is forgiveness with thee, that thou mayest be feared. ",
+      "author": "Psalm 130:3-4"
+    },
+    {
+      "quote": "I wait for the LORD, my soul doth wait, and in his word do I hope. ",
+      "author": "Psalm 130:5"
+    },
+    {
+      "quote": "That your faith should not stand in the wisdom of men, but in the power of God. ",
+      "author": "1 Corinthians 2:5"
+    },
+    {
+      "quote": "The LORD will perfect that which concerneth me: thy mercy, O LORD, endureth for ever: forsake not the works of thine own hands.",
+      "author": "Psalm 138:8"
+    },
+    {
+      "quote": "O LORD, thou hast searched me, and known me. ",
+      "author": "Psalm 139:1"
+    },
+    {
+      "quote": "Whither shall I go from thy spirit? or whither shall I flee from thy presence?",
+      "author": "Psalm 139:7"
+    },
+    {
+      "quote": "How precious also are thy thoughts unto me, O God! how great is the sum of them! If I should count them, they are more in number than the sand",
+      "author": "Psalm 139:17-18a"
+    },
+    {
+      "quote": "I cried unto thee, O LORD: I said, Thou art my refuge and my portion in the land of the living.",
+      "author": "Psalm 142:5"
+    },
+    {
+      "quote": "And enter not into judgment with thy servant: for in thy sight shall no man living be justified. ",
+      "author": "Psalm 143:2"
+    },
+    {
+      "quote": "Cause me to hear thy lovingkindness in the morning; for in thee do I trust: cause me to know the way wherein I should walk; for I lift up my soul unto thee. ",
+      "author": "Psalm 143:8"
+    },
+    {
+      "quote": "Blessed be the LORD my strength, which teacheth my hands to war, and my fingers to fight",
+      "author": "Psalm 144:1"
+    },
+    {
+      "quote": "The LORD is gracious, and full of compassion; slow to anger, and of great mercy. ",
+      "author": "Psalm 145:8"
+    },
+    {
+      "quote": "The LORD is good to all: and his tender mercies are over all his works.",
+      "author": "Psalm 145:9"
+    },
+    {
+      "quote": "The LORD upholdeth all that fall, and raiseth up all those that be bowed down. ",
+      "author": "Psalm 145:14"
+    },
+    {
+      "quote": "Thou openest thine hand, and satisfiest the desire of every living thing. ",
+      "author": "Psalm 145:16"
+    },
+    {
+      "quote": "The LORD is nigh unto all them that call upon him, to all that call upon him in truth. ",
+      "author": "Psalm 145:18"
+    },
+    {
+      "quote": "Put not your trust in princes, nor in the son of man, in whom there is no help. ",
+      "author": "Psalm 146:3"
+    },
+    {
+      "quote": "The LORD taketh pleasure in them that fear him, in those that hope in his mercy. ",
+      "author": "Psalm 147:11"
+    },
+    {
+      "quote": "Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths. ",
+      "author": "Proverbs 3:5-6"
+    },
+    {
+      "quote": "For whom the LORD loveth he correcteth; even as a father the son in whom he delighteth. ",
+      "author": "Proverbs 3:12"
+    },
+    {
+      "quote": "Be not afraid of sudden fear, neither of the desolation of the wicked, when it cometh. For the LORD shall be thy confidence, and shall keep thy foot from being taken. ",
+      "author": "Proverbs 3:25-26"
+    },
+    {
+      "quote": "Keep thy heart with all diligence; for out of it are the issues of life.",
+      "author": "Proverbs 4:23"
+    },
+    {
+      "quote": "Ponder the path of thy feet, and let all thy ways be established.",
+      "author": "Proverbs 4:26"
+    },
+    {
+      "quote": "The fear of the LORD is the beginning of wisdom: and the knowledge of the holy is understanding. ",
+      "author": "Proverbs 9:10"
+    },
+    {
+      "quote": "The blessing of the LORD, it maketh rich, and he addeth no sorrow with it. ",
+      "author": "Proverbs 10:22"
+    },
+    {
+      "quote": "..let God be true, but every man a liar",
+      "author": "Romans 3:4"
+    },
+    {
+      "quote": "For what saith the scripture? Abraham believed God, and it was counted unto him for righteousness.",
+      "author": "Romans 4:3"
+    },
+    {
+      "quote": "But to him that worketh not, but believeth on him that justifieth the ungodly, his faith is counted for righteousness. ",
+      "author": "Romans 4:5"
+    },
+    {
+      "quote": "Wealth gotten by vanity shall be diminished: but he that gathereth by labour shall increase.",
+      "author": "Proverbs 13:11"
+    },
+    {
+      "quote": "Every wise woman buildeth her house: but the foolish plucketh it down with her hands. ",
+      "author": "Proverbs 14:1"
+    },
+    {
+      "quote": "In the fear of the LORD is strong confidence: and his children shall have a place of refuge. ",
+      "author": "Proverbs 14:26"
+    },
+    {
+      "quote": "The preparations of the heart in man, and the answer of the tongue, is from the LORD. ",
+      "author": "Proverbs 16:1"
+    },
+    {
+      "quote": "Commit thy works unto the LORD, and thy thoughts shall be established. ",
+      "author": "Proverbs 16:3"
+    },
+    {
+      "quote": "A man's heart deviseth his way: but the LORD directeth his steps. ",
+      "author": "Proverbs 16:9"
+    },
+    {
+      "quote": "Cease, my son, to hear the instruction that causeth to err from the words of knowledge.",
+      "author": "Proverbs 19:27"
+    },
+    {
+      "quote": "Love not sleep, lest thou come to poverty; open thine eyes, and thou shalt be satisfied with bread. ",
+      "author": "Proverbs 20:13"
+    },
+    {
+      "quote": "I thank God through Jesus Christ our Lord. So then with the mind I myself serve the law of God; but with the flesh the law of sin. ",
+      "author": "Proverbs 7:25"
+    },
+    {
+      "quote": "There is therefore now no condemnation to them which are in Christ Jesus, who walk not after the flesh, but after the Spirit. ",
+      "author": "Romans 8:1"
+    },
+    {
+      "quote": "For ye have not received the spirit of bondage again to fear; but ye have received the Spirit of adoption, whereby we cry, Abba, Father.",
+      "author": "Romans 8:15"
+    },
+    {
+      "quote": "The Spirit itself beareth witness with our spirit, that we are the children of God",
+      "author": "Romans 8:16"
+    },
+    {
+      "quote": "But if we hope for that we see not, then do we with patience wait for it. ",
+      "author": "Romans 8:25"
+    },
+    {
+      "quote": "Likewise the Spirit also helpeth our infirmities: for we know not what we should pray for as we ought: but the Spirit itself maketh intercession for us with groanings which cannot be uttered. ",
+      "author": "Romans 8:26"
+    },
+    {
+      "quote": "And we know that all things work together for good to them that love God, to them who are the called according to his purpose. ",
+      "author": "Romans 8:28"
+    },
+    {
+      "quote": "He that spared not his own Son, but delivered him up for us all, how shall he not with him also freely give us all things? ",
+      "author": "Romans 8:31"
+    },
+    {
+      "quote": "Who shall lay any thing to the charge of God's elect? It is God that justifieth. ",
+      "author": "Romans 8:33"
+    },
+    {
+      "quote": "Who shall separate us from the love of Christ? shall tribulation, or distress, or persecution, or famine, or nakedness, or peril, or sword? ",
+      "author": "Romans 8:35"
+    },
+    {
+      "quote": "So then it is not of him that willeth, nor of him that runneth, but of God that sheweth mercy. ",
+      "author": "Romans 9:16"
+    },
+    {
+      "quote": "For they being ignorant of God's righteousness, and going about to establish their own righteousness, have not submitted themselves unto the righteousness of God.",
+      "author": "Romans 10:3"
+    },
+    {
+      "quote": "So then faith cometh by hearing, and hearing by the word of God. ",
+      "author": "Romans 10:17"
+    },
+    {
+      "quote": "I beseech you therefore, brethren, by the mercies of God, that ye present your bodies a living sacrifice, holy, acceptable unto God, which is your reasonable service. ",
+      "author": "Romans 12:1"
+    },
+    {
+      "quote": "And be not conformed to this world: but be ye transformed by the renewing of your mind, that ye may prove what is that good, and acceptable, and perfect, will of God. ",
+      "author": "Romans 12:2"
+    },
+    {
+      "quote": "But put ye on the Lord Jesus Christ, and make not provision for the flesh, to fulfil the lusts thereof. ",
+      "author": "Romans 13:14"
+    },
+    {
+      "quote": "For none of us liveth to himself, and no man dieth to himself. ",
+      "author": "Romans 14:7"
+    },
+    {
+      "quote": "For whether we live, we live unto the Lord; and whether we die, we die unto the Lord: whether we live therefore, or die, we are the Lord's. ",
+      "author": "Romans 14:8"
+    },
+    {
+      "quote": "A faithful man shall abound with blessings: but he that maketh haste to be rich shall not be innocent. ",
+      "author": "Proverbs 28:20"
+    },
+    {
+      "quote": "The fear of man bringeth a snare: but whoso putteth his trust in the LORD shall be safe.",
+      "author": "Proverbs 29:30"
+    },
+    {
+      "quote": "If thou hast done foolishly in lifting up thyself, or if thou hast thought evil, lay thine hand upon thy mouth.",
+      "author": "Proverbs 30:32"
+    },
+    {
+      "quote": "For whatsoever things were written aforetime were written for our learning, that we through patience and comfort of the scriptures might have hope.",
+      "author": "Romans 15:4"
+    },
+    {
+      "quote": "God is faithful, by whom ye were called unto the fellowship of his Son Jesus Christ our Lord. ",
+      "author": "1 Corinthians 1:9"
+    },
+    {
+      "quote": "For after that in the wisdom of God the world by wisdom knew not God, it pleased God by the foolishness of preaching to save them that believe.",
+      "author": "1 Corinthians 1:21"
+    },
+    {
+      "quote": "Because the foolishness of God is wiser than men; and the weakness of God is stronger than men. ",
+      "author": "1 Corinthians 1:25"
+    },
+    {
+      "quote": "But God hath chosen the foolish things of the world to confound the wise; and God hath chosen the weak things of the world to confound the things which are mighty",
+      "author": "1 Corinthians 1:27"
+    },
+    {
+      "quote": "And base things of the world, and things which are despised, hath God chosen, yea, and things which are not, to bring to nought things that are",
+      "author": "1 Corinthians 1:28"
+    },
+    {
+      "quote": "But of him are ye in Christ Jesus, who of God is made unto us wisdom, and righteousness, and sanctification, and redemption",
+      "author": "1 Corinthians 1:30"
+    },
+    {
+      "quote": "But as it is written, Eye hath not seen, nor ear heard, neither have entered into the heart of man, the things which God hath prepared for them that love him. ",
+      "author": "1 Corinthians 2:9"
+    },
+    {
+      "quote": "But as it is written, Eye hath not seen, nor ear heard, neither have entered into the heart of man, the things which God hath prepared for them that love him. ",
+      "author": "1 Corinthians 2:11"
+    },
+    {
+      "quote": "But the natural man receiveth not the things of the Spirit of God: for they are foolishness unto him: neither can he know them, because they are spiritually discerned. ",
+      "author": "1 Corinthians 2:14"
+    },
+    {
+      "quote": "For who hath known the mind of the Lord, that he may instruct him? But we have the mind of Christ",
+      "author": "1 Corinthians 2:16"
+    },
+    {
+      "quote": "I will say to the north, Give up; and to the south, Keep not back: bring my sons from far, and my daughters from the ends of the earth; \n Even every one that is called by my name: for I have created him for my glory, I have formed him; yea, I have made him. ",
+      "author": "Isaiah 43:6-7"
+    },
+    {
+      "quote": "Ye are my witnesses, saith the LORD, and my servant whom I have chosen: that ye may know and believe me, and understand that I am he: before me there was no God formed, neither shall there be after me. ",
+      "author": "Isaiah 43:10"
+    },
+    {
+      "quote": "Let us hear the conclusion of the whole matter: Fear God, and keep his commandments: for this is the whole duty of man. ",
+      "author": "Isaiah 12:13"
+    },
+    {
+      "quote": "Brethren, let every man, wherein he is called, therein abide with God. ",
+      "author": "1 Corinthians  7:24"
+    },
+    {
+      "quote": "There hath no temptation taken you but such as is common to man: but God is faithful, who will not suffer you to be tempted above that ye are able; but will with the temptation also make a way to escape, that ye may be able to bear it. ",
+      "author": "1 Corinthians 10:13"
+    },
+    {
+      "quote": "All things are lawful for me, but all things are not expedient: all things are lawful for me, but all things edify not.",
+      "author": "1 Corinthians 10:23"
+    },
+    {
+      "quote": "Watch ye, stand fast in the faith, quit you like men, be strong.",
+      "author": "1 Corinthians 16:13"
+    },
+    {
+      "quote": "But ye, beloved, building up yourselves on your most holy faith, praying in the Holy Ghost,  Keep yourselves in the love of God, looking for the mercy of our Lord Jesus Christ unto eternal life. ",
+      "author": "Jude 1:20-21"
+    },
+    {
+      "quote": "Now unto him that is able to keep you from falling, and to present you faultless before the presence of his glory with exceeding joy, \nTo the only wise God our Saviour, be glory and majesty, dominion and power, both now and ever. Amen. ",
+      "author": "Jude 1:24-25"
+    },
+    {
+      "quote": "Sanctify the LORD of hosts himself; and let him be your fear, and let him be your dread. ",
+      "author": "Isaiah 8:13"
+    },
+    {
+      "quote": "Say ye not, A confederacy, to all them to whom this people shall say, A confederacy; neither fear ye their fear, nor be afraid. ",
+      "author": "Isaiah 8:12"
+    },
+    {
+      "quote": "But we had the sentence of death in ourselves, that we should not trust in ourselves, but in God which raiseth the dead",
+      "author": "2 Corinthians 1:9"
+    },
+    {
+      "quote": "Not that we are sufficient of ourselves to think any thing as of ourselves; but our sufficiency is of God",
+      "author": "2 Corinthians 3:5"
+    },
+    {
+      "quote": "And God is able to make all grace abound toward you; that ye, always having all sufficiency in all things, may abound to every good work",
+      "author": "2 Corinthians 9:8"
+    },
+    {
+      "quote": "Every man according as he purposeth in his heart, so let him give; not grudgingly, or of necessity: for God loveth a cheerful giver.",
+      "author": "2 Corinthians 9:7"
+    },
+    {
+      "quote": "But he that glorieth, let him glory in the Lord. ",
+      "author": "2 Corinthians 10:17"
+    },
+    {
+      "quote": "For not he that commendeth himself is approved, but whom the Lord commendeth. \n",
+      "author": "2 Corinthians 10:18"
+    },
+    {
+      "quote": "And he said unto me, My grace is sufficient for thee: for my strength is made perfect in weakness. Most gladly therefore will I rather glory in my infirmities, that the power of Christ may rest upon me. ",
+      "author": "2 Corinthians 12:9"
+    },
+    {
+      "quote": "Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee. ",
+      "author": "Isaiah 26:3"
+    },
+    {
+      "quote": "Trust ye in the LORD for ever: for in the LORD JEHOVAH is everlasting strength",
+      "author": "Isaiah 26:4"
+    },
+    {
+      "quote": "LORD, thou wilt ordain peace for us: for thou also hast wrought all our works in us. ",
+      "author": "Isaiah 26:12"
+    },
+    {
+      "quote": "For thus saith the Lord GOD, the Holy One of Israel; In returning and rest shall ye be saved; in quietness and in confidence shall be your strength: and ye would not. ",
+      "author": "Isaiah 30:15"
+    },
+    {
+      "quote": "And thine ears shall hear a word behind thee, saying, This is the way, walk ye in it, when ye turn to the right hand, and when ye turn to the left. ",
+      "author": "Isaiah 30:21"
+    },
+    {
+      "quote": "And therefore will the LORD wait, that he may be gracious unto you, and therefore will he be exalted, that he may have mercy upon you: for the LORD is a God of judgment: blessed are all they that wait for him. ",
+      "author": "Isaiah 30:18"
+    },
+    {
+      "quote": "Are ye so foolish? having begun in the Spirit, are ye now made perfect by the flesh? ",
+      "author": "Galatians 3:3"
+    },
+    {
+      "quote": "But that no man is justified by the law in the sight of God, it is evident: for, The just shall live by faith. ",
+      "author": "Galatians 3:11"
+    },
+    {
+      "quote": "But now, after that ye have known God, or rather are known of God, how turn ye again to the weak and beggarly elements, whereunto ye desire again to be in bondage? ",
+      "author": "Galatians 4:9"
+    },
+    {
+      "quote": "And because ye are sons, God hath sent forth the Spirit of his Son into your hearts, crying, Abba, Father. ",
+      "author": "Galatians 4:6"
+    },
+    {
+      "quote": "He shall feed his flock like a shepherd: he shall gather the lambs with his arm, and carry them in his bosom, and shall gently lead those that are with young. ",
+      "author": "Isaiah 40:11"
+    },
+    {
+      "quote": "To whom then will ye liken me, or shall I be equal? saith the Holy One. ",
+      "author": "Isaiah 40:25"
+    },
+    {
+      "quote": "Why sayest thou, O Jacob, and speakest, O Israel, My way is hid from the LORD, and my judgment is passed over from my God? ",
+      "author": "Isaiah 40:27"
+    },
+    {
+      "quote": "Hast thou not known? hast thou not heard, that the everlasting God, the LORD, the Creator of the ends of the earth, fainteth not, neither is weary? there is no searching of his understanding. ",
+      "author": "Isaiah 40:28"
+    },
+    {
+      "quote": "He giveth power to the faint; and to them that have no might he increaseth strength. ",
+      "author": "Isaiah 40:29"
+    },
+    {
+      "quote": "But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint. ",
+      "author": "Isaiah 40:31"
+    },
+    {
+      "quote": "Stand fast therefore in the liberty wherewith Christ hath made us free, and be not entangled again with the yoke of bondage. ",
+      "author": "Galatians 5:1"
+    },
+    {
+      "quote": "And let us not be weary in well doing: for in due season we shall reap, if we faint not. ",
+      "author": "Galatians 6:9"
+    },
+    {
+      "quote": "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness. ",
+      "author": "Isaiah 41:10"
+    },
+    {
+      "quote": "Ye are my witnesses, saith the LORD, and my servant whom I have chosen: that ye may know and believe me, and understand that I am he: before me there was no God formed, neither shall there be after me. ",
+      "author": "Isaiah 43:10"
+    },
+    {
+      "quote": "I am the LORD, your Holy One, the creator of Israel, your King. ",
+      "author": "Isaiah 43:15"
+    },
+    {
+      "quote": "Thus saith the LORD, thy Redeemer, the Holy One of Israel; I am the LORD thy God which teacheth thee to profit, which leadeth thee by the way that thou shouldest go. ",
+      "author": "Isaiah 48:17"
+    },
+    {
+      "quote": "Can a woman forget her sucking child, that she should not have compassion on the son of her womb? yea, they may forget, yet will I not forget thee. ",
+      "author": "Isaiah 49:15"
+    },
+    {
+      "quote": "Now unto him that is able to do exceeding abundantly above all that we ask or think, according to the power that worketh in us",
+      "author": "Ephesians 3:20"
+    },
+    {
+      "quote": "O thou afflicted, tossed with tempest, and not comforted, behold, I will lay thy stones with fair colours, and lay thy foundations with sapphires. ",
+      "author": "Isaiah 54:11"
+    },
+    {
+      "quote": "In righteousness shalt thou be established: thou shalt be far from oppression; for thou shalt not fear: and from terror; for it shall not come near thee. ",
+      "author": "Isaiah 54:14"
+    },
+    {
+      "quote": "No weapon that is formed against thee shall prosper; and every tongue that shall rise against thee in judgment thou shalt condemn. This is the heritage of the servants of the LORD, and their righteousness is of me, saith the LORD.",
+      "author": "Isaiah 54:17"
+    },
+    {
+      "quote": "So shall my word be that goeth forth out of my mouth: it shall not return unto me void, but it shall accomplish that which I please, and it shall prosper in the thing whereto I sent it. ",
+      "author": "Isaiah 55:11"
+    },
+    {
+      "quote": "Redeeming the time, because the days are evil. ",
+      "author": "Ephesians 5:16"
+    },
+    {
+      "quote": "It is vain for you to rise up early, to sit up late, to eat the bread of sorrows: for so he giveth his beloved sleep.",
+      "author": "Psalm 127:2"
+    },
+    {
+      "quote": "Many are the afflictions of the righteous: but the LORD delivereth him out of them all. ",
+      "author": "Psalm 34:19"
+    },
+    {
+      "quote": "For in that he himself hath suffered being tempted, he is able to succour them that are tempted. ",
+      "author": "Hebrews 2:18"
+    },
+    {
+      "quote": "Wherefore in all things it behoved him to be made like unto his brethren, that he might be a merciful and faithful high priest in things pertaining to God, to make reconciliation for the sins of the people. ",
+      "author": "Hebrews 2:17"
+    },
+    {
+      "quote": "Knowing that whatsoever good thing any man doeth, the same shall he receive of the Lord, whether he be bond or free. ",
+      "author": "Ephesians 6:8"
+    },
+    {
+      "quote": "Being confident of this very thing, that he which hath begun a good work in you will perform it until the day of Jesus Christ",
+      "author": "Philippians 1:6"
+    },
+    {
+      "quote": "For it is God which worketh in you both to will and to do of his good pleasure. ",
+      "author": "Philippians 2:13"
+    },
+    {
+      "quote": "Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus. ",
+      "author": "Philippians 4:6-7"
+    },
+    {
+      "quote": "Finally, brethren, whatsoever things are true, whatsoever things are honest, whatsoever things are just, whatsoever things are pure, whatsoever things are lovely, whatsoever things are of good report; if there be any virtue, and if there be any praise, think on these things. ",
+      "author": "Philippians 4:8"
+    },
+    {
+      "quote": "I can do all things through Christ which strengtheneth me. ",
+      "author": "Philippians 4:13"
+    },
+    {
+      "quote": "But my God shall supply all your need according to his riches in glory by Christ Jesus. ",
+      "author": "Philippians 4:19"
+    },
+    {
+      "quote": "But let him that glorieth glory in this, that he understandeth and knoweth me, that I am the LORD which exercise lovingkindness, judgment, and righteousness, in the earth: for in these things I delight, saith the LORD. ",
+      "author": "Jeremiah 9:24"
+    },
+    {
+      "quote": "O LORD, I know that the way of man is not in himself: it is not in man that walketh to direct his steps.",
+      "author": "Jeremiah 10:23"
+    },
+    {
+      "quote": "O LORD, correct me, but with judgment; not in thine anger, lest thou bring me to nothing. ",
+      "author": "Jeremiah 10:24"
+    },
+    {
+      "quote": "But the Lord is faithful, who shall stablish you, and keep you from evil. ",
+      "author": "2 Thessalonians 3:3"
+    },
+    {
+      "quote": "And the Lord direct your hearts into the love of God, and into the patient waiting for Christ. ",
+      "author": "2 Thessalonians 3:5"
+    },
+    {
+      "quote": "For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind. ",
+      "author": "2 Timothy 1:7"
+    },
+    {
+      "quote": "Who hath saved us, and called us with an holy calling, not according to our works, but according to his own purpose and grace, which was given us in Christ Jesus before the world began",
+      "author": "2 Timothy 1:9"
+    },
+    {
+      "quote": "...for I know whom I have believed, and am persuaded that he is able to keep that which I have committed unto him against that day.",
+      "author": "2 Timothy 1:12b"
+    },
+    {
+      "quote": "That good thing which was committed unto thee keep by the Holy Ghost which dwelleth in us. ",
+      "author": "2 Timothy 1:14"
+    },
+    {
+      "quote": "Thou therefore endure hardness, as a good soldier of Jesus Christ.",
+      "author": "2 Timothy 2:3"
+    },
+    {
+      "quote": "No man that warreth entangleth himself with the affairs of this life; that he may please him who hath chosen him to be a soldier. ",
+      "author": "2 Timothy 2:4"
+    },
+    {
+      "quote": "Study to shew thyself approved unto God, a workman that needeth not to be ashamed, rightly dividing the word of truth. ",
+      "author": "2 Timothy 2:15"
+    },
+    {
+      "quote": "Nevertheless the foundation of God standeth sure, having this seal, The Lord knoweth them that are his. And, Let every one that nameth the name of Christ depart from iniquity. ",
+      "author": "2 Timothy 2:19"
+    },
+    {
+      "quote": "It is of the LORD'S mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness. ",
+      "author": "Lamentations 3:22-23"
+    },
+    {
+      "quote": "The LORD is my portion, saith my soul; therefore will I hope in him. ",
+      "author": "Lamentations 3:24"
+    },
+    {
+      "quote": "The LORD is good unto them that wait for him, to the soul that seeketh him. ",
+      "author": "Lamentations 3:25"
+    },
+    {
+      "quote": "It is good that a man should both hope and quietly wait for the salvation of the LORD. ",
+      "author": "Lamentations 3:26"
+    },
+    {
+      "quote": "For he doth not afflict willingly nor grieve the children of men. ",
+      "author": "Lamentations 3:33"
+    },
+    {
+      "quote": "And they shall teach my people the difference between the holy and profane, and cause them to discern between the unclean and the clean. ",
+      "author": "Ezekiel 44:23"
+    },
+    {
+      "quote": "For the law made nothing perfect, but the bringing in of a better hope did; by the which we draw nigh unto God.",
+      "author": "Hebrews 7:19"
+    },
+    {
+      "quote": "Abide in me, and I in you. As the branch cannot bear fruit of itself, except it abide in the vine; no more can ye, except ye abide in me. I am the vine, ye are the branches: He that abideth in me, and I in him, the same bringeth forth much fruit: for without me ye can do nothing. ",
+      "author": "John 15:4-5"
+    },
+    {
+      "quote": "For, lo, he that formeth the mountains, and createth the wind, and declareth unto man what is his thought, that maketh the morning darkness, and treadeth upon the high places of the earth, The LORD, The God of hosts, is his name. ",
+      "author": "Amos 4:13"
+    },
+    {
+      "quote": "Arise ye, and depart; for this is not your rest: because it is polluted, it shall destroy you, even with a sore destruction. ",
+      "author": "Micah 2:10"
+    },
+    {
+      "quote": "The LORD is good, a strong hold in the day of trouble; and he knoweth them that trust in him. ",
+      "author": "Nahum 1:7"
+    },
+    {
+      "quote": "They that be whole need not a physician, but they that are sick.",
+      "author": "Matthew 9:12"
+    },
+    {
+      "quote": "It is not of him that willeth, nor of him that runneth, but of God that sheweth mercy.",
+      "author": "Romans 9:16"
+    },
+    {
+      "quote": "For he hath made him to be sin for us, who knew no sin; that we might be made the righteousness of God in him.",
+      "author": "2 Corinthians 5:21"
+    },
+    {
+      "quote": "So then it is not of him that willeth, nor of him that runneth, but of God that sheweth mercy.",
+      "author": "Romans 9:16"
+    },
+    {
+      "quote": "The LORD redeemeth the soul of his servants: and none of them that trust in him shall be desolate.",
+      "author": "Psalms 34:22"
+    },
+    {
+      "quote": "I will cry unto God most high; unto God that performeth all things for me.",
+      "author": "Psalm 57:2"
+    },
+    {
+      "quote": "And the barrel of meal wasted not, neither did the cruse of oil fail, according to the word of the LORD, which he spake by Elijah.",
+      "author": "1 Kings 17:16"
+    },
+    {
+      "quote": "The LORD will perfect that which concerneth me: thy mercy, O LORD, endureth for ever: forsake not the works of thine own hands.",
+      "author": "Psalm 138:8"
+    },
+    {
+      "quote": "And they that know thy name will put their trust in thee: for thou, LORD, hast not forsaken them that seek thee.",
+      "author": "Psalm 9:10"
+    },
+    {
+      "quote": "Then said they unto him, What shall we do, that we might work the works of God? Jesus answered and said unto them, This is the work of God, that ye believe on him whom he hath sent.",
+      "author": "John 6: 28-29"
+    }
+  ]
+}
