@@ -11,9 +11,15 @@ function initializeWidget(renderCallback) {
       ...widgetConfig
     };
   }
+  
+  // Find the widget element
+  const widgetElement = document.querySelector('.widget');
 
-  // Apply configuration
-  document.body.className = config.theme;
+  // Apply configuration directly to the widget element
+  if (widgetElement) {
+    widgetElement.className = 'widget ' + config.theme;
+  }
+
 
   if (renderCallback) {
     renderCallback(config);
