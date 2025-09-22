@@ -21,7 +21,6 @@
     .widget {
       width: min(720px, 92vw);
       border-radius: 12px;
-      border: 2px solid var(--secondary-bg-color);
       padding: 20px;
       display: flex;
       flex-direction: column;
@@ -30,6 +29,9 @@
       background-color: var(--primary-bg-color);
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: background-color 0.5s, border-color 0.5s;
+      min-height: 120px;
+      /* Add a default border here so the div still has a border without config.js */
+      border: 2px solid var(--secondary-bg-color);
     }
 
     .cat {
