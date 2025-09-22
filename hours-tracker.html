@@ -57,7 +57,7 @@
       align-items: baseline;
     }
 
-    /* --- WORKDAY TRACKER STYLES --- */
+    /* --- WORKDAY TRACKER STYLES (MODIFIED) --- */
     #day-tracker .progress-label span:first-child {
       font-weight: 600;
     }
@@ -68,7 +68,7 @@
     .hour-markers {
         display: flex;
         justify-content: space-between;
-        font-size: clamp(0.6rem, 2vw, 0.7rem);
+        font-size: clamp(0.6rem, 2vw, 0.75rem);
         color: var(--primary-text-color);
         opacity: 0.8;
         padding: 0 5px;
@@ -76,7 +76,7 @@
     }
     .workday-progress-segmented {
         display: flex;
-        gap: 4px;
+        gap: clamp(3px, 0.75vw, 5px);
         width: 100%;
     }
     .segment-container {
@@ -86,7 +86,8 @@
         overflow: hidden;
     }
     .segment-bar {
-        height: clamp(14px, 3vh, 18px);
+        /* Increased height for more prominence */
+        height: clamp(18px, 4vh, 24px);
         width: 0%;
         background-color: var(--accent-color);
         border-radius: 50px;
@@ -97,41 +98,47 @@
     .sub-trackers {
         display: flex;
         justify-content: space-between;
-        gap: 20px;
+        gap: clamp(15px, 4vw, 20px);
         flex-wrap: wrap;
     }
     .sub-trackers .progress-container {
         flex: 1;
-        min-width: 200px;
+        min-width: 180px; /* Reduced min-width for better wrapping */
     }
 
-    /* --- SQUARE GRID STYLES --- */
+    /* --- SQUARE GRID STYLES (MODIFIED) --- */
     .progress-grid {
       display: grid;
-      gap: 4px;
-      padding: 5px;
+      /* Reduced gap and padding to make squares smaller */
+      gap: 3px;
+      padding: 4px;
       border-radius: 8px;
       background-color: var(--secondary-bg-color);
     }
     #year-progress-grid {
-      /* 2 rows of 6 for the 12 months */
       grid-template-columns: repeat(6, 1fr);
     }
     .progress-grid .square {
       width: 100%;
-      padding-bottom: 100%; /* Creates a square aspect ratio */
-      background-color: rgba(0,0,0,0.05); /* Default un-filled color */
+      padding-bottom: 100%;
+      background-color: rgba(0,0,0,0.05);
       border-radius: 2px;
       transition: background-color 0.5s;
     }
     .progress-grid .square.filled {
-      background-color: var(--accent-color); /* Fully filled color */
+      background-color: var(--accent-color);
     }
-    /* Style for the current day of the month */
     .progress-grid .square.current-day {
       background: linear-gradient(90deg,
         var(--accent-color) 50%,
         rgba(0,0,0,0.05) 50%
+      );
+    }
+    /* NEW: Style for the current month in the year tracker */
+    .progress-grid .square.current-month {
+       background: linear-gradient(90deg,
+        var(--accent-color) var(--month-progress, 0%),
+        rgba(0,0,0,0.05) var(--month-progress, 0%)
       );
     }
   </style>
@@ -187,7 +194,7 @@
       const WORKDAY_START_HOUR = 9;
       const WORKDAY_END_HOUR = 17;
       const workHours = WORKDAY_END_HOUR - WORKDAY_START_HOUR;
-      let displayedMonth = -1; // To track if the month grid needs rebuilding
+      let displayedMonth = -1;
 
       // Apply theme from config.js or use default
       if (typeof widgetConfig !== 'undefined' && widgetConfig.theme) {
@@ -198,7 +205,6 @@
 
       // --- Initial Setup ---
       function initializeTrackers() {
-        // 1. Workday Tracker Setup
         for (let i = 0; i <= workHours; i++) {
             const hour = WORKDAY_START_HOUR + i;
             const marker = document.createElement('span');
@@ -217,8 +223,6 @@
             segmentContainer.appendChild(segmentBar);
             workdayProgressContainerEl.appendChild(segmentContainer);
         }
-
-        // 2. Year Tracker Grid Setup (12 months)
         for (let i = 0; i < 12; i++) {
             const square = document.createElement('div');
             square.className = 'square';
@@ -226,23 +230,20 @@
         }
       }
 
-
       // --- Main Update Function ---
       function updateTrackers() {
         const now = new Date();
         const year = now.getFullYear();
-        const currentMonth = now.getMonth(); // 0-11
+        const currentMonth = now.getMonth();
         const dayOfMonth = now.getDate();
         const currentHour24 = now.getHours();
         const currentMinute = now.getMinutes();
 
-        // Update time display
         const ampm = currentHour24 >= 12 ? 'PM' : 'AM';
         let currentHour12 = currentHour24 % 12;
         currentHour12 = currentHour12 ? currentHour12 : 12;
         timeDisplayEl.textContent = `${currentHour12}:${currentMinute.toString().padStart(2, '0')} ${ampm}`;
 
-        // -- 1. Update Workday Tracker --
         const totalMinutesIntoDay = currentHour24 * 60 + currentMinute;
         const startMinutes = WORKDAY_START_HOUR * 60;
         const endMinutes = WORKDAY_END_HOUR * 60;
@@ -258,15 +259,13 @@
             else segmentBars[i].style.width = '0%';
         }
 
-        // -- 2. Update Month Tracker --
         const daysInMonth = new Date(year, currentMonth + 1, 0).getDate();
         const monthProgress = (dayOfMonth / daysInMonth) * 100;
         monthPercentTextEl.textContent = `${Math.floor(monthProgress)}%`;
 
-        // Rebuild grid only if the month has changed
         if (currentMonth !== displayedMonth) {
             displayedMonth = currentMonth;
-            monthProgressGridEl.innerHTML = ''; // Clear old grid
+            monthProgressGridEl.innerHTML = '';
             monthProgressGridEl.style.gridTemplateColumns = 'repeat(7, 1fr)';
             for (let i = 0; i < daysInMonth; i++) {
                 const square = document.createElement('div');
@@ -275,7 +274,6 @@
             }
         }
 
-        // Update month grid highlights
         const monthSquares = monthProgressGridEl.querySelectorAll('.square');
         monthSquares.forEach((square, index) => {
             square.classList.remove('filled', 'current-day');
@@ -286,32 +284,29 @@
             }
         });
 
-        // -- 3. Update Year Tracker --
         const startOfYear = new Date(year, 0, 0);
         const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24));
         const daysInYear = new Date(year, 1, 29).getMonth() === 1 ? 366 : 365;
         const yearProgress = (dayOfYear / daysInYear) * 100;
         yearPercentTextEl.textContent = `${Math.floor(yearProgress)}%`;
-
-        // Update year grid highlights
+        
+        // MODIFIED: Update year grid highlights using CSS classes and variables
         const yearSquares = yearProgressGridEl.querySelectorAll('.square');
-        const defaultColor = 'rgba(0,0,0,0.05)';
-        const filledColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
-
         yearSquares.forEach((square, index) => {
+            square.classList.remove('filled', 'current-month');
+            square.style.setProperty('--month-progress', '0%'); // Reset progress
+
             if (index < currentMonth) {
-                square.style.background = filledColor; // Past months
+                square.classList.add('filled'); // Past months
             } else if (index === currentMonth) {
-                // Current month with gradient progress
                 const progressPercent = (dayOfMonth / daysInMonth) * 100;
-                square.style.background = `linear-gradient(90deg, ${filledColor} ${progressPercent}%, ${defaultColor} ${progressPercent}%)`;
-            } else {
-                square.style.background = defaultColor; // Future months
+                square.classList.add('current-month'); // Current month
+                // Set custom property for the gradient
+                square.style.setProperty('--month-progress', `${progressPercent}%`);
             }
         });
       }
 
-      // --- Run Application ---
       initializeTrackers();
       updateTrackers();
       setInterval(updateTrackers, 60000);
