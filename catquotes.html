@@ -14,14 +14,14 @@
       min-height: 100vh;
       font-family: sans-serif;
       background-color: var(--primary-bg-color);
-      color: var(--font-color);
+      color: var(--primary-text-color);
       transition: background-color 0.5s, color 0.5s;
     }
 
     .widget {
       width: min(720px, 92vw);
       border-radius: 12px;
-      border: 2px solid var(--header-color);
+      border: 2px solid var(--secondary-bg-color);
       padding: 20px;
       display: flex;
       flex-direction: column;
@@ -34,28 +34,31 @@
 
     .cat {
       font-size: 3em;
-      transition: color 0.5s;
-      color: var(--accent-color);
+      filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
     }
 
-    .quote {
-      font-size: clamp(16px, 2.4vw, 22px);
-      font-weight: 600;
-      line-height: 1.35;
+    .quote-content {
+      font-size: 1.5em;
+      font-style: italic;
+      text-align: center;
+      padding: 0 20px;
     }
   </style>
 </head>
 
 <body>
-  <div class="widget" id="widget">
-    <div class="cat" id="catEmoji"></div>
-    <div class="quote" id="quote"></div>
+  <div class="widget">
+    <span id="catEmoji" class="cat"></span>
+    <div id="quote" class="quote-content">Loading quote...</div>
   </div>
 
   <script src="config.js"></script>
   <script>
     const QUOTES = [
-      "Purr-gress, not purr-fection.",
+      "The key to happiness is a full food bowl.",
+      "Just five more minutes… of napping.",
+      "A clean paw is a happy paw.",
+      "If you can't find a sunbeam, make your own.",
       "One task at a time… like batting toys under the couch.",
       "Stay paw-sitive, you’re claw-ing through it!",
       "Tackle your tasks, then enjoy a cozy nap.",
@@ -89,15 +92,16 @@
         }
       } else {
         // Fallback to a default theme if config.js is not loaded
-        document.body.className = 'gilded-iris-theme';
+        document.body.className = 'soft-evergreen-theme';
         quoteEl.style.textAlign = 'center';
       }
-
-      render(0);
-      setInterval(() => render(index + 1), 10000); // 10000ms = 10 seconds
     }
 
-    initializeWidget();
+    document.addEventListener('DOMContentLoaded', () => {
+      render(0);
+      setInterval(() => render(index + 1), 10000); // 10000 ms = 10 seconds
+      initializeWidget();
+    });
   </script>
 </body>
 

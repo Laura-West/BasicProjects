@@ -30,7 +30,6 @@
         h1 {
             font-size: 2.2em;
             font-weight: 700;
-            /* Removed static color, now set dynamically in JS */
             text-align: center;
             margin-bottom: 20px;
         }
@@ -38,587 +37,123 @@
         h2 {
             margin-top: 0;
             font-size: 1.5em;
-            font-weight: 600;
-            color: #34495e;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
+            color: #4a4a4a;
         }
 
-        h3 {
-            margin-top: 0;
-            font-size: 1.2em;
-            font-weight: 600;
-            color: #4a657c;
-        }
-
-        .settings-section {
-            border: 1px solid #e1e4e8;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .theme-section .settings-section {
-            border: none;
-            padding: 0;
-            margin-bottom: 0;
-        }
-
-        .controls-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        .section-control {
+            display: flex;
+            flex-wrap: wrap;
             gap: 15px;
+            justify-content: center;
         }
 
-        .controls-grid.alignment {
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        /* Theme Option Styles */
+        .theme-option {
+            width: 150px;
+            height: 150px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid #ddd;
+            transition: transform 0.2s, border-color 0.2s;
+            position: relative;
+            background-color: #f7f7f7;
         }
 
-        .theme-option,
+        .theme-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-option.active {
+            border-color: #007bff;
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.3);
+        }
+
+        .color-swatch {
+            width: 80%;
+            height: 80px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        .theme-option span {
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Alignment Option Styles */
         .alignment-option {
-            padding: 10px 15px;
+            padding: 10px 20px;
+            border: 2px solid #ddd;
             border-radius: 6px;
             cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.2s ease-in-out;
-            font-weight: 500;
-            background-color: #ecf0f1;
-            color: #2c3e50;
+            transition: background-color 0.2s, border-color 0.2s;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .theme-option:hover,
         .alignment-option:hover {
-            background-color: #dbe4e6;
+            background-color: #f0f0f0;
         }
 
-        .theme-option.active,
         .alignment-option.active {
-            border-color: #3498db;
-            background-color: #eaf6fd;
-            color: #2980b9;
+            border-color: #28a745;
+            background-color: #e9f5ee;
         }
 
-        .color-swatch {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            outline: 1px solid rgba(0, 0, 0, 0.1);
-            flex-shrink: 0;
-        }
-
-        #palette-preview {
-            display: flex;
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid #e1e4e8;
-            margin-top: 15px;
-        }
-
-        .palette-swatch {
-            flex-grow: 1;
-            height: 40px;
-        }
-
-        #theme-management-form {
-            display: none;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
-            padding: 20px;
-            border: 1px dashed #ccc;
+        /* Download button styles */
+        #download-btn {
+            background-color: #007bff;
+            color: #fff;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
             border-radius: 8px;
-        }
-
-        #theme-management-form.active {
-            display: flex;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .form-row label {
-            width: 120px;
-            text-align: right;
-            font-weight: 600;
-        }
-        
-        .form-row input[type="color"] {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            border: none;
-            width: 32px;
-            height: 32px;
-            background-color: transparent;
             cursor: pointer;
-            padding: 0;
-        }
-        
-        .form-row input[type="color"]::-webkit-color-swatch {
-            border-radius: 50%;
-            border: 1px solid #ccc;
+            transition: background-color 0.3s;
+            align-self: center;
+            width: fit-content;
         }
 
-        .form-row input[type="color"]::-moz-color-swatch {
-            border-radius: 50%;
-            border: 1px solid #ccc;
+        #download-btn:hover {
+            background-color: #0056b3;
         }
-
-        .form-row input[type="text"] {
-            flex-grow: 1;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-        
-        #delete-theme-button {
-            background-color: #e74c3c;
-        }
-        
-        #delete-theme-button:hover {
-            background-color: #c0392b;
-        }
-
-        .theme-action-buttons {
-            margin-left: auto;
-            gap: 5px;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease-in-out;
-            display: flex;
-        }
-
-        .theme-option:hover .theme-action-buttons,
-        .theme-option.active .theme-action-buttons {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .theme-action-buttons button {
-            background: none;
-            border: none;
-            color: #2c3e50;
-            font-size: 1.2em;
-            cursor: pointer;
-            padding: 0;
-            transition: transform 0.2s;
-        }
-
-        .theme-action-buttons button:hover {
-            transform: scale(1.1);
-        }
-
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            background-color: #3498db;
-            color: #ffffff;
-            transition: background-color 0.2s;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-        }
-
-        /* --- THEME-SPECIFIC BACKGROUND COLORS FOR LIVE PREVIEW --- */
-        body.gilded-iris-theme { background-color: #4b0082; }
-        body.cosmic-dust-theme { background-color: #0c1c38; }
-        body.twilight-garden-theme { background-color: #2b0d36; }
-        body.blue-lagoon-theme { background-color: #2a52be; }
-        body.midnight-bloom-theme { background-color: #0d0f19; }
-        body.deep-sea-pearl-theme { background-color: #1c3144; }
-        body.amethyst-mist-theme { background-color: #6a5acd; }
-        body.starlight-theme { background-color: #2c3e50; }
-        body.sunset-haze-theme { background-color: #e74c3c; }
-        body.light-mode { background-color: #ffffff; }
-        body.dark-mode { background-color: #2c3e50; }
-        body.forest-green { background-color: #ecf0e6; }
     </style>
-    <style id="dynamic-themes-style"></style>
 </head>
 
 <body>
     <div class="container">
-        <h1 id="admin-settings-header">Admin Settings</h1>
-        
-        <div class="settings-section">
-            <h2>Theme</h2>
-            
-            <div class="settings-section">
-                <h3>Selection</h3>
-                <div class="controls-grid" id="theme-controls">
-                    </div>
-                <div id="palette-preview">
-                    </div>
-                <div style="text-align: right; margin-top: 15px;">
-                    <button id="randomize-button">Randomize</button>
-                </div>
+        <h1>Widget Admin Dashboard</h1>
+        <p>Use this dashboard to configure your widgets. Your selections will be saved to `config.js`, which you can then upload to your repository.</p>
+
+        <h2>Select a Theme</h2>
+        <div id="theme-controls" class="section-control">
             </div>
 
-            <div class="settings-section">
-                <h3>Management</h3>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <button id="add-theme-button">Add New Theme</button>
-                </div>
-                <form id="theme-management-form">
-                    <input type="hidden" id="theme-key">
-                    <div class="form-row">
-                        <label for="theme-name">Theme Name:</label>
-                        <input type="text" id="theme-name" required>
-                    </div>
-                    <div class="form-row">
-                        <label for="theme-color1">Primary Background:</label>
-                        <input type="color" id="theme-color1-picker" required>
-                        <input type="text" id="theme-color1" required placeholder="#RRGGBB">
-                    </div>
-                    <div class="form-row">
-                        <label for="theme-color2">Primary Text:</label>
-                        <input type="color" id="theme-color2-picker" required>
-                        <input type="text" id="theme-color2" required placeholder="#RRGGBB">
-                    </div>
-                    <div class="form-row">
-                        <label for="theme-color3">Accent:</label>
-                        <input type="color" id="theme-color3-picker" required>
-                        <input type="text" id="theme-color3" required placeholder="#RRGGBB">
-                    </div>
-                    <div class="form-row">
-                        <label for="theme-color4">Header/Border:</label>
-                        <input type="color" id="theme-color4-picker" required>
-                        <input type="text" id="theme-color4" required placeholder="#RRGGBB">
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" id="cancel-button">Cancel</button>
-                        <button type="button" id="delete-theme-button" style="display:none;">Delete</button>
-                        <button type="submit" id="save-theme-button">Save Theme</button>
-                    </div>
-                </form>
+        <h2>Select Text Alignment</h2>
+        <div id="alignment-controls" class="section-control">
+            <div class="alignment-option" data-alignment="left">
+                <span>Left</span>
+            </div>
+            <div class="alignment-option" data-alignment="center">
+                <span>Center</span>
+            </div>
+            <div class="alignment-option" data-alignment="right">
+                <span>Right</span>
             </div>
         </div>
 
-        <div class="settings-section">
-            <h2>Alignment</h2>
-            <div class="controls-grid alignment" id="alignment-controls">
-                <div class="alignment-option active" data-alignment="center">Center</div>
-                <div class="alignment-option" data-alignment="left">Left</div>
-                <div class="alignment-option" data-alignment="right">Right</div>
-            </div>
-        </div>
-
-        <button id="download-button" style="margin-top: 20px;">Download Configuration</button>
+        <button id="download-btn">Download config.js</button>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const bodyElement = document.body;
-            const themeControls = document.getElementById('theme-controls');
-            const alignmentControls = document.getElementById('alignment-controls');
-            const themeForm = document.getElementById('theme-management-form');
-            const themeKeyInput = document.getElementById('theme-key');
-            const themeNameInput = document.getElementById('theme-name');
-            const themeColor1Input = document.getElementById('theme-color1');
-            const themeColor2Input = document.getElementById('theme-color2');
-            const themeColor3Input = document.getElementById('theme-color3');
-            const themeColor4Input = document.getElementById('theme-color4');
-            const themeColor1Picker = document.getElementById('theme-color1-picker');
-            const themeColor2Picker = document.getElementById('theme-color2-picker');
-            const themeColor3Picker = document.getElementById('theme-color3-picker');
-            const themeColor4Picker = document.getElementById('theme-color4-picker');
-            const saveThemeButton = document.getElementById('save-theme-button');
-            const deleteThemeButton = document.getElementById('delete-theme-button');
-            const cancelButton = document.getElementById('cancel-button');
-            const randomizeButton = document.getElementById('randomize-button');
-            const downloadButton = document.getElementById('download-button');
-            const palettePreview = document.getElementById('palette-preview');
-            const dynamicStyles = document.getElementById('dynamic-themes-style');
-            const adminSettingsHeader = document.getElementById('admin-settings-header'); // Get the H1 element
-
-            const state = {
-                allThemes: {},
-                selectedTheme: 'gilded-iris-theme',
-                selectedAlignment: 'center'
-            };
-
-            const defaultThemes = {
-                'light-mode': { class: 'light-mode', name: 'Light Mode', colors: ['#ffffff', '#2c3e50', '#3498db', '#bdc3c7'] },
-                'dark-mode': { class: 'dark-mode', name: 'Dark Mode', colors: ['#2c3e50', '#ecf0f1', '#3498db', '#bdc3c7'] },
-                'forest-green': { class: 'forest-green', name: 'Forest Green', colors: ['#ecf0e6', '#264639', '#558269', '#558269'] },
-                'gilded-iris-theme': { class: 'gilded-iris-theme', name: 'Gilded Iris', colors: ['#4b0082', '#fce883', '#ffc94b', '#3b0066'] },
-                'cosmic-dust-theme': { class: 'cosmic-dust-theme', name: 'Cosmic Dust', colors: ['#0c1c38', '#e0e6f2', '#f0a07c', '#172a4e'] },
-                'twilight-garden-theme': { class: 'twilight-garden-theme', name: 'Twilight Garden', colors: ['#2b0d36', '#e1efff', '#00ffff', '#2d2d86'] },
-                'blue-lagoon-theme': { class: 'blue-lagoon-theme', name: 'Blue Lagoon', colors: ['#2a52be', '#e1efff', '#00ffff', '#2d2d86'] },
-                'midnight-bloom-theme': { class: 'midnight-bloom-theme', name: 'Midnight Bloom', colors: ['#0d0f19', '#e6e6fa', '#ff69b4', '#1a1e2f'] },
-                'deep-sea-pearl-theme': { class: 'deep-sea-pearl-theme', name: 'Deep Sea Pearl', colors: ['#1c3144', '#f0f8ff', '#c0fefe', '#2c445c'] },
-                'amethyst-mist-theme': { class: 'amethyst-mist-theme', name: 'Amethyst Mist', colors: ['#6a5acd', '#f0f0ff', '#1e1e1e', '#8a7cde'] },
-                'starlight-theme': { class: 'starlight-theme', name: 'Starlight', colors: ['#2c3e50', '#f8f8ff', '#d1b281', '#1a243e'] },
-                'sunset-haze-theme': { class: 'sunset-haze-theme', name: 'Sunset Haze', colors: ['#e74c3c', '#fce883', '#ffc94b', '#c0392b'] }
-            };
-
-            function saveState() {
-                localStorage.setItem('themeState', JSON.stringify(state));
-            }
-
-            function initializeState() {
-                const savedState = localStorage.getItem('themeState');
-                if (savedState) {
-                    const parsedState = JSON.parse(savedState);
-                    state.allThemes = { ...defaultThemes, ...parsedState.allThemes
-                    };
-                    state.selectedTheme = parsedState.selectedTheme || state.selectedTheme;
-                    state.selectedAlignment = parsedState.selectedAlignment || state.selectedAlignment;
-                } else {
-                    state.allThemes = defaultThemes;
-                }
-            }
-
-            function renderThemes() {
-                themeControls.innerHTML = '';
-                for (const themeKey in state.allThemes) {
-                    const theme = state.allThemes[themeKey];
-                    const option = document.createElement('div');
-                    option.className = `theme-option ${theme.class === state.selectedTheme ? 'active' : ''}`;
-                    option.dataset.theme = theme.class;
-                    
-                    const colors = theme.colors;
-                    option.innerHTML = `
-                        <div style="display:flex; gap:4px;">
-                            <span class="color-swatch" style="background-color: ${colors[0]};"></span>
-                            <span class="color-swatch" style="background-color: ${colors[1]};"></span>
-                            <span class="color-swatch" style="background-color: ${colors[2]};"></span>
-                            <span class="color-swatch" style="background-color: ${colors[3]};"></span>
-                        </div>
-                        <span>${theme.name}</span>
-                        <div class="theme-action-buttons">
-                            <button type="button" data-theme-key="${themeKey}" class="edit-theme-button" title="Edit">&#9998;</button>
-                            <button type="button" data-theme-key="${themeKey}" class="delete-theme-button" title="Delete">&#128465;</button>
-                        </div>
-                    `;
-                    themeControls.appendChild(option);
-                }
-
-                document.querySelectorAll('.theme-option').forEach(option => {
-                    option.addEventListener('click', (e) => {
-                        if (!e.target.closest('.theme-action-buttons')) {
-                            state.selectedTheme = option.dataset.theme;
-                            updateActiveControls();
-                        }
-                    });
-                });
-                document.querySelectorAll('.edit-theme-button').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        editTheme(e.target.dataset.themeKey);
-                    });
-                });
-                document.querySelectorAll('.delete-theme-button').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        deleteTheme(e.target.dataset.themeKey);
-                    });
-                });
-                updateActiveControls();
-            }
-
-            function renderPalettePreview(themeKey) {
-                palettePreview.innerHTML = '';
-                const theme = state.allThemes[themeKey];
-                if (theme && theme.colors) {
-                    theme.colors.forEach(color => {
-                        const swatch = document.createElement('div');
-                        swatch.className = 'palette-swatch';
-                        swatch.style.backgroundColor = color;
-                        palettePreview.appendChild(swatch);
-                    });
-                }
-            }
-
-            function updateActiveControls() {
-                document.querySelectorAll('.theme-option').forEach(el => {
-                    el.classList.remove('active');
-                    if (el.dataset.theme === state.selectedTheme) {
-                        el.classList.add('active');
-                    }
-                });
-                bodyElement.className = state.selectedTheme;
-                
-                // Update Admin Settings header color
-                const currentTheme = state.allThemes[state.selectedTheme];
-                if (currentTheme) {
-                    adminSettingsHeader.style.color = currentTheme.colors[0]; // Set H1 color to Primary Background
-                }
-
-                document.querySelectorAll('.alignment-option').forEach(el => {
-                    el.classList.remove('active');
-                    if (el.dataset.alignment === state.selectedAlignment) {
-                        el.classList.add('active');
-                    }
-                });
-                renderPalettePreview(state.selectedTheme);
-                saveState();
-            }
-
-            function editTheme(themeKey) {
-                const theme = state.allThemes[themeKey];
-                themeKeyInput.value = themeKey;
-                themeNameInput.value = theme.name;
-                themeColor1Input.value = theme.colors[0];
-                themeColor2Input.value = theme.colors[1];
-                themeColor3Input.value = theme.colors[2];
-                themeColor4Input.value = theme.colors[3];
-                themeColor1Picker.value = theme.colors[0];
-                themeColor2Picker.value = theme.colors[1];
-                themeColor3Picker.value = theme.colors[2];
-                themeColor4Picker.value = theme.colors[3];
-                themeForm.classList.add('active');
-                saveThemeButton.textContent = 'Save Changes';
-                deleteThemeButton.style.display = 'inline-block';
-            }
-
-            function deleteTheme(themeKey) {
-                if (confirm(`Are you sure you want to delete the theme "${state.allThemes[themeKey].name}"?`)) {
-                    delete state.allThemes[themeKey];
-                    if (state.selectedTheme === themeKey) {
-                        state.selectedTheme = Object.keys(state.allThemes)[0] || null;
-                    }
-                    saveState();
-                    renderThemes();
-                    themeForm.classList.remove('active');
-                }
-            }
-            
-            themeColor1Input.addEventListener('input', (e) => themeColor1Picker.value = e.target.value);
-            themeColor2Input.addEventListener('input', (e) => themeColor2Picker.value = e.target.value);
-            themeColor3Input.addEventListener('input', (e) => themeColor3Picker.value = e.target.value);
-            themeColor4Input.addEventListener('input', (e) => themeColor4Picker.value = e.target.value);
-            
-            themeColor1Picker.addEventListener('input', (e) => themeColor1Input.value = e.target.value);
-            themeColor2Picker.addEventListener('input', (e) => themeColor2Input.value = e.target.value);
-            themeColor3Picker.addEventListener('input', (e) => themeColor3Input.value = e.target.value);
-            themeColor4Picker.addEventListener('input', (e) => themeColor4Input.value = e.target.value);
-
-            themeForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const key = themeKeyInput.value || themeNameInput.value.toLowerCase().replace(/\s/g, '-');
-                state.allThemes[key] = {
-                    class: key,
-                    name: themeNameInput.value,
-                    colors: [
-                        themeColor1Input.value,
-                        themeColor2Input.value,
-                        themeColor3Input.value,
-                        themeColor4Input.value
-                    ]
-                };
-                state.selectedTheme = key;
-                themeForm.classList.remove('active');
-                renderThemes();
-            });
-
-            addThemeButton.addEventListener('click', () => {
-                themeForm.classList.add('active');
-                themeKeyInput.value = '';
-                themeNameInput.value = '';
-                themeColor1Input.value = '#000000';
-                themeColor2Input.value = '#ffffff';
-                themeColor3Input.value = '#cccccc';
-                themeColor4Input.value = '#333333';
-                themeColor1Picker.value = '#000000';
-                themeColor2Picker.value = '#ffffff';
-                themeColor3Picker.value = '#cccccc';
-                themeColor4Picker.value = '#333333';
-                saveThemeButton.textContent = 'Save New Theme';
-                deleteThemeButton.style.display = 'none';
-            });
-
-            cancelButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                themeForm.classList.remove('active');
-            });
-
-            randomizeButton.addEventListener('click', () => {
-                const themeKeys = Object.keys(state.allThemes);
-                const randomIndex = Math.floor(Math.random() * themeKeys.length);
-                state.selectedTheme = themeKeys[randomIndex];
-                updateActiveControls();
-            });
-
-            downloadButton.addEventListener('click', () => {
-                // Generate config.js content
-                const configContent = `// This file is generated by the Admin Dashboard.
-const widgetConfig = {
-  theme: '${state.selectedTheme}',
-  alignment: '${state.selectedAlignment}'
-};
-`;
-                const configBlob = new Blob([configContent], {
-                    type: 'text/javascript'
-                });
-                const configUrl = URL.createObjectURL(configBlob);
-                const configLink = document.createElement('a');
-                configLink.href = configUrl;
-                configLink.download = 'config.js';
-                document.body.appendChild(configLink);
-                configLink.click();
-                document.body.removeChild(configLink);
-                URL.revokeObjectURL(configUrl);
-
-                // Generate styles.css content
-                const selectedTheme = state.allThemes[state.selectedTheme];
-                const cssContent = `/*
- * This file sets up a consistent color palette using CSS Custom Properties (variables).
- * You can link this file to any of your widget HTML files to apply the same theme.
- */
-
-:root {
-  /* Default colors - these will be used if no theme is selected */
-  --primary-bg-color: ${selectedTheme.colors[0]};
-  --primary-text-color: ${selectedTheme.colors[1]};
-  --accent-color: ${selectedTheme.colors[2]};
-  --secondary-bg-color: ${selectedTheme.colors[3]};
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-`;
-                const cssBlob = new Blob([cssContent], {
-                    type: 'text/css'
-                });
-                const cssUrl = URL.createObjectURL(cssBlob);
-                const cssLink = document.createElement('a');
-                cssLink.href = cssUrl;
-                cssLink.download = 'styles.css';
-                document.body.appendChild(cssLink);
-                cssLink.click();
-                document.body.removeChild(cssLink);
-                URL.revokeObjectURL(cssUrl);
-
-                console.log('Configuration files downloaded successfully.');
-            });
-
-            document.querySelectorAll('.alignment-option').forEach(option => {
-                option.addEventListener('click', () => {
-                    state.selectedAlignment = option.dataset.alignment;
-                    updateActiveControls();
-                });
-            });
-
-            initializeState();
-            renderThemes();
-        });
-    </script>
+    <script src="settings.js"></script>
 </body>
 
 </html>

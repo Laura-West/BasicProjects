@@ -12,9 +12,9 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      font-family: sans-serif;
+      font-family: var(--font-family);
       background-color: var(--primary-bg-color);
-      color: var(--font-color);
+      color: var(--primary-text-color);
       transition: background-color 0.5s, color 0.5s;
     }
 
@@ -22,7 +22,7 @@
       position: relative;
       width: min(720px, 92vw);
       border-radius: 12px;
-      border: 2px solid var(--header-color);
+      border: 2px solid var(--secondary-bg-color);
       padding: 20px;
       display: flex;
       flex-direction: column;
@@ -33,46 +33,66 @@
       transition: background-color 0.5s, border-color 0.5s;
     }
 
+    .widget-controls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 5px;
+    }
+
+    .control-btn {
+      background: none;
+      border: 1px solid var(--accent-color);
+      color: var(--primary-text-color);
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .control-btn:hover {
+      background-color: var(--secondary-bg-color);
+    }
+
     .quote-content {
-      font-size: clamp(16px, 2.4vw, 22px);
-      font-weight: 600;
-      line-height: 1.35;
+      font-size: 1.5em;
+      font-style: italic;
       text-align: center;
+      padding: 0 20px;
     }
 
     .author {
-      font-size: clamp(14px, 1.8vw, 18px);
-      font-weight: 400;
-      font-style: italic;
+      font-size: 1em;
+      font-weight: bold;
       margin-top: 10px;
+      text-align: center;
       color: var(--accent-color);
     }
   </style>
 </head>
 
 <body>
-  <div class="widget" id="widget">
-    <div class="quote-content" id="quote-content"></div>
-    <div class="author" id="author"></div>
+  <div class="widget">
+    <div id="quote-container">
+      <div id="quote" class="quote-content">Loading quote...</div>
+      <div id="author" class="author"></div>
+    </div>
   </div>
 
   <script src="config.js"></script>
   <script>
     let QUOTES = [];
-    const quoteContentEl = document.getElementById('quote-content');
-    const authorEl = document.getElementById('author');
     let index = 0;
 
-    function render(nextIndex) {
-      if (QUOTES.length === 0) {
-        quoteContentEl.textContent = "Loading...";
-        authorEl.textContent = "";
-        return;
-      }
+    const quoteContentEl = document.getElementById('quote');
+    const authorEl = document.getElementById('author');
 
+    function render(nextIndex) {
+      if (QUOTES.length === 0) return;
       index = (nextIndex + QUOTES.length) % QUOTES.length;
       const quote = QUOTES[index];
-      quoteContentEl.textContent = `\"${quote.quote}\"`;
+      quoteContentEl.textContent = `"${quote.quote}"`;
       authorEl.textContent = quote.author;
     }
 
@@ -109,14 +129,15 @@
         }
       } else {
         // Fallback to a default theme if config.js is not loaded
-        document.body.className = 'gilded-iris-theme';
+        document.body.className = 'soft-evergreen-theme';
         quoteContentEl.style.textAlign = 'center';
       }
-
-      fetchQuotes();
     }
 
-    initializeWidget();
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchQuotes();
+      initializeWidget();
+    });
   </script>
 </body>
 
