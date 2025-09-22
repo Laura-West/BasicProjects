@@ -7,19 +7,17 @@ function initializeWidget(renderCallback) {
 
   // Check if the widgetConfig object exists and apply settings
   if (typeof widgetConfig !== 'undefined') {
-    config = { ...config,
-      ...widgetConfig
-    };
+    config = { ...config, ...widgetConfig };
   }
-  
+
   // Find the widget element
   const widgetElement = document.querySelector('.widget');
 
   // Apply configuration directly to the widget element
   if (widgetElement) {
-    widgetElement.className = 'widget ' + config.theme;
+    // This adds the theme class (e.g., 'soft-evergreen-theme') to the widget div
+    widgetElement.classList.add(config.theme);
   }
-
 
   if (renderCallback) {
     renderCallback(config);

@@ -1,86 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Main Quote Widget</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Universal Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       font-family: var(--font-family);
-      /* This is now permanently transparent */
-      background-color: transparent; 
+      background-color: transparent;
     }
-
-    /* The theme classes from styles.css will now apply directly to .widget,
-      controlling its background, text, and accent colors.
-    */
     .widget {
       position: relative;
       width: min(720px, 92vw);
       border-radius: 12px;
-      padding: clamp(20px, 5vw, 30px) clamp(15px, 4vw, 20px);
+      padding: clamp(20px, 5vw, 30px);
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: clamp(10px, 3vw, 15px);
-      
-      /* Styles inherited from the theme class */
       background-color: var(--primary-bg-color);
       color: var(--primary-text-color);
       border: 2px solid var(--secondary-bg-color);
-      
       transition: background-color 0.5s, border-color 0.5s, color 0.5s;
       min-height: 150px;
     }
-
-    #quote-container {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: clamp(10px, 3vw, 15px);
-    }
-
-    .quote-content {
-      font-size: clamp(1.2em, 4vw, 1.4em);
-      font-style: italic;
-      text-align: center;
-      padding: 0 clamp(10px, 3vw, 20px);
-      line-height: 1.6;
-    }
-
-    .author {
-      font-size: clamp(0.9em, 2.5vw, 1em);
-      font-weight: bold;
-      text-align: center;
-      color: var(--accent-color);
-    }
-
-    .loading {
-      font-style: italic;
-      color: var(--accent-color);
-    }
-
-    .error {
-      color: #d32f2f;
-      font-style: italic;
-    }
+    #quote-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+    .quote-content { font-size: clamp(1.2em, 4vw, 1.4em); font-style: italic; text-align: center; line-height: 1.6; }
+    .author { font-size: clamp(0.9em, 2.5vw, 1em); font-weight: bold; text-align: center; color: var(--accent-color); }
+    .loading { font-style: italic; color: var(--accent-color); }
+    .error { color: #d32f2f; }
   </style>
 </head>
-
 <body>
   <div class="widget">
     <div id="quote-container">
@@ -88,7 +44,6 @@
       <p class="author" id="author"></p>
     </div>
   </div>
-
   <script src="config.js"></script>
   <script src="widget.js"></script>
   <script>
@@ -96,7 +51,6 @@
     const authorEl = document.getElementById('author');
     let quotes = [];
     let currentQuoteIndex = 0;
-
     async function fetchQuotes() {
       try {
         const response = await fetch('ScriptureQuotes.json');
@@ -106,28 +60,26 @@
         setInterval(renderQuote, 20000);
       } catch (error) {
         quoteContentEl.textContent = 'Failed to load quotes.';
-        quoteContentEl.classList.remove('loading', 'error');
+        quoteContentEl.classList.remove('loading');
         quoteContentEl.classList.add('error');
-        console.error('Error fetching quotes:', error);
       }
     }
-
     function renderQuote() {
       const quote = quotes[currentQuoteIndex];
       currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
       quoteContentEl.textContent = `"${quote.quote}"`;
-      quoteContentEl.classList.remove('loading', 'error');
+      quoteContentEl.classList.remove('loading');
       authorEl.textContent = quote.author;
     }
-
     document.addEventListener('DOMContentLoaded', () => {
       fetchQuotes();
       setTimeout(() => initializeWidget(config => {
-        quoteContentEl.style.textAlign = config.alignment;
-        authorEl.style.textAlign = config.alignment;
+        const quoteContainer = document.getElementById('quote-container');
+        if (quoteContainer) {
+          quoteContainer.style.textAlign = config.alignment;
+        }
       }), 100);
     });
   </script>
 </body>
-
 </html>

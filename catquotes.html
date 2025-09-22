@@ -1,25 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cat Quote Widget</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       font-family: var(--font-family);
-      background-color: var(--primary-bg-color);
-      color: var(--primary-text-color);
-      transition: background-color 0.5s, color 0.5s;
-      margin: 0;
-      padding: 0;
+      background-color: transparent;
     }
-
     .widget {
       width: min(720px, 92vw);
       border-radius: 12px;
@@ -29,22 +24,21 @@
       align-items: center;
       gap: 12px;
       background-color: var(--primary-bg-color);
-      transition: background-color 0.5s, border-color 0.5s;
+      color: var(--primary-text-color);
+      border: 2px solid var(--secondary-bg-color);
+      transition: background-color 0.5s, border-color 0.5s, color 0.5s;
       min-height: 120px;
     }
-
     .cat {
       font-size: 3em;
-      filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
+      filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.1));
     }
-
     .quote-content {
       font-size: 1.5em;
       font-style: italic;
       text-align: center;
       padding: 0 20px;
     }
-
     .nav-button {
       background: none;
       border: none;
@@ -52,7 +46,6 @@
       cursor: pointer;
       color: var(--accent-color);
     }
-
     .nav-container {
       display: flex;
       align-items: center;
@@ -61,7 +54,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="widget">
     <div class="cat" id="catEmoji"></div>
@@ -71,7 +63,6 @@
       <button class="nav-button" onclick="render(index + 1)">&#x2192;</button>
     </div>
   </div>
-
   <script src="config.js"></script>
   <script src="widget.js"></script>
   <script>
@@ -84,17 +75,14 @@
       'The smallest feline is a masterpiece.',
       'Cats choose us; we don\'t own them.'
     ];
-
     const quoteEl = document.getElementById('quote');
     const catEl = document.getElementById('catEmoji');
     let index = 0;
-
     function render(nextIndex) {
       index = (nextIndex + QUOTES.length) % QUOTES.length;
       quoteEl.textContent = QUOTES[index];
       catEl.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
     }
-
     document.addEventListener('DOMContentLoaded', () => {
       render(0);
       setTimeout(() => initializeWidget(config => {
@@ -103,5 +91,4 @@
     });
   </script>
 </body>
-
 </html>
