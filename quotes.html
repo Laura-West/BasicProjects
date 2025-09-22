@@ -73,100 +73,50 @@
 <body>
   <div class="widget">
     <div id="quote-container">
-      <div id="quote" class="quote-content loading">Loading quote...</div>
-      <div id="author" class="author"></div>
+      <p class="quote-content loading" id="quote-content">Loading quote...</p>
+      <p class="author" id="author"></p>
     </div>
   </div>
 
   <script src="config.js"></script>
+  <script src="widget.js"></script>
   <script>
-    let QUOTES = [];
-    let index = 0;
-    let rotationInterval;
-    
-    const quoteContentEl = document.getElementById('quote');
+    const quoteContentEl = document.getElementById('quote-content');
     const authorEl = document.getElementById('author');
+    let quotes = [];
+    let currentQuoteIndex = 0;
 
     async function fetchQuotes() {
       try {
         const response = await fetch('ScriptureQuotes.json');
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
         const data = await response.json();
-        if (data.quotes && Array.isArray(data.quotes)) {
-          QUOTES = data.quotes;
-          console.log(`Loaded ${QUOTES.length} quotes successfully`);
-        } else {
-          throw new Error("Invalid quotes format.");
-        }
-        
-        // Start rotation if quotes loaded successfully
-        if (QUOTES.length > 0) {
-          render(0);
-          // Rotate every 5 minutes (300000ms)
-          rotationInterval = setInterval(() => render(index + 1), 300000);
-        }
+        // Shuffle the array and get the first 10
+        quotes = data.quotes.sort(() => 0.5 - Math.random()).slice(0, 10);
+        renderQuote();
+        setInterval(renderQuote, 20000); // 20 seconds
       } catch (error) {
-        console.error("Failed to fetch quotes:", error);
-        quoteContentEl.textContent = "Unable to load quotes. Please check your connection.";
+        quoteContentEl.textContent = 'Failed to load quotes.';
         quoteContentEl.classList.remove('loading');
         quoteContentEl.classList.add('error');
-        authorEl.textContent = "";
+        console.error('Error fetching quotes:', error);
       }
     }
 
-    function render(nextIndex) {
-      if (QUOTES.length === 0) return;
-      
-      index = (nextIndex + QUOTES.length) % QUOTES.length;
-      const quote = QUOTES[index];
-      
+    function renderQuote() {
+      const quote = quotes[currentQuoteIndex];
+      currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+
       quoteContentEl.textContent = `"${quote.quote}"`;
       quoteContentEl.classList.remove('loading', 'error');
       authorEl.textContent = quote.author;
     }
 
-    function initializeWidget() {
-      // Default configuration
-      let config = {
-        theme: 'soft-evergreen-theme',
-        alignment: 'center'
-      };
-
-      // Check if the widgetConfig object exists and apply settings
-      if (typeof widgetConfig !== 'undefined') {
-        config = { ...config, ...widgetConfig };
-      }
-
-      // Apply configuration
-      document.body.className = config.theme;
-      quoteContentEl.style.textAlign = config.alignment;
-      authorEl.style.textAlign = config.alignment;
-    }
-
-    // Handle config.js loading errors
-    window.addEventListener('error', function(e) {
-      if (e.target && e.target.src && e.target.src.includes('config.js')) {
-        console.warn('Config file not found, using defaults');
-        window.widgetConfig = {
-          theme: 'soft-evergreen-theme',
-          alignment: 'center'
-        };
-        initializeWidget();
-      }
-    }, true);
-
     document.addEventListener('DOMContentLoaded', () => {
       fetchQuotes();
-      setTimeout(initializeWidget, 100); // Small delay to ensure config loads
-    });
-
-    // Clean up interval on page unload
-    window.addEventListener('beforeunload', () => {
-      if (rotationInterval) {
-        clearInterval(rotationInterval);
-      }
+      setTimeout(() => initializeWidget(config => {
+        quoteContentEl.style.textAlign = config.alignment;
+        authorEl.style.textAlign = config.alignment;
+      }), 100);
     });
   </script>
 </body>

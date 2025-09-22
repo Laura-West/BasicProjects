@@ -57,13 +57,13 @@ body.soft-lavender-theme {
   --primary-bg-color: #f7f3f9;
   --primary-text-color: #544458;
   --accent-color: #a08da6;
-  --secondary-bg-color: #e1dbe2;
+  --secondary-bg-color: #e1dbe4;
 }
 
 /* 7. "Gilded Iris" */
 body.gilded-iris-theme {
-  --primary-bg-color: #f8f6f2;
-  --primary-text-color: #4d443b;
-  --accent-color: #c9b19e;
-  --secondary-bg-color: #e3ddd3;
+    --primary-bg-color: #fdfaf3;
+    --primary-text-color: #4b422e;
+    --accent-color: #c5a76c;
+    --secondary-bg-color: #e9e2d3;
 }
