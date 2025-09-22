@@ -22,11 +22,11 @@
     .widget {
       width: min(720px, 92vw);
       border-radius: 12px;
-      padding: 30px;
+      padding: 20px; /* Adjusted padding */
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
+      gap: 15px; /* Adjusted gap */
       background-color: var(--primary-bg-color);
       transition: background-color 0.5s, border-color 0.5s;
     }
@@ -35,78 +35,71 @@
       width: 100%;
       background-color: var(--secondary-bg-color);
       border-radius: 50px;
-      height: 25px;
       overflow: hidden;
-      margin-top: 10px;
     }
 
-    .progress-bar {
-      height: 100%;
+    #progress-bar {
+      height: 20px;
       width: 0%;
       background-color: var(--accent-color);
+      border-radius: 50px;
       transition: width 0.5s ease-in-out;
     }
 
     #time-display {
-      font-size: 2em;
-      font-weight: bold;
-      text-align: center;
+      /* Made font size responsive using clamp() */
+      font-size: clamp(2em, 8vw, 2.5em);
+      font-weight: 700;
     }
 
-    .remaining-text {
-      font-size: 1.2em;
-      text-align: center;
+    #remaining-text {
+      font-size: 1.1em;
+      opacity: 0.9;
     }
   </style>
 </head>
 
 <body>
   <div class="widget">
-    <div id="time-display"></div>
+    <div id="time-display">--:--</div>
     <div class="progress-bar-container">
-      <div id="progress-bar" class="progress-bar"></div>
+      <div id="progress-bar"></div>
     </div>
-    <div id="remaining-text" class="remaining-text"></div>
+    <div id="remaining-text">Calculating...</div>
   </div>
 
   <script src="config.js"></script>
   <script>
-    // Define a standard 9-to-5 workday (in your local timezone)
+    const progressBarEl = document.getElementById('progress-bar');
+    const remainingTextEl = document.getElementById('remaining-text');
+    const timeDisplayEl = document.getElementById('time-display');
+
+    // --- Business Hours Configuration ---
     const WORKDAY_START_HOUR = 9; // 9 AM
     const WORKDAY_END_HOUR = 17; // 5 PM
     const WORKDAY_LENGTH_MINUTES = (WORKDAY_END_HOUR - WORKDAY_START_HOUR) * 60;
-    const MILLISECONDS_IN_MINUTE = 60 * 1000;
-
-    const timeDisplayEl = document.getElementById('time-display');
-    const progressBarEl = document.getElementById('progress-bar');
-    const remainingTextEl = document.getElementById('remaining-text');
+    const MILLISECONDS_IN_MINUTE = 60000;
 
     function updateProgressBar() {
       const now = new Date();
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
+      const totalMinutesIntoDay = currentHour * 60 + currentMinute;
 
-      let hoursRemaining, minutesRemaining;
-      let progressPercentage;
+      const startMinutes = WORKDAY_START_HOUR * 60;
+      const endMinutes = WORKDAY_END_HOUR * 60;
+
+      let progressPercentage = 0;
       let remainingText = '';
+      let hoursRemaining, minutesRemaining;
 
-      const workDayStartTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), WORKDAY_START_HOUR, 0, 0);
-      const workDayEndTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), WORKDAY_END_HOUR, 0, 0);
-
-      if (now < workDayStartTime) {
-        // Before the workday starts
-        const timeUntilStart = workDayStartTime - now;
-        const minutesUntilStart = Math.ceil(timeUntilStart / MILLISECONDS_IN_MINUTE);
-        hoursRemaining = Math.floor(minutesUntilStart / 60);
-        minutesRemaining = minutesUntilStart % 60;
-
+      if (totalMinutesIntoDay < startMinutes) {
+        // Before the workday
         progressPercentage = 0;
-        remainingText = `Workday starts in ${hoursRemaining}h ${minutesRemaining}m`;
+        remainingText = 'Workday hasn\'t started yet.';
 
-      } else if (now > workDayEndTime) {
-        // After the workday ends
-        hoursRemaining = 0;
-        minutesRemaining = 0;
+      } else if (totalMinutesIntoDay >= endMinutes) {
+        // After the workday
         progressPercentage = 100;
         remainingText = 'Workday is over! 🎉';
 
@@ -144,9 +137,23 @@
       updateProgressBar();
       setInterval(updateProgressBar, MILLISECONDS_IN_MINUTE);
     }
+    
+    // Handle config.js loading errors
+    window.addEventListener('error', function(e) {
+      if (e.target && e.target.src && e.target.src.includes('config.js')) {
+        console.warn('Config file not found, using defaults');
+        window.widgetConfig = {
+          theme: 'soft-evergreen-theme',
+          alignment: 'center'
+        };
+        initializeWidget();
+      }
+    }, true);
 
-    document.addEventListener('DOMContentLoaded', initializeWidget);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initializeWidget, 100);
+    });
   </script>
 </body>
-
 </html>
