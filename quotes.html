@@ -19,14 +19,15 @@
       position: relative;
       width: min(720px, 92vw);
       border-radius: 12px;
-      padding: clamp(25px, 5vw, 40px); /* Increased padding for a spacious feel */
+      padding: clamp(25px, 5vw, 35px);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 15px;
+      gap: 5px;
       background-color: var(--primary-bg-color);
       color: var(--primary-text-color);
-      transition: background-color 0.5s, color 0.5s;
+      border: 2px solid var(--secondary-bg-color);
+      transition: background-color 0.5s, border-color 0.5s, color 0.5s;
       min-height: 150px;
     }
     #quote-container {
@@ -41,26 +42,31 @@
       font-style: italic;
       text-align: center;
       line-height: 1.6;
-      width: 100%; /* Ensure p takes full width for alignment */
     }
-    /* NEW: Styles for the decorative first letter */
+    /* Style for the decorative first letter */
     .quote-content::first-letter {
-      font-family: Georgia, serif; /* A classic, elegant serif font */
-      font-size: 3em; /* Make the first letter significantly larger */
-      font-style: normal; /* Italic doesn't always look good on drop caps */
+      font-family: Georgia, serif;
+      font-size: 3em;
+      font-style: normal;
       font-weight: bold;
       color: var(--accent-color);
-      float: left; /* Allows text to wrap around the letter */
-      line-height: 0.7; /* Adjusts vertical alignment */
+      float: left;
+      line-height: 0.7;
       padding-right: 8px;
       padding-top: 5px;
+    }
+    /* Style for the decorative ornament */
+    .divider {
+      font-size: 1.5em;
+      color: var(--accent-color);
+      opacity: 0.8;
+      line-height: 1;
     }
     .author {
       font-size: clamp(0.9em, 2.5vw, 1em);
       font-weight: bold;
       text-align: center;
       color: var(--accent-color);
-      margin-top: 10px; /* Add some space above the author */
     }
     .loading { font-style: italic; color: var(--accent-color); }
     .error { color: #d32f2f; }
@@ -70,6 +76,7 @@
   <div class="widget">
     <div id="quote-container">
       <p class="quote-content loading" id="quote-content">Loading quote...</p>
+      <div class="divider">✢</div>
       <p class="author" id="author"></p>
     </div>
   </div>
@@ -96,18 +103,17 @@
     function renderQuote() {
       const quote = quotes[currentQuoteIndex];
       currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
-      // We no longer add quotes here, just the raw text
+      // Set the raw text for the first-letter style to work
       quoteContentEl.textContent = quote.quote; 
       quoteContentEl.classList.remove('loading');
-      authorEl.textContent = '— ' + quote.author; // Added an em dash for style
+      authorEl.textContent = quote.author;
     }
     document.addEventListener('DOMContentLoaded', () => {
       fetchQuotes();
       setTimeout(() => initializeWidget(config => {
-        // Apply alignment to the whole widget for consistency
-        const widgetDiv = document.querySelector('.widget');
-        if (widgetDiv) {
-            widgetDiv.style.textAlign = config.alignment;
+        const quoteContainer = document.getElementById('quote-container');
+        if (quoteContainer) {
+          quoteContainer.style.textAlign = config.alignment;
         }
       }), 100);
     });
