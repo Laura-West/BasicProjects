@@ -95,18 +95,17 @@
         #add-theme-btn:hover { background-color: #218838; }
         
         .download-section { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px; margin-top: 20px; }
-        #download-config-btn, #download-styles-btn { background-color: #007bff; /* Both buttons are blue */ }
+        #download-config-btn, #download-styles-btn { background-color: #007bff; }
         #download-config-btn:hover, #download-styles-btn:hover { background-color: #0056b3; }
+        #update-interface-btn { background-color: #28a745; }
+        #update-interface-btn:hover { background-color: #218838; }
 
-        /* Clicked state for buttons */
         .btn.clicked {
-            background-color: #6c757d; /* Grey color */
+            background-color: #6c757d;
             cursor: default;
             transform: none;
         }
-        .btn.clicked:hover {
-            background-color: #6c757d; /* Stays grey on hover */
-        }
+        .btn.clicked:hover { background-color: #6c757d; }
         
         /* Upload Instructions Block */
         .upload-instructions {
@@ -173,10 +172,11 @@
         <div class="download-section">
             <button id="download-config-btn" class="btn">Save Settings</button>
             <button id="download-styles-btn" class="btn" style="display: none;">Save Styles</button>
+            <button id="update-interface-btn" class="btn" style="display: none;">Update Interface</button>
         </div>
 
         <div id="upload-instructions" class="upload-instructions" style="display: none;">
-            <p>Changes made! Remember to save your settings and styles, then upload both files to GitHub:</p>
+            <p>Changes made! Save your files, then upload <strong>all three</strong> (`settings.js`, `styles.css`, `config.js`) to GitHub:</p>
             <a href="https://github.com/Laura-West/BasicProjects/upload/main" target="_blank">https://github.com/Laura-West/BasicProjects/upload/main</a>
         </div>
     </div>
