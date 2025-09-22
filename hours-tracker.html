@@ -92,36 +92,36 @@
 
       const workDayStartTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), WORKDAY_START_HOUR, 0, 0);
       const workDayEndTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), WORKDAY_END_HOUR, 0, 0);
-      
+
       if (now < workDayStartTime) {
         // Before the workday starts
         const timeUntilStart = workDayStartTime - now;
         const minutesUntilStart = Math.ceil(timeUntilStart / MILLISECONDS_IN_MINUTE);
         hoursRemaining = Math.floor(minutesUntilStart / 60);
         minutesRemaining = minutesUntilStart % 60;
-        
+
         progressPercentage = 0;
         remainingText = `Workday starts in ${hoursRemaining}h ${minutesRemaining}m`;
-        
+
       } else if (now > workDayEndTime) {
         // After the workday ends
         hoursRemaining = 0;
         minutesRemaining = 0;
         progressPercentage = 100;
         remainingText = 'Workday is over! 🎉';
-        
+
       } else {
         // During the workday
         const elapsedMinutes = (currentHour - WORKDAY_START_HOUR) * 60 + currentMinute;
         const remainingMinutes = WORKDAY_LENGTH_MINUTES - elapsedMinutes;
-        
+
         hoursRemaining = Math.floor(remainingMinutes / 60);
         minutesRemaining = remainingMinutes % 60;
-        
+
         progressPercentage = (elapsedMinutes / WORKDAY_LENGTH_MINUTES) * 100;
         remainingText = `${hoursRemaining}h ${minutesRemaining}m remaining`;
       }
-      
+
       // Update the DOM
       timeDisplayEl.textContent = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
       progressBarEl.style.width = `${progressPercentage}%`;
