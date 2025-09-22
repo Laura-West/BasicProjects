@@ -23,19 +23,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 5px;
+      gap: 15px; /* Unified gap */
       background-color: var(--primary-bg-color);
       color: var(--primary-text-color);
       border: 2px solid var(--secondary-bg-color);
       transition: background-color 0.5s, border-color 0.5s, color 0.5s;
       min-height: 150px;
-    }
-    #quote-container {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
     }
     .quote-content {
       font-size: clamp(1.2em, 4vw, 1.4em);
@@ -43,7 +36,6 @@
       text-align: center;
       line-height: 1.6;
     }
-    /* Style for the decorative first letter */
     .quote-content::first-letter {
       font-family: Georgia, serif;
       font-size: 3em;
@@ -55,7 +47,6 @@
       padding-right: 8px;
       padding-top: 5px;
     }
-    /* Style for the decorative ornament */
     .divider {
       font-size: 1.5em;
       color: var(--accent-color);
@@ -73,49 +64,54 @@
   </style>
 </head>
 <body>
-  <div class="widget">
-    <div id="quote-container">
+  <div id="quote-container" class="widget">
       <p class="quote-content loading" id="quote-content">Loading quote...</p>
       <div class="divider">✢</div>
       <p class="author" id="author"></p>
-    </div>
   </div>
+
   <script src="config.js"></script>
-  <script src="widget.js"></script>
   <script>
-    const quoteContentEl = document.getElementById('quote-content');
-    const authorEl = document.getElementById('author');
-    let quotes = [];
-    let currentQuoteIndex = 0;
-    async function fetchQuotes() {
-      try {
-        const response = await fetch('ScriptureQuotes.json');
-        const data = await response.json();
-        quotes = data.quotes.sort(() => 0.5 - Math.random()).slice(0, 10);
-        renderQuote();
-        setInterval(renderQuote, 20000);
-      } catch (error) {
-        quoteContentEl.textContent = 'Failed to load quotes.';
-        quoteContentEl.classList.remove('loading');
-        quoteContentEl.classList.add('error');
-      }
-    }
-    function renderQuote() {
-      const quote = quotes[currentQuoteIndex];
-      currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
-      // Set the raw text for the first-letter style to work
-      quoteContentEl.textContent = quote.quote; 
-      quoteContentEl.classList.remove('loading');
-      authorEl.textContent = quote.author;
-    }
     document.addEventListener('DOMContentLoaded', () => {
-      fetchQuotes();
-      setTimeout(() => initializeWidget(config => {
-        const quoteContainer = document.getElementById('quote-container');
-        if (quoteContainer) {
-          quoteContainer.style.textAlign = config.alignment;
+      const quoteContainer = document.getElementById('quote-container');
+      const quoteContentEl = document.getElementById('quote-content');
+      const authorEl = document.getElementById('author');
+
+      // 1. Apply Theme from config.js
+      if (typeof widgetConfig !== 'undefined' && widgetConfig.theme) {
+        quoteContainer.classList.add(widgetConfig.theme);
+      } else {
+        quoteContainer.classList.add('soft-evergreen-theme'); // Default theme
+      }
+
+      let quotes = [];
+      let currentQuoteIndex = 0;
+
+      // 2. Fetch and Render Quotes
+      async function fetchQuotes() {
+        try {
+          const response = await fetch('ScriptureQuotes.json');
+          const data = await response.json();
+          quotes = data.quotes.sort(() => 0.5 - Math.random()).slice(0, 10);
+          renderQuote();
+          setInterval(renderQuote, 20000);
+        } catch (error) {
+          quoteContentEl.textContent = 'Failed to load quotes.';
+          quoteContentEl.classList.remove('loading');
+          quoteContentEl.classList.add('error');
         }
-      }), 100);
+      }
+
+      function renderQuote() {
+        if (quotes.length === 0) return;
+        const quote = quotes[currentQuoteIndex];
+        currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+        quoteContentEl.textContent = quote.quote;
+        quoteContentEl.classList.remove('loading');
+        authorEl.textContent = quote.author;
+      }
+      
+      fetchQuotes();
     });
   </script>
 </body>
