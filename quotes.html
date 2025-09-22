@@ -22,15 +22,14 @@
       position: relative;
       width: min(720px, 92vw);
       border-radius: 12px;
-      border: 2px solid var(--secondary-bg-color);
       padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 12px;
       background-color: var(--primary-bg-color);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: background-color 0.5s, border-color 0.5s;
+      border: 2px solid var(--secondary-bg-color);
     }
 
     .widget-controls {
@@ -84,17 +83,8 @@
   <script>
     let QUOTES = [];
     let index = 0;
-
     const quoteContentEl = document.getElementById('quote');
     const authorEl = document.getElementById('author');
-
-    function render(nextIndex) {
-      if (QUOTES.length === 0) return;
-      index = (nextIndex + QUOTES.length) % QUOTES.length;
-      const quote = QUOTES[index];
-      quoteContentEl.textContent = `"${quote.quote}"`;
-      authorEl.textContent = quote.author;
-    }
 
     async function fetchQuotes() {
       try {
@@ -115,22 +105,29 @@
         return;
       }
       render(0);
-      setInterval(() => render(index + 1), 300000); // 300000 ms = 5 minutes
+      setInterval(() => render(index + 1), 300000);
+    }
+
+    function render(nextIndex) {
+      if (QUOTES.length === 0) return;
+      index = (nextIndex + QUOTES.length) % QUOTES.length;
+      const quote = QUOTES[index];
+      quoteContentEl.textContent = `"${quote.quote}"`;
+      authorEl.textContent = quote.author;
     }
 
     function initializeWidget() {
-      // Check if the widgetConfig object exists and apply settings
       if (typeof widgetConfig !== 'undefined') {
         if (widgetConfig.theme) {
           document.body.className = widgetConfig.theme;
         }
         if (widgetConfig.alignment) {
+          document.querySelector('.widget').style.textAlign = widgetConfig.alignment;
           quoteContentEl.style.textAlign = widgetConfig.alignment;
         }
       } else {
-        // Fallback to a default theme if config.js is not loaded
         document.body.className = 'soft-evergreen-theme';
-        quoteContentEl.style.textAlign = 'center';
+        document.querySelector('.widget').style.textAlign = 'center';
       }
     }
 
