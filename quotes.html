@@ -7,29 +7,38 @@
   <title>Main Quote Widget</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
+    /* Universal Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       font-family: var(--font-family);
-      background-color: var(--primary-bg-color);
+      /* Changed to transparent to show Notion background */
+      background-color: transparent; 
       color: var(--primary-text-color);
-      transition: background-color 0.5s, color 0.5s;
-      margin: 0;
-      padding: 0;
+      transition: color 0.5s; /* Only color transitions now */
     }
 
     .widget {
       position: relative;
       width: min(720px, 92vw);
       border-radius: 12px;
-      padding: 30px 20px;
+      /* Adaptive padding */
+      padding: clamp(20px, 5vw, 30px) clamp(15px, 4vw, 20px); 
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
-      background-color: var(--primary-bg-color);
+      /* Adaptive gap */
+      gap: clamp(10px, 3vw, 15px); 
+      /* This now holds the theme background color */
+      background-color: var(--primary-bg-color); 
       transition: background-color 0.5s, border-color 0.5s;
       border: 2px solid var(--secondary-bg-color);
       min-height: 150px;
@@ -40,19 +49,21 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 15px;
+      gap: clamp(10px, 3vw, 15px); /* Adaptive gap */
     }
 
     .quote-content {
-      font-size: 1.4em;
+      /* Adaptive font size */
+      font-size: clamp(1.2em, 4vw, 1.4em); 
       font-style: italic;
       text-align: center;
-      padding: 0 20px;
+      padding: 0 clamp(10px, 3vw, 20px); /* Adaptive padding */
       line-height: 1.6;
     }
 
     .author {
-      font-size: 1em;
+      /* Adaptive font size */
+      font-size: clamp(0.9em, 2.5vw, 1em); 
       font-weight: bold;
       text-align: center;
       color: var(--accent-color);
