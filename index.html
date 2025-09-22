@@ -26,6 +26,7 @@
             display: flex;
             flex-direction: column;
             gap: 25px;
+            position: relative; /* Needed for popup positioning */
         }
         h1, h2 { text-align: center; color: #333; }
         h1 { font-size: 2.2em; font-weight: 700; margin-bottom: 10px; }
@@ -100,11 +101,57 @@
         #download-styles-btn { background-color: #5a6268; }
         #download-styles-btn:hover { background-color: #444a50; }
         #styles-hint { color: #666; font-size: 0.9em; margin: 0; }
+        
+        /* Upload Instructions Popup */
+        .instructions-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            z-index: 100;
+            border: 1px solid #ddd;
+        }
+        .instructions-popup p {
+            font-size: 1.1em;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .instructions-popup a {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .instructions-popup a:hover {
+            background-color: #218838;
+        }
+        #close-instructions-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #888;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Widget Admin Dashboard</h1>
+        <h1>Widget Theme Dashboard</h1>
         <p>Use this dashboard to create and manage themes. When you're done, download the generated <code>styles.css</code> and <code>config.js</code> files to update your project.</p>
         
         <h2>Select a Theme</h2>
@@ -112,7 +159,7 @@
 
         <h2>Create a Custom Theme</h2>
         <div id="theme-creator" class="theme-creator-grid">
-            <div class="form-group" style="grid-column: 1 / -1;">
+             <div class="form-group" style="grid-column: 1 / -1;">
                 <label for="new-theme-name">Theme Name</label>
                 <input type="text" id="new-theme-name" placeholder="e.g., Ocean Breeze">
             </div>
@@ -152,8 +199,14 @@
 
         <div class="download-section">
             <p id="styles-hint" style="display: none;">You've made changes! Don't forget to download the updated stylesheet.</p>
-            <button id="download-config-btn" class="btn">Download config.js</button>
+            <button id="download-config-btn" class="btn">Save Settings</button>
             <button id="download-styles-btn" class="btn" style="display: none;">Download styles.css</button>
+        </div>
+
+        <div id="upload-instructions" class="instructions-popup" style="display: none;">
+            <button id="close-instructions-btn">&times;</button>
+            <p>Files downloaded! Now, upload both <strong>config.js</strong> and <strong>styles.css</strong> to your GitHub repository.</p>
+            <a href="https://github.com/Laura-West/BasicProjects/upload/main" target="_blank">Upload to GitHub</a>
         </div>
     </div>
     <script src="settings.js"></script>
