@@ -8,12 +8,15 @@
     <style>
         /* Base styles for the dashboard */
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             transition: background-color 0.5s ease-in-out;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .container {
@@ -40,6 +43,11 @@
             color: #4a4a4a;
         }
 
+        p {
+            color: #666;
+            line-height: 1.6;
+        }
+
         .section-control {
             display: flex;
             flex-wrap: wrap;
@@ -58,19 +66,19 @@
             justify-content: center;
             cursor: pointer;
             border: 2px solid #ddd;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
             position: relative;
             background-color: #f7f7f7;
         }
 
         .theme-option:hover {
             transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .theme-option.active {
             border-color: #007bff;
-            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.3);
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
         }
 
         .color-swatch {
@@ -84,22 +92,26 @@
         .theme-option span {
             font-weight: 600;
             color: #333;
+            font-size: 0.9em;
+            text-align: center;
         }
 
         /* Alignment Option Styles */
         .alignment-option {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: 2px solid #ddd;
             border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.2s, border-color 0.2s;
+            transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
             display: flex;
             align-items: center;
             gap: 8px;
+            font-weight: 500;
         }
 
         .alignment-option:hover {
             background-color: #f0f0f0;
+            transform: translateY(-2px);
         }
 
         .alignment-option.active {
@@ -117,13 +129,42 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.2s;
             align-self: center;
             width: fit-content;
         }
 
         #download-btn:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        #download-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Success message */
+        .success-message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -131,26 +172,30 @@
 <body>
     <div class="container">
         <h1>Widget Admin Dashboard</h1>
-        <p>Use this dashboard to configure your widgets. Your selections will be saved to `config.js`, which you can then upload to your repository.</p>
+        <p>Use this dashboard to configure your widgets. Your selections will be saved to <code>config.js</code>, which you can then upload to your repository.</p>
 
         <h2>Select a Theme</h2>
         <div id="theme-controls" class="section-control">
-            </div>
+        </div>
 
         <h2>Select Text Alignment</h2>
         <div id="alignment-controls" class="section-control">
             <div class="alignment-option" data-alignment="left">
-                <span>Left</span>
+                <span>↔ Left</span>
             </div>
             <div class="alignment-option" data-alignment="center">
-                <span>Center</span>
+                <span>↔ Center</span>
             </div>
             <div class="alignment-option" data-alignment="right">
-                <span>Right</span>
+                <span>↔ Right</span>
             </div>
         </div>
 
         <button id="download-btn">Download config.js</button>
+    </div>
+
+    <div class="success-message" id="success-message">
+        config.js downloaded successfully!
     </div>
 
     <script src="settings.js"></script>

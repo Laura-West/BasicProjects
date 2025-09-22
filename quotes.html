@@ -16,13 +16,15 @@
       background-color: var(--primary-bg-color);
       color: var(--primary-text-color);
       transition: background-color 0.5s, color 0.5s;
+      margin: 0;
+      padding: 0;
     }
 
     .widget {
       position: relative;
       width: min(720px, 92vw);
       border-radius: 12px;
-      padding: 20px;
+      padding: 30px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -30,43 +32,40 @@
       background-color: var(--primary-bg-color);
       transition: background-color 0.5s, border-color 0.5s;
       border: 2px solid var(--secondary-bg-color);
+      min-height: 150px;
     }
 
-    .widget-controls {
-      position: absolute;
-      top: 10px;
-      right: 10px;
+    #quote-container {
+      width: 100%;
       display: flex;
-      gap: 5px;
-    }
-
-    .control-btn {
-      background: none;
-      border: 1px solid var(--accent-color);
-      color: var(--primary-text-color);
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .control-btn:hover {
-      background-color: var(--secondary-bg-color);
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
     }
 
     .quote-content {
-      font-size: 1.5em;
+      font-size: 1.4em;
       font-style: italic;
       text-align: center;
       padding: 0 20px;
+      line-height: 1.6;
     }
 
     .author {
       font-size: 1em;
       font-weight: bold;
-      margin-top: 10px;
       text-align: center;
       color: var(--accent-color);
+    }
+
+    .loading {
+      font-style: italic;
+      color: var(--accent-color);
+    }
+
+    .error {
+      color: #d32f2f;
+      font-style: italic;
     }
   </style>
 </head>
@@ -74,7 +73,7 @@
 <body>
   <div class="widget">
     <div id="quote-container">
-      <div id="quote" class="quote-content">Loading quote...</div>
+      <div id="quote" class="quote-content loading">Loading quote...</div>
       <div id="author" class="author"></div>
     </div>
   </div>
@@ -83,6 +82,8 @@
   <script>
     let QUOTES = [];
     let index = 0;
+    let rotationInterval;
+    
     const quoteContentEl = document.getElementById('quote');
     const authorEl = document.getElementById('author');
 
@@ -95,45 +96,77 @@
         const data = await response.json();
         if (data.quotes && Array.isArray(data.quotes)) {
           QUOTES = data.quotes;
+          console.log(`Loaded ${QUOTES.length} quotes successfully`);
         } else {
           throw new Error("Invalid quotes format.");
         }
+        
+        // Start rotation if quotes loaded successfully
+        if (QUOTES.length > 0) {
+          render(0);
+          // Rotate every 5 minutes (300000ms)
+          rotationInterval = setInterval(() => render(index + 1), 300000);
+        }
       } catch (error) {
         console.error("Failed to fetch quotes:", error);
-        quoteContentEl.textContent = "Error loading quotes.";
+        quoteContentEl.textContent = "Unable to load quotes. Please check your connection.";
+        quoteContentEl.classList.remove('loading');
+        quoteContentEl.classList.add('error');
         authorEl.textContent = "";
-        return;
       }
-      render(0);
-      setInterval(() => render(index + 1), 300000);
     }
 
     function render(nextIndex) {
       if (QUOTES.length === 0) return;
+      
       index = (nextIndex + QUOTES.length) % QUOTES.length;
       const quote = QUOTES[index];
+      
       quoteContentEl.textContent = `"${quote.quote}"`;
+      quoteContentEl.classList.remove('loading', 'error');
       authorEl.textContent = quote.author;
     }
 
     function initializeWidget() {
+      // Default configuration
+      let config = {
+        theme: 'soft-evergreen-theme',
+        alignment: 'center'
+      };
+
+      // Check if the widgetConfig object exists and apply settings
       if (typeof widgetConfig !== 'undefined') {
-        if (widgetConfig.theme) {
-          document.body.className = widgetConfig.theme;
-        }
-        if (widgetConfig.alignment) {
-          document.querySelector('.widget').style.textAlign = widgetConfig.alignment;
-          quoteContentEl.style.textAlign = widgetConfig.alignment;
-        }
-      } else {
-        document.body.className = 'soft-evergreen-theme';
-        document.querySelector('.widget').style.textAlign = 'center';
+        config = { ...config, ...widgetConfig };
       }
+
+      // Apply configuration
+      document.body.className = config.theme;
+      quoteContentEl.style.textAlign = config.alignment;
+      authorEl.style.textAlign = config.alignment;
     }
+
+    // Handle config.js loading errors
+    window.addEventListener('error', function(e) {
+      if (e.target && e.target.src && e.target.src.includes('config.js')) {
+        console.warn('Config file not found, using defaults');
+        window.widgetConfig = {
+          theme: 'soft-evergreen-theme',
+          alignment: 'center'
+        };
+        initializeWidget();
+      }
+    }, true);
 
     document.addEventListener('DOMContentLoaded', () => {
       fetchQuotes();
-      initializeWidget();
+      setTimeout(initializeWidget, 100); // Small delay to ensure config loads
+    });
+
+    // Clean up interval on page unload
+    window.addEventListener('beforeunload', () => {
+      if (rotationInterval) {
+        clearInterval(rotationInterval);
+      }
     });
   </script>
 </body>

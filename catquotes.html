@@ -16,6 +16,8 @@
       background-color: var(--primary-bg-color);
       color: var(--primary-text-color);
       transition: background-color 0.5s, color 0.5s;
+      margin: 0;
+      padding: 0;
     }
 
     .widget {
@@ -60,12 +62,12 @@
       "A clean paw is a happy paw.",
       "If you can't find a sunbeam, make your own.",
       "One task at a time… like batting toys under the couch.",
-      "Stay paw-sitive, you’re claw-ing through it!",
+      "Stay paw-sitive, you're claw-ing through it!",
       "Tackle your tasks, then enjoy a cozy nap.",
       "Tasks today, catnap later.",
       "Conquer the list, claim the sunny spot.",
       "Less hiss, more bliss—get it done.",
-      "Whisker by whisker, you’re making progress."
+      "Whisker by whisker, you're making progress."
     ];
 
     const EMOJIS = ["🐱", "🐈", "🐈‍⬛", "🐾", "😸"];
@@ -82,25 +84,38 @@
     }
 
     function initializeWidget() {
+      // Default configuration
+      let config = {
+        theme: 'soft-evergreen-theme',
+        alignment: 'center'
+      };
+
       // Check if the widgetConfig object exists and apply settings
       if (typeof widgetConfig !== 'undefined') {
-        if (widgetConfig.theme) {
-          document.body.className = widgetConfig.theme;
-        }
-        if (widgetConfig.alignment) {
-          quoteEl.style.textAlign = widgetConfig.alignment;
-        }
-      } else {
-        // Fallback to a default theme if config.js is not loaded
-        document.body.className = 'soft-evergreen-theme';
-        quoteEl.style.textAlign = 'center';
+        config = { ...config, ...widgetConfig };
       }
+
+      // Apply configuration
+      document.body.className = config.theme;
+      quoteEl.style.textAlign = config.alignment;
     }
+
+    // Handle config.js loading errors
+    window.addEventListener('error', function(e) {
+      if (e.target && e.target.src && e.target.src.includes('config.js')) {
+        console.warn('Config file not found, using defaults');
+        window.widgetConfig = {
+          theme: 'soft-evergreen-theme',
+          alignment: 'center'
+        };
+        initializeWidget();
+      }
+    }, true);
 
     document.addEventListener('DOMContentLoaded', () => {
       render(0);
       setInterval(() => render(index + 1), 10000);
-      initializeWidget();
+      setTimeout(initializeWidget, 100); // Small delay to ensure config loads
     });
   </script>
 </body>
