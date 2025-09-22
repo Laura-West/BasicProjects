@@ -42,6 +42,7 @@ const widgetConfig = {
   alignment: '${state.selectedAlignment}'
 };`;
     triggerDownload(configContent, 'config.js', 'text/javascript');
+    downloadConfigBtn.classList.add('clicked');
   }
 
   function generateCssContent() {
@@ -77,6 +78,7 @@ const widgetConfig = {
   function downloadStylesFile() {
       const cssContent = generateCssContent();
       triggerDownload(cssContent, 'styles.css', 'text/css');
+      downloadStylesBtn.classList.add('clicked');
   }
 
   function triggerDownload(content, fileName, mimeType) {
@@ -101,6 +103,7 @@ const widgetConfig = {
   function showSaveAndUploadElements() {
       downloadStylesBtn.style.display = 'inline-block';
       uploadInstructions.style.display = 'block';
+      downloadStylesBtn.classList.remove('clicked'); // Reset to blue
   }
 
   function renderThemes() {
@@ -114,6 +117,7 @@ const widgetConfig = {
       option.addEventListener('click', (e) => {
         if (e.target.classList.contains('delete-btn')) return;
         state.selectedTheme = option.dataset.theme;
+        downloadConfigBtn.classList.remove('clicked'); // Reset button
         updateActiveControls();
       });
       themeControls.appendChild(option);
@@ -159,7 +163,11 @@ const widgetConfig = {
   addThemeBtn.addEventListener('click', addNewTheme);
   
   alignmentControls.querySelectorAll('.alignment-option').forEach(option => {
-    option.addEventListener('click', () => { state.selectedAlignment = option.dataset.alignment; updateActiveControls(); });
+    option.addEventListener('click', () => { 
+        state.selectedAlignment = option.dataset.alignment; 
+        downloadConfigBtn.classList.remove('clicked'); // Reset button
+        updateActiveControls(); 
+    });
   });
   
   colorPickers.forEach(picker => picker.addEventListener('input', (e) => { document.querySelector(`.color-hex-input[data-picker="${e.target.id}"]`).value = e.target.value; }));

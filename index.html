@@ -95,10 +95,18 @@
         #add-theme-btn:hover { background-color: #218838; }
         
         .download-section { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px; margin-top: 20px; }
-        #download-config-btn { background-color: #007bff; }
-        #download-config-btn:hover { background-color: #0056b3; }
-        #download-styles-btn { background-color: #5a6268; }
-        #download-styles-btn:hover { background-color: #444a50; }
+        #download-config-btn, #download-styles-btn { background-color: #007bff; /* Both buttons are blue */ }
+        #download-config-btn:hover, #download-styles-btn:hover { background-color: #0056b3; }
+
+        /* Clicked state for buttons */
+        .btn.clicked {
+            background-color: #6c757d; /* Grey color */
+            cursor: default;
+            transform: none;
+        }
+        .btn.clicked:hover {
+            background-color: #6c757d; /* Stays grey on hover */
+        }
         
         /* Upload Instructions Block */
         .upload-instructions {
@@ -109,19 +117,9 @@
             border: 1px solid #28a745;
             border-radius: 8px;
         }
-        .upload-instructions p {
-            margin: 0 0 10px 0;
-            color: #333;
-            font-size: 1em;
-        }
-        .upload-instructions a {
-            color: #007bff;
-            font-weight: bold;
-            text-decoration: none;
-        }
-        .upload-instructions a:hover {
-            text-decoration: underline;
-        }
+        .upload-instructions p { margin: 0 0 10px 0; color: #333; font-size: 1em; }
+        .upload-instructions a { color: #007bff; font-weight: bold; text-decoration: none; }
+        .upload-instructions a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
