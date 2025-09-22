@@ -65,29 +65,14 @@
         font-weight: 600;
         font-size: clamp(0.9rem, 3vw, 1rem);
     }
-    .hour-markers {
-        display: flex;
-        justify-content: space-between;
-        font-size: clamp(0.6rem, 2vw, 0.75rem);
-        color: var(--primary-text-color);
-        opacity: 0.8;
-        padding: 0 5px;
-        margin-bottom: 4px;
-    }
-    .workday-progress-segmented {
-        display: flex;
-        gap: clamp(3px, 0.75vw, 5px);
+    .progress-bar-background {
         width: 100%;
-    }
-    .segment-container {
-        flex: 1;
         background-color: var(--secondary-bg-color);
         border-radius: 50px;
         overflow: hidden;
     }
-    .segment-bar {
-        /* Further increased height for maximum prominence */
-        height: clamp(22px, 5vh, 30px);
+    #day-progress-bar {
+        height: clamp(18.2px, 3.9vh, 23.4px); /* Increased height by 30% from 14px baseline */
         width: 0%;
         background-color: var(--accent-color);
         border-radius: 50px;
@@ -103,17 +88,15 @@
     }
     .sub-trackers .progress-container {
         flex: 1;
-        /* Reduced min-width to allow grids to be smaller */
-        min-width: 150px;
+        min-width: 140px; /* Reduced min-width for better wrapping */
     }
 
     /* --- SQUARE GRID STYLES (MODIFIED) --- */
     .progress-grid {
       display: grid;
-      /* Further reduced gap and padding to make squares smaller */
-      gap: 2px;
-      padding: 3px;
-      border-radius: 6px;
+      gap: 2.8px; /* Reduced gap by 30% */
+      padding: 3.5px; /* Reduced padding by 30% */
+      border-radius: 5.6px; /* Reduced border-radius by 30% */
       background-color: var(--secondary-bg-color);
     }
     #year-progress-grid {
@@ -123,7 +106,7 @@
       width: 100%;
       padding-bottom: 100%;
       background-color: rgba(0,0,0,0.05);
-      border-radius: 2px;
+      border-radius: 1.4px;
       transition: background-color 0.5s;
     }
     .progress-grid .square.filled {
@@ -152,8 +135,9 @@
           <span>Today's Workday</span>
           <span id="day-remaining-text"></span>
         </div>
-        <div id="hour-markers-container" class="hour-markers"></div>
-        <div id="workday-progress-segmented" class="workday-progress-segmented"></div>
+        <div class="progress-bar-background">
+          <div id="day-progress-bar"></div>
+        </div>
       </div>
 
       <div class="sub-trackers">
@@ -179,50 +163,26 @@
   <script src="config.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // --- Element References ---
       const widget = document.getElementById('time-widget');
       const timeDisplayEl = document.getElementById('time-display');
       const dayRemainingTextEl = document.getElementById('day-remaining-text');
-      const hourMarkersContainerEl = document.getElementById('hour-markers-container');
-      const workdayProgressContainerEl = document.getElementById('workday-progress-segmented');
+      const dayProgressBarEl = document.getElementById('day-progress-bar');
       const monthPercentTextEl = document.getElementById('month-percent-text');
       const monthProgressGridEl = document.getElementById('month-progress-grid');
       const yearPercentTextEl = document.getElementById('year-percent-text');
       const yearProgressGridEl = document.getElementById('year-progress-grid');
 
-      // --- Configuration & State ---
       const WORKDAY_START_HOUR = 9;
       const WORKDAY_END_HOUR = 17;
-      const workHours = WORKDAY_END_HOUR - WORKDAY_START_HOUR;
       let displayedMonth = -1;
 
-      // Apply theme from config.js or use default
       if (typeof widgetConfig !== 'undefined' && widgetConfig.theme) {
         widget.classList.add(widgetConfig.theme);
       } else {
         widget.classList.add('soft-evergreen-theme');
       }
 
-      // --- Initial Setup ---
       function initializeTrackers() {
-        for (let i = 0; i <= workHours; i++) {
-            const hour = WORKDAY_START_HOUR + i;
-            const marker = document.createElement('span');
-            const displayHour = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
-            marker.textContent = `${displayHour}`;
-            if (i === 0 || i === workHours || hour === 12) {
-                 marker.textContent = `${displayHour}${hour >= 12 ? 'PM' : 'AM'}`;
-            }
-            hourMarkersContainerEl.appendChild(marker);
-        }
-        for (let i = 0; i < workHours; i++) {
-            const segmentContainer = document.createElement('div');
-            segmentContainer.className = 'segment-container';
-            const segmentBar = document.createElement('div');
-            segmentBar.className = 'segment-bar';
-            segmentContainer.appendChild(segmentBar);
-            workdayProgressContainerEl.appendChild(segmentBar);
-        }
         for (let i = 0; i < 12; i++) {
             const square = document.createElement('div');
             square.className = 'square';
@@ -230,7 +190,6 @@
         }
       }
 
-      // --- Main Update Function ---
       function updateTrackers() {
         const now = new Date();
         const year = now.getFullYear();
@@ -247,17 +206,18 @@
         const totalMinutesIntoDay = currentHour24 * 60 + currentMinute;
         const startMinutes = WORKDAY_START_HOUR * 60;
         const endMinutes = WORKDAY_END_HOUR * 60;
+        
+        let dayProgress = 0;
+        if (totalMinutesIntoDay > startMinutes && totalMinutesIntoDay < endMinutes) {
+            dayProgress = ((totalMinutesIntoDay - startMinutes) / (endMinutes - startMinutes)) * 100;
+        } else if (totalMinutesIntoDay >= endMinutes) {
+            dayProgress = 100;
+        }
+        dayProgressBarEl.style.width = `${dayProgress}%`;
+
         dayRemainingTextEl.textContent = totalMinutesIntoDay < startMinutes ? 'Not started' :
           totalMinutesIntoDay >= endMinutes ? 'Complete 🎉' :
           `${Math.floor(((endMinutes - totalMinutesIntoDay) / 60))}h ${(endMinutes - totalMinutesIntoDay) % 60}m left`;
-
-        const segmentBars = workdayProgressContainerEl.querySelectorAll('.segment-bar');
-        const elapsedHours = currentHour24 - WORKDAY_START_HOUR;
-        for(let i = 0; i < segmentBars.length; i++) {
-            if (i < elapsedHours) segmentBars[i].style.width = '100%';
-            else if (i === elapsedHours) segmentBars[i].style.width = `${(currentMinute / 60) * 100}%`;
-            else segmentBars[i].style.width = '0%';
-        }
 
         const daysInMonth = new Date(year, currentMonth + 1, 0).getDate();
         const monthProgress = (dayOfMonth / daysInMonth) * 100;
