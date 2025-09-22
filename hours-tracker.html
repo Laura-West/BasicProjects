@@ -7,11 +7,6 @@
   <title>Work Hours Tracker Widget</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Universal box-sizing rule to prevent overflow */
-    * {
-      box-sizing: border-box;
-    }
-
     /* Widget-specific styles */
     body {
       display: flex;
@@ -23,7 +18,7 @@
       color: var(--primary-text-color);
       transition: background-color 0.5s, color 0.5s;
       margin: 0;
-      padding: 0; /* Copied from catquotes.html */
+      padding: 0;
     }
 
     .widget {
@@ -36,6 +31,7 @@
       gap: 15px;
       background-color: var(--primary-bg-color);
       transition: background-color 0.5s, border-color 0.5s;
+      box-sizing: border-box;
     }
 
     .progress-bar-container {
