@@ -22,7 +22,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: clamp(10px, 3vw, 15px);
+      gap: clamp(10px, 3vh, 15px);
       background-color: var(--primary-bg-color);
       color: var(--primary-text-color);
       border: 2px solid var(--secondary-bg-color);
@@ -35,7 +35,7 @@
   </style>
 </head>
 <body>
-  <div class="widget">
+  <div id="hours-widget" class="widget">
     <div id="time-display">--:--</div>
     <div class="progress-bar-container">
       <div id="progress-bar"></div>
@@ -43,50 +43,62 @@
     <div id="remaining-text">Calculating...</div>
   </div>
   <script src="config.js"></script>
-  <script src="widget.js"></script>
   <script>
-    const progressBarEl = document.getElementById('progress-bar');
-    const remainingTextEl = document.getElementById('remaining-text');
-    const timeDisplayEl = document.getElementById('time-display');
-    const WORKDAY_START_HOUR = 9;
-    const WORKDAY_END_HOUR = 17;
-    const WORKDAY_LENGTH_MINUTES = (WORKDAY_END_HOUR - WORKDAY_START_HOUR) * 60;
-    const MILLISECONDS_IN_MINUTE = 60000;
-    function updateProgressBar() {
-      const now = new Date();
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-      const totalMinutesIntoDay = currentHour * 60 + currentMinute;
-      const startMinutes = WORKDAY_START_HOUR * 60;
-      const endMinutes = WORKDAY_END_HOUR * 60;
-      let progressPercentage = 0;
-      let remainingText = '';
-      if (totalMinutesIntoDay < startMinutes) {
-        remainingText = 'Workday hasn\'t started yet.';
-      } else if (totalMinutesIntoDay >= endMinutes) {
-        progressPercentage = 100;
-        remainingText = 'Workday is over! 🎉';
-      } else {
-        const elapsedMinutes = (currentHour - WORKDAY_START_HOUR) * 60 + currentMinute;
-        const remainingMinutes = WORKDAY_LENGTH_MINUTES - elapsedMinutes;
-        const hoursRemaining = Math.floor(remainingMinutes / 60);
-        const minutesRemaining = remainingMinutes % 60;
-        progressPercentage = (elapsedMinutes / WORKDAY_LENGTH_MINUTES) * 100;
-        remainingText = `${hoursRemaining}h ${minutesRemaining}m remaining`;
-      }
-      timeDisplayEl.textContent = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
-      progressBarEl.style.width = `${progressPercentage}%`;
-      remainingTextEl.textContent = remainingText;
-    }
     document.addEventListener('DOMContentLoaded', () => {
-      updateProgressBar();
-      setInterval(updateProgressBar, MILLISECONDS_IN_MINUTE);
-      setTimeout(() => initializeWidget(config => {
-        const widgetDiv = document.querySelector('.widget');
-        if(widgetDiv) {
-            widgetDiv.style.textAlign = config.alignment;
+      const widget = document.getElementById('hours-widget');
+      const progressBarEl = document.getElementById('progress-bar');
+      const remainingTextEl = document.getElementById('remaining-text');
+      const timeDisplayEl = document.getElementById('time-display');
+
+      if (typeof widgetConfig !== 'undefined' && widgetConfig.theme) {
+        widget.classList.add(widgetConfig.theme);
+      } else {
+        widget.classList.add('soft-evergreen-theme');
+      }
+
+      const WORKDAY_START_HOUR = 9;
+      const WORKDAY_END_HOUR = 17;
+      const WORKDAY_LENGTH_MINUTES = (WORKDAY_END_HOUR - WORKDAY_START_HOUR) * 60;
+
+      function updateProgressBar() {
+        const now = new Date();
+        const currentHour24 = now.getHours();
+        const currentMinute = now.getMinutes();
+
+        // --- 12-HOUR TIME CONVERSION LOGIC ---
+        const ampm = currentHour24 >= 12 ? 'PM' : 'AM';
+        let currentHour12 = currentHour24 % 12;
+        currentHour12 = currentHour12 ? currentHour12 : 12; // the hour '0' should be '12'
+        const formattedTime = `${currentHour12}:${currentMinute.toString().padStart(2, '0')} ${ampm}`;
+        timeDisplayEl.textContent = formattedTime;
+        // --- END CONVERSION LOGIC ---
+
+        const totalMinutesIntoDay = currentHour24 * 60 + currentMinute;
+        const startMinutes = WORKDAY_START_HOUR * 60;
+        const endMinutes = WORKDAY_END_HOUR * 60;
+        let progressPercentage = 0;
+        let remainingText = '';
+
+        if (totalMinutesIntoDay < startMinutes) {
+          remainingText = 'Workday hasn\'t started yet.';
+        } else if (totalMinutesIntoDay >= endMinutes) {
+          progressPercentage = 100;
+          remainingText = 'Workday is over! 🎉';
+        } else {
+          const elapsedMinutes = (currentHour24 - WORKDAY_START_HOUR) * 60 + currentMinute;
+          const remainingMinutes = WORKDAY_LENGTH_MINUTES - elapsedMinutes;
+          const hoursRemaining = Math.floor(remainingMinutes / 60);
+          const minutesRemaining = remainingMinutes % 60;
+          progressPercentage = (elapsedMinutes / WORKDAY_LENGTH_MINUTES) * 100;
+          remainingText = `${hoursRemaining}h ${minutesRemaining}m remaining`;
         }
-      }), 100);
+        
+        progressBarEl.style.width = `${progressPercentage}%`;
+        remainingTextEl.textContent = remainingText;
+      }
+
+      updateProgressBar();
+      setInterval(updateProgressBar, 60000); // Update every minute
     });
   </script>
 </body>
