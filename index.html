@@ -26,7 +26,6 @@
             display: flex;
             flex-direction: column;
             gap: 25px;
-            position: relative; /* Needed for popup positioning */
         }
         h1, h2 { text-align: center; color: #333; }
         h1 { font-size: 2.2em; font-weight: 700; margin-bottom: 10px; }
@@ -100,59 +99,35 @@
         #download-config-btn:hover { background-color: #0056b3; }
         #download-styles-btn { background-color: #5a6268; }
         #download-styles-btn:hover { background-color: #444a50; }
-        #styles-hint { color: #666; font-size: 0.9em; margin: 0; }
         
-        /* Upload Instructions Popup */
-        .instructions-popup {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 500px;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+        /* Upload Instructions Block */
+        .upload-instructions {
             text-align: center;
-            z-index: 100;
-            border: 1px solid #ddd;
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #e9f5ee;
+            border: 1px solid #28a745;
+            border-radius: 8px;
         }
-        .instructions-popup p {
-            font-size: 1.1em;
+        .upload-instructions p {
+            margin: 0 0 10px 0;
             color: #333;
-            margin-top: 0;
-            margin-bottom: 20px;
+            font-size: 1em;
         }
-        .instructions-popup a {
-            display: inline-block;
-            background-color: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 6px;
-            text-decoration: none;
+        .upload-instructions a {
+            color: #007bff;
             font-weight: bold;
-            transition: background-color 0.2s;
+            text-decoration: none;
         }
-        .instructions-popup a:hover {
-            background-color: #218838;
-        }
-        #close-instructions-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #888;
+        .upload-instructions a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Widget Theme Dashboard</h1>
-        <p>Use this dashboard to create and manage themes. When you're done, download the generated <code>styles.css</code> and <code>config.js</code> files to update your project.</p>
+        <h1>Widget Admin Dashboard</h1>
+        <p>Use this dashboard to create and manage themes. When you're done, save your files and upload them to your project.</p>
         
         <h2>Select a Theme</h2>
         <div id="theme-controls" class="section-control"></div>
@@ -198,15 +173,13 @@
         </div>
 
         <div class="download-section">
-            <p id="styles-hint" style="display: none;">You've made changes! Don't forget to download the updated stylesheet.</p>
             <button id="download-config-btn" class="btn">Save Settings</button>
-            <button id="download-styles-btn" class="btn" style="display: none;">Download styles.css</button>
+            <button id="download-styles-btn" class="btn" style="display: none;">Save Styles</button>
         </div>
 
-        <div id="upload-instructions" class="instructions-popup" style="display: none;">
-            <button id="close-instructions-btn">&times;</button>
-            <p>Files downloaded! Now, upload both <strong>config.js</strong> and <strong>styles.css</strong> to your GitHub repository.</p>
-            <a href="https://github.com/Laura-West/BasicProjects/upload/main" target="_blank">Upload to GitHub</a>
+        <div id="upload-instructions" class="upload-instructions" style="display: none;">
+            <p>Changes made! Remember to save your settings and styles, then upload both files to GitHub:</p>
+            <a href="https://github.com/Laura-West/BasicProjects/upload/main" target="_blank">https://github.com/Laura-West/BasicProjects/upload/main</a>
         </div>
     </div>
     <script src="settings.js"></script>

@@ -4,13 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const alignmentControls = document.getElementById('alignment-controls');
   const downloadConfigBtn = document.getElementById('download-config-btn');
   const downloadStylesBtn = document.getElementById('download-styles-btn');
-  const stylesHint = document.getElementById('styles-hint');
   const addThemeBtn = document.getElementById('add-theme-btn');
   const newThemeNameInput = document.getElementById('new-theme-name');
   const colorHexInputs = document.querySelectorAll('.color-hex-input');
   const colorPickers = document.querySelectorAll('input[type="color"]');
   const uploadInstructions = document.getElementById('upload-instructions');
-  const closeInstructionsBtn = document.getElementById('close-instructions-btn');
 
   // Themes object - mutable to allow adding/deleting themes
   const allThemes = {
@@ -44,9 +42,6 @@ const widgetConfig = {
   alignment: '${state.selectedAlignment}'
 };`;
     triggerDownload(configContent, 'config.js', 'text/javascript');
-    
-    // Show the upload instructions popup
-    uploadInstructions.style.display = 'block';
   }
 
   function generateCssContent() {
@@ -103,9 +98,9 @@ const widgetConfig = {
     document.head.appendChild(style);
   }
   
-  function showStylesDownloadButton() {
+  function showSaveAndUploadElements() {
       downloadStylesBtn.style.display = 'inline-block';
-      stylesHint.style.display = 'block';
+      uploadInstructions.style.display = 'block';
   }
 
   function renderThemes() {
@@ -142,7 +137,7 @@ const widgetConfig = {
     addThemeStyle(themeKey, colors);
     renderThemes();
     newThemeNameInput.value = '';
-    showStylesDownloadButton();
+    showSaveAndUploadElements();
   }
 
   function deleteTheme(event) {
@@ -153,7 +148,7 @@ const widgetConfig = {
         delete allThemes[themeKey];
         if (state.selectedTheme === themeKey) { state.selectedTheme = Object.keys(allThemes)[0]; }
         renderThemes();
-        showStylesDownloadButton();
+        showSaveAndUploadElements();
     }
   }
 
@@ -162,12 +157,11 @@ const widgetConfig = {
   downloadConfigBtn.addEventListener('click', createConfigFile);
   downloadStylesBtn.addEventListener('click', downloadStylesFile);
   addThemeBtn.addEventListener('click', addNewTheme);
-  closeInstructionsBtn.addEventListener('click', () => {
-      uploadInstructions.style.display = 'none';
-  });
+  
   alignmentControls.querySelectorAll('.alignment-option').forEach(option => {
     option.addEventListener('click', () => { state.selectedAlignment = option.dataset.alignment; updateActiveControls(); });
   });
+  
   colorPickers.forEach(picker => picker.addEventListener('input', (e) => { document.querySelector(`.color-hex-input[data-picker="${e.target.id}"]`).value = e.target.value; }));
   colorHexInputs.forEach(input => input.addEventListener('input', (e) => { document.getElementById(e.target.dataset.picker).value = e.target.value; }));
 
