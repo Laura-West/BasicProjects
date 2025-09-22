@@ -86,15 +86,15 @@
         overflow: hidden;
     }
     .segment-bar {
-        /* Increased height for more prominence */
-        height: clamp(18px, 4vh, 24px);
+        /* Further increased height for maximum prominence */
+        height: clamp(22px, 5vh, 30px);
         width: 0%;
         background-color: var(--accent-color);
         border-radius: 50px;
         transition: width 0.5s ease-in-out;
     }
 
-    /* --- MONTH & YEAR TRACKER GROUP --- */
+    /* --- MONTH & YEAR TRACKER GROUP (MODIFIED) --- */
     .sub-trackers {
         display: flex;
         justify-content: space-between;
@@ -103,16 +103,17 @@
     }
     .sub-trackers .progress-container {
         flex: 1;
-        min-width: 180px; /* Reduced min-width for better wrapping */
+        /* Reduced min-width to allow grids to be smaller */
+        min-width: 150px;
     }
 
     /* --- SQUARE GRID STYLES (MODIFIED) --- */
     .progress-grid {
       display: grid;
-      /* Reduced gap and padding to make squares smaller */
-      gap: 3px;
-      padding: 4px;
-      border-radius: 8px;
+      /* Further reduced gap and padding to make squares smaller */
+      gap: 2px;
+      padding: 3px;
+      border-radius: 6px;
       background-color: var(--secondary-bg-color);
     }
     #year-progress-grid {
@@ -134,7 +135,6 @@
         rgba(0,0,0,0.05) 50%
       );
     }
-    /* NEW: Style for the current month in the year tracker */
     .progress-grid .square.current-month {
        background: linear-gradient(90deg,
         var(--accent-color) var(--month-progress, 0%),
@@ -221,7 +221,7 @@
             const segmentBar = document.createElement('div');
             segmentBar.className = 'segment-bar';
             segmentContainer.appendChild(segmentBar);
-            workdayProgressContainerEl.appendChild(segmentContainer);
+            workdayProgressContainerEl.appendChild(segmentBar);
         }
         for (let i = 0; i < 12; i++) {
             const square = document.createElement('div');
@@ -290,18 +290,16 @@
         const yearProgress = (dayOfYear / daysInYear) * 100;
         yearPercentTextEl.textContent = `${Math.floor(yearProgress)}%`;
         
-        // MODIFIED: Update year grid highlights using CSS classes and variables
         const yearSquares = yearProgressGridEl.querySelectorAll('.square');
         yearSquares.forEach((square, index) => {
             square.classList.remove('filled', 'current-month');
-            square.style.setProperty('--month-progress', '0%'); // Reset progress
+            square.style.setProperty('--month-progress', '0%');
 
             if (index < currentMonth) {
-                square.classList.add('filled'); // Past months
+                square.classList.add('filled');
             } else if (index === currentMonth) {
                 const progressPercent = (dayOfMonth / daysInMonth) * 100;
-                square.classList.add('current-month'); // Current month
-                // Set custom property for the gradient
+                square.classList.add('current-month');
                 square.style.setProperty('--month-progress', `${progressPercent}%`);
             }
         });
