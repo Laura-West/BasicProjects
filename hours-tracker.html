@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Work Hours Tracker Widget</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Universal Reset - This will fix the scrollbar */
+    /* Universal CSS Reset: 
+      This is the most important part. It removes default browser spacing 
+      and ensures padding doesn't break the layout.
+    */
     * {
       margin: 0;
       padding: 0;
@@ -29,11 +31,13 @@
     .widget {
       width: min(720px, 92vw);
       border-radius: 12px;
-      padding: 20px;
+      /* ADAPTIVE: Padding now scales with the width */
+      padding: clamp(10px, 4vw, 20px); 
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 15px;
+      /* ADAPTIVE: Gap between elements now scales */
+      gap: clamp(10px, 3vw, 15px);
       background-color: var(--primary-bg-color);
       transition: background-color 0.5s, border-color 0.5s;
     }
@@ -46,7 +50,8 @@
     }
 
     #progress-bar {
-      height: 20px;
+      /* ADAPTIVE: Bar height now scales */
+      height: clamp(15px, 3vh, 20px);
       width: 0%;
       background-color: var(--accent-color);
       border-radius: 50px;
@@ -54,17 +59,18 @@
     }
 
     #time-display {
-      font-size: clamp(2em, 8vw, 2.5em);
+      /* ADAPTIVE: Font size scales between a min and max */
+      font-size: clamp(2rem, 10vw, 2.5rem);
       font-weight: 700;
     }
 
     #remaining-text {
-      font-size: 1.1em;
+      /* ADAPTIVE: Font size scales between a min and max */
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
       opacity: 0.9;
     }
   </style>
 </head>
-
 <body>
   <div class="widget">
     <div id="time-display">--:--</div>
@@ -91,37 +97,26 @@
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
       const totalMinutesIntoDay = currentHour * 60 + currentMinute;
-
       const startMinutes = WORKDAY_START_HOUR * 60;
       const endMinutes = WORKDAY_END_HOUR * 60;
-
       let progressPercentage = 0;
       let remainingText = '';
-      let hoursRemaining, minutesRemaining;
 
       if (totalMinutesIntoDay < startMinutes) {
-        // Before the workday
         progressPercentage = 0;
         remainingText = 'Workday hasn\'t started yet.';
-
       } else if (totalMinutesIntoDay >= endMinutes) {
-        // After the workday
         progressPercentage = 100;
         remainingText = 'Workday is over! 🎉';
-
       } else {
-        // During the workday
         const elapsedMinutes = (currentHour - WORKDAY_START_HOUR) * 60 + currentMinute;
         const remainingMinutes = WORKDAY_LENGTH_MINUTES - elapsedMinutes;
-
-        hoursRemaining = Math.floor(remainingMinutes / 60);
-        minutesRemaining = remainingMinutes % 60;
-
+        const hoursRemaining = Math.floor(remainingMinutes / 60);
+        const minutesRemaining = remainingMinutes % 60;
         progressPercentage = (elapsedMinutes / WORKDAY_LENGTH_MINUTES) * 100;
         remainingText = `${hoursRemaining}h ${minutesRemaining}m remaining`;
       }
 
-      // Update the DOM
       timeDisplayEl.textContent = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
       progressBarEl.style.width = `${progressPercentage}%`;
       remainingTextEl.textContent = remainingText;
@@ -129,33 +124,23 @@
 
     function initializeWidget() {
       if (typeof widgetConfig !== 'undefined') {
-        if (widgetConfig.theme) {
-          document.body.className = widgetConfig.theme;
-        }
-        if (widgetConfig.alignment) {
-          document.querySelector('.widget').style.textAlign = widgetConfig.alignment;
-        }
+        document.body.className = widgetConfig.theme || 'soft-evergreen-theme';
+        document.querySelector('.widget').style.textAlign = widgetConfig.alignment || 'center';
       } else {
         document.body.className = 'soft-evergreen-theme';
         document.querySelector('.widget').style.textAlign = 'center';
       }
-      // Update every minute
       updateProgressBar();
       setInterval(updateProgressBar, MILLISECONDS_IN_MINUTE);
     }
     
-    // Handle config.js loading errors
     window.addEventListener('error', function(e) {
       if (e.target && e.target.src && e.target.src.includes('config.js')) {
         console.warn('Config file not found, using defaults');
-        window.widgetConfig = {
-          theme: 'soft-evergreen-theme',
-          alignment: 'center'
-        };
+        window.widgetConfig = { theme: 'soft-evergreen-theme', alignment: 'center' };
         initializeWidget();
       }
     }, true);
-
 
     document.addEventListener('DOMContentLoaded', () => {
         setTimeout(initializeWidget, 100);
