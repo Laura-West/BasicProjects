@@ -8,11 +8,8 @@
   <link rel="stylesheet" href="styles.css">
 
   <style>
-    /* Note: Theme variables (e.g., --primary-bg-color) are now defined in styles.css.
-      This block contains the structural and behavioral styles for the widget itself.
-    */
+    /* Structural and behavioral styles for the widget itself. */
     :root {
-      /* Define non-theme variables if needed, or rely on defaults from styles.css */
       --success-color: #28a745; 
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     }
@@ -34,73 +31,25 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: clamp(15px, 4vw, 25px); /* Adaptive gap */
+      gap: clamp(15px, 4vw, 25px);
       background-color: var(--primary-bg-color);
       border: 2px solid var(--secondary-bg-color);
     }
-    #icon-display {
-      font-size: clamp(3.5rem, 16vw, 5rem);
-      line-height: 1;
-    }
-    #count-container {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      gap: clamp(8px, 2vw, 12px); /* Adaptive gap */
-    }
-    #count-display {
-      font-size: clamp(3.5rem, 18vw, 5.5rem);
-      font-weight: 700;
-      line-height: 1;
-      color: var(--primary-text-color);
-      transition: color 0.3s ease-in-out;
-    }
-    #wins-text {
-      font-size: clamp(1.25rem, 5vw, 2rem);
-      font-weight: 500;
-      color: var(--primary-text-color);
-      opacity: 0.8;
-    }
-    #button-container {
-      display: flex;
-      flex-wrap: wrap; /* Allow buttons to stack on very narrow screens */
-      justify-content: center;
-      gap: clamp(10px, 3vw, 15px);
-      width: 100%;
-    }
-    .control-btn {
-      color: var(--primary-bg-color);
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-      font-size: clamp(1rem, 4vw, 1.2rem);
-      font-weight: bold;
-      line-height: 1;
-      padding: clamp(12px, 3vw, 16px) clamp(18px, 5vw, 24px);
-      flex-grow: 1; /* Allow buttons to share space */
-      max-width: 150px;
-    }
-    .control-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-    }
-    .control-btn:active {
-      transform: translateY(0);
-    }
-    #increment-btn {
-      background-color: var(--accent-color);
-    }
-    #reset-btn {
-      background-color: var(--success-color);
-    }
+    #icon-display { font-size: clamp(3.5rem, 16vw, 5rem); line-height: 1; }
+    #count-container { display: flex; align-items: baseline; justify-content: center; gap: clamp(8px, 2vw, 12px); }
+    #count-display { font-size: clamp(3.5rem, 18vw, 5.5rem); font-weight: 700; line-height: 1; color: var(--primary-text-color); transition: color 0.3s ease-in-out; }
+    #wins-text { font-size: clamp(1.25rem, 5vw, 2rem); font-weight: 500; color: var(--primary-text-color); opacity: 0.8; }
+    #button-container { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(10px, 3vw, 15px); width: 100%; }
+    .control-btn { color: var(--primary-bg-color); border: none; border-radius: 12px; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.08); font-size: clamp(1rem, 4vw, 1.2rem); font-weight: bold; line-height: 1; padding: clamp(12px, 3vw, 16px) clamp(18px, 5vw, 24px); flex-grow: 1; max-width: 150px; }
+    .control-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+    .control-btn:active { transform: translateY(0); }
+    #increment-btn { background-color: var(--accent-color); }
+    #reset-btn { background-color: var(--success-color); }
   </style>
 </head>
 <body>
   <div id="daily-counter-widget" class="widget">
-    <div id="icon-display">
-      </div>
+    <div id="icon-display"></div>
     <div id="count-container">
       <div id="count-display">0</div>
       <div id="wins-text">wins</div>
@@ -113,6 +62,10 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // *** THIS IS THE NEW LINE ***
+      // It calls the function from widget.js to apply the theme.
+      initializeWidget(); 
+
       // Element selectors
       const countDisplayEl = document.getElementById('count-display');
       const iconDisplayEl = document.getElementById('icon-display');
@@ -120,78 +73,39 @@
       const incrementBtn = document.getElementById('increment-btn');
       const resetBtn = document.getElementById('reset-btn');
 
-      let state = {
-        count: 0,
-        date: new Date().toLocaleDateString()
-      };
+      let state = { count: 0, date: new Date().toLocaleDateString() };
       
       function getEmojiForCount(count) {
-        if (count > 4) return "😇";
-        if (count === 4) return "😁";
-        if (count === 3) return "😊";
-        if (count === 2) return "🙂";
-        if (count === 1) return "😐";
-        return "😔";
+        if (count > 4) return "😇"; if (count === 4) return "😁"; if (count === 3) return "😊"; if (count === 2) return "🙂"; if (count === 1) return "😐"; return "😔";
       }
 
       function getColorForCount(count) {
-        if (count > 4) return "#ffc107"; // Gold for angel
-        if (count === 4) return "#DA70D6"; // Orchid
-        if (count === 3) return "#32CD32"; // LimeGreen
-        if (count === 2) return "#FFD700"; // Gold
-        if (count === 1) return "#FF8C00"; // DarkOrange
-        return "#DC143C"; // Crimson
+        if (count > 4) return "#ffc107"; if (count === 4) return "#DA70D6"; if (count === 3) return "#32CD32"; if (count === 2) return "#FFD700"; if (count === 1) return "#FF8C00"; return "#DC143C";
       }
 
       function updateDisplay() {
-        // Update count number and its color
         countDisplayEl.textContent = state.count;
         countDisplayEl.style.color = getColorForCount(state.count);
-
-        // Update emoji icon
         iconDisplayEl.textContent = getEmojiForCount(state.count);
-        
-        // Update "win" vs "wins" text
         winsTextEl.textContent = state.count === 1 ? 'win' : 'wins';
       }
 
       function loadCounter() {
         const storedData = localStorage.getItem('dailyCounterData');
         const today = new Date().toLocaleDateString();
-
         if (storedData) {
           const parsedData = JSON.parse(storedData);
-          if (parsedData.date === today) {
-            state = parsedData;
-          } else {
-            state.count = 0;
-            state.date = today;
-            saveCounter();
-          }
+          if (parsedData.date === today) { state = parsedData; } 
+          else { state.count = 0; state.date = today; saveCounter(); }
         }
         updateDisplay();
       }
 
-      function saveCounter() {
-        localStorage.setItem('dailyCounterData', JSON.stringify(state));
-      }
+      function saveCounter() { localStorage.setItem('dailyCounterData', JSON.stringify(state)); }
+      function resetCounter() { state.count = 0; updateDisplay(); saveCounter(); }
 
-      function resetCounter() {
-        state.count = 0;
-        updateDisplay();
-        saveCounter();
-      }
-
-      // Event Listeners
-      incrementBtn.addEventListener('click', () => {
-        state.count++;
-        updateDisplay();
-        saveCounter();
-      });
-
+      incrementBtn.addEventListener('click', () => { state.count++; updateDisplay(); saveCounter(); });
       resetBtn.addEventListener('click', resetCounter);
-
-      // Initial Load
       loadCounter();
     });
   </script>
