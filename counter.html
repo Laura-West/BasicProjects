@@ -66,7 +66,7 @@
       margin-top: 15px;
     }
     .control-btn {
-      color: var(--primary-bg-color);
+      color: var(--primary-bg-color); /* For the plus sign, if using text */
       border: none;
       width: 60px;
       height: 60px;
@@ -77,7 +77,7 @@
       align-items: center;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      font-size: 2.5rem;
+      font-size: 2.5rem; /* For the plus sign */
       font-weight: bold;
       line-height: 1;
     }
@@ -93,6 +93,12 @@
     }
     #reset-btn {
       background-color: var(--success-color);
+      /* Embed SVG as background image */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M12 4.5A7.5 7.5 0 0 0 4.5 12H6a6 6 0 1 1 1.757 4.243L5.636 14.12l5.657 1.414l-1.414-5.657l-1.415 1.415A5.96 5.96 0 0 1 6.75 12a5.25 5.25 0 0 1 10.125-1.5H18A7.5 7.5 0 0 0 12 4.5Z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 2.5rem 2.5rem; /* Make the SVG icon size consistent */
+      font-size: 0; /* Hide any potential text content for reset button */
     }
   </style>
 </head>
@@ -106,7 +112,7 @@
     </div>
     <div id="button-container">
         <button id="increment-btn" class="control-btn" aria-label="Increment Count">+</button>
-        <button id="reset-btn" class="control-btn" aria-label="Reset Count">🔄</button>
+        <button id="reset-btn" class="control-btn" aria-label="Reset Count"></button>
     </div>
   </div>
 
