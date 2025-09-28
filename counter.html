@@ -92,7 +92,12 @@
       background-color: var(--accent-color);
     }
     #reset-btn {
-      background-color: var(--success-color);
+        background-color: var(--success-color);
+        /* Embed SVG as a background image for consistency */
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M12 4.5A7.5 7.5 0 0 0 4.5 12H6a6 6 0 1 1 1.757 4.243L5.636 14.12l5.657 1.414l-1.414-5.657l-1.415 1.415A5.96 5.96 0 0 1 6.75 12a5.25 5.25 0 0 1 10.125-1.5H18A7.5 7.5 0 0 0 12 4.5Z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 2.2rem 2.2rem; /* Fine-tune icon size */
     }
   </style>
 </head>
@@ -106,7 +111,7 @@
     </div>
     <div id="button-container">
         <button id="increment-btn" class="control-btn" aria-label="Increment Count">+</button>
-        <button id="reset-btn" class="control-btn" aria-label="Reset Count">↻</button>
+        <button id="reset-btn" class="control-btn" aria-label="Reset Count"></button>
     </div>
   </div>
 
