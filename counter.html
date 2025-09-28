@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daily Counter Widget</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mingcute@4.0.0/dist/mingcute.css">
+  <style>
+    :root {
+      /* Define theme variables */
+      --primary-bg-color: #ffffff;
+      --secondary-bg-color: #e9ecef;
+      --primary-text-color: #212529;
+      --accent-color: #007bff;
+      --success-color: #28a745; /* Green color for reset button */
+      --font-family: sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: var(--font-family);
+      background-color: transparent;
+    }
+    .widget {
+      width: min(400px, 92vw);
+      border-radius: 16px;
+      padding: clamp(20px, 5vw, 30px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      background-color: var(--primary-bg-color);
+      color: var(--primary-text-color);
+      border: 2px solid var(--secondary-bg-color);
+      transition: background-color 0.5s, border-color 0.5s, color 0.5s;
+    }
+    #icon-display {
+      margin-bottom: 10px;
+    }
+    #icon-display i {
+      font-size: clamp(4rem, 18vw, 5.5rem); /* Made icon slightly larger */
+      transition: color 0.3s ease-in-out;
+      line-height: 1;
+    }
+    #count-container {
+      display: flex;
+      align-items: baseline; /* Aligns number and text nicely */
+      justify-content: center;
+      gap: 12px;
+    }
+    #count-display {
+      font-size: clamp(4rem, 20vw, 6rem);
+      font-weight: 700;
+      line-height: 1;
+      color: var(--primary-text-color);
+    }
+    #wins-text {
+        font-size: clamp(1.5rem, 6vw, 2.25rem);
+        font-weight: 500;
+        color: var(--primary-text-color);
+        opacity: 0.8;
+    }
+    #button-container {
+      display: flex;
+      gap: 20px;
+      margin-top: 15px;
+    }
+    .control-btn {
+      font-family: inherit;
+      color: var(--primary-bg-color);
+      border: none;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .control-btn i {
+      font-size: 2.5rem;
+      line-height: 1;
+    }
+    .control-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    .control-btn:active {
+      transform: scale(1.0);
+    }
+    #increment-btn {
+        background-color: var(--accent-color);
+    }
+    #reset-btn {
+        background-color: var(--success-color);
+    }
+  </style>
+</head>
+<body>
+  <div id="daily-counter-widget" class="widget">
+    <div id="icon-display">
+      <i></i>
+    </div>
+    <div id="count-container">
+      <div id="count-display">0</div>
+      <div id="wins-text">wins</div>
+    </div>
+    <div id="button-container">
+        <button id="increment-btn" class="control-btn" aria-label="Increment Count">
+            <i class="mgc_add_line"></i>
+        </button>
+        <button id="reset-btn" class="control-btn" aria-label="Reset Count">
+            <i class="mgc_replay_line"></i>
+        </button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Element selectors
+      const countDisplayEl = document.getElementById('count-display');
+      const iconEl = document.querySelector('#icon-display i');
+      const winsTextEl = document.getElementById('wins-text');
+      const incrementBtn = document.getElementById('increment-btn');
+      const resetBtn = document.getElementById('reset-btn');
+
+      let state = {
+        count: 0,
+        date: new Date().toLocaleDateString()
+      };
+      
+      function getIconForCount(count) {
+        if (count > 4) return "mgc_angel_fill";
+        if (count === 4) return "mgc_emoji_2_fill";
+        if (count === 3) return "mgc_happy_fill";
+        if (count === 2) return "mgc_emoji_fill";
+        if (count === 1) return "mgc_look_down_fill";
+        return "mgc_unhappy_fill";
+      }
+
+      function getColorForCount(count) {
+        if (count > 5) return "#FFFFFFFF";
+        if (count === 5) return "#FF00C8FF";
+        if (count === 4) return "#DA70D6";
+        if (count === 3) return "#32CD32";
+        if (count === 2) return "#FFD700";
+        if (count === 1) return "#FF8C00";
+        return "#DC143C";
+      }
+
+      // Combined update function
+      function updateDisplay() {
+        countDisplayEl.textContent = state.count;
+        iconEl.className = getIconForCount(state.count);
+        iconEl.style.color = getColorForCount(state.count);
+        // Update "win" vs "wins" text
+        winsTextEl.textContent = state.count === 1 ? 'win' : 'wins';
+      }
+
+      function loadCounter() {
+        const storedData = localStorage.getItem('dailyCounterData');
+        const today = new Date().toLocaleDateString();
+
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          if (parsedData.date === today) {
+            state = parsedData;
+          } else {
+            // New day, reset counter but keep stored date
+            state.count = 0;
+            state.date = today;
+            saveCounter();
+          }
+        }
+        updateDisplay();
+      }
+
+      function saveCounter() {
+        localStorage.setItem('dailyCounterData', JSON.stringify(state));
+      }
+
+      function resetCounter() {
+        state.count = 0;
+        updateDisplay();
+        saveCounter();
+      }
+
+      // Event Listeners
+      incrementBtn.addEventListener('click', () => {
+        state.count++;
+        updateDisplay();
+        saveCounter();
+      });
+
+      resetBtn.addEventListener('click', resetCounter);
+
+      // Initial Load
+      loadCounter();
+    });
+  </script>
+</body>
+</html>
