@@ -4,14 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Daily Counter Widget</title>
+
+  <link rel="stylesheet" href="styles.css">
+
   <style>
+    /* Note: Theme variables (e.g., --primary-bg-color) are now defined in styles.css.
+      This block contains the structural and behavioral styles for the widget itself.
+    */
     :root {
-      /* Define theme variables */
-      --primary-bg-color: #ffffff;
-      --secondary-bg-color: #f1f3f5;
-      --primary-text-color: #212529;
-      --accent-color: #007bff;
-      --success-color: #28a745;
+      /* Define non-theme variables if needed, or rely on defaults from styles.css */
+      --success-color: #28a745; 
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -193,5 +195,9 @@
       loadCounter();
     });
   </script>
+
+  <script src="config.js"></script>
+  <script src="widget.js"></script>
+  
 </body>
 </html>
