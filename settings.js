@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const DASHBOARD_VERSION = 'v3.1';
+  const DASHBOARD_VERSION = 'v3.3';
 
   // DOM Element References
   const versionDisplay = document.getElementById('version-display');
@@ -121,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const key = row.dataset.key;
     
-    // --- Select Button ---
     if (e.target.classList.contains('btn-select')) {
         state.selectedTheme = key;
         applyDashboardTheme(key);
@@ -135,12 +134,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (e.target.classList.contains('btn-cancel')) {
       if (!key) { row.remove(); } 
-      else { row.classList.remove('editing'); }
+      else { renderThemes(); }
     }
     
     if (e.target.classList.contains('btn-delete')) {
       if (confirm(`Are you sure you want to delete "${allThemes[key].name}"?`)) {
         delete allThemes[key];
+        if (state.selectedTheme === key) {
+            const firstTheme = Object.keys(allThemes)[0] || '';
+            state.selectedTheme = firstTheme;
+            if (firstTheme) applyDashboardTheme(firstTheme);
+        }
         renderThemes();
         showSaveAndUploadElements();
       }
@@ -231,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const firstTheme = Object.keys(allThemes)[0];
         state.selectedTheme = firstTheme;
         applyDashboardTheme(firstTheme);
-        renderThemes(); // Re-render to show the first theme as selected
+        renderThemes();
     }
     
     downloadConfigBtn.addEventListener('click', createConfigFile);
@@ -244,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
           updateActiveControls(); 
       });
     });
-    document.querySelectorAll('details input[type="color"]').forEach(input => {
+    document.querySelectorAll('#functional-colors-container input[type="color"]').forEach(input => {
         input.addEventListener('input', showSaveAndUploadElements);
     });
   }
