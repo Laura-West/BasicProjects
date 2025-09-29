@@ -39,25 +39,28 @@
              color: var(--primary-text-color); 
         }
         h1 { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px; font-size: 2.2em; font-weight: 700; margin-bottom: 10px; }
-        .version-info { font-size: 0.5em; font-weight: 500; color: var(--primary-text-color); /* MODIFIED */ background-color: var(--secondary-bg-color); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--border-color); opacity: 0.7; }
+        .version-info { font-size: 0.5em; font-weight: 500; color: #888; background-color: var(--secondary-bg-color); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--border-color); }
         h2 { font-size: 1.5em; font-weight: 600; text-align: center; }
         h3 { font-size: 1.2em; font-weight: 600; text-align: center; margin-bottom: 15px; }
         .heading-with-button { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px; width: 100%; }
         .section-control { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; padding: 20px; background-color: var(--secondary-bg-color); border: 1px solid var(--border-color); border-radius: 8px; }
-        .alignment-option { padding: 10px 15px; border: 2px solid #ccc; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; display: flex; align-items: center; gap: 10px; font-weight: 500; }
+        .alignment-option { padding: 10px 15px; border: 2px solid transparent; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; display: flex; align-items: center; gap: 10px; font-weight: 500; }
         .alignment-option:hover { border-color: var(--accent-color); }
-        .alignment-option.active { border-color: var(--accent-color); background-color: var(--accent-color); color: white; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); transform: translateY(-2px); }
-        .btn { padding: 10px 20px; border: none; background-color: var(--accent-color); color: white; border-radius: 8px; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: transform 0.1s ease, filter 0.1s ease; }
+        .alignment-option.active { border-color: var(--accent-color); box-shadow: 0 0 8px rgba(106, 154, 141, 0.4); }
+        .btn { padding: 10px 20px; border: none; background-color: var(--accent-color); color: white; border-radius: 8px; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: transform 0.1s ease, filter 0.1s ease, background-color 0.2s; }
         .btn:hover { filter: brightness(110%); }
         .btn:active { transform: scale(0.97); filter: brightness(95%); }
+        .btn:disabled { background-color: #cccccc; color: #666666; cursor: not-allowed; filter: none; transform: none; }
         .btn.secondary { background-color: #6c757d; }
         .btn.danger { background-color: #dc3545; }
         .btn.selected { background-color: #28a745; cursor: default; }
         .btn.selected:hover { filter: none; }
+        .upload-instructions { text-align: center; }
         .upload-instructions a { color: var(--accent-color); font-weight: 600; }
 
         /* List-Style & Grid UI Styles */
         .theme-row, .functional-colour-row { padding: 15px; background-color: var(--secondary-bg-color); border: 1px solid var(--border-color); border-radius: 8px; display: flex; flex-direction: column; gap: 15px; }
+        .theme-row.active { border-color: var(--accent-color); box-shadow: 0 0 8px rgba(106, 154, 141, 0.4); }
         .theme-row.editing .view-mode { display: none; }
         .theme-row:not(.editing) .edit-mode { display: none; }
         .view-mode, .edit-mode-controls, .functional-colour-row .controls { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
@@ -72,13 +75,13 @@
         .theme-name-input { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 1em; box-sizing: border-box; grid-column: 1 / -1; }
         
         details { width: 100%; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 10px; }
-        summary { cursor: pointer; font-weight: 600; font-size: 1.5em; text-align: center; padding: 10px; color: var(--primary-text-color); } /* MODIFIED */
+        summary { cursor: pointer; font-weight: 600; font-size: 1.5em; text-align: center; padding: 10px; }
         
         /* New Save Section Styles */
         .save-section-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .save-section { background-color: var(--secondary-bg-color); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 15px; text-align: center; }
         .save-section .filename { font-weight: 600; font-size: 1.1em; background-color: var(--primary-bg-color); padding: 5px 10px; border-radius: 5px; border: 1px solid var(--border-color); display: inline-block; margin: 0 auto; }
-        .save-section p { font-size: 0.9em; line-height: 1.5; color: var(--primary-text-color); margin: 0; } /* MODIFIED */
+        .save-section p { font-size: 0.9em; line-height: 1.5; color: #666; margin: 0; }
         .save-section .btn { margin-top: auto; }
     </style>
 </head>
@@ -124,7 +127,7 @@
                 <h3>Theme Library</h3>
                 <span class="filename">styles.css</span>
                 <p>This is the master library of all your themes and functional colours. Save this file when you add, edit, or delete any theme or colour.</p>
-                <button id="download-styles-btn" class="btn" style="display: none;">Save Styles</button>
+                <button id="download-styles-btn" class="btn">Save Styles</button>
             </div>
             <div class="save-section">
                 <h3>Widget Settings</h3>
