@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const DASHBOARD_VERSION = 'v2.1';
+  const DASHBOARD_VERSION = 'v2.2';
 
   // DOM Element References
   const versionDisplay = document.getElementById('version-display');
@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function initializeStateFromCSS() {
     try {
+      // THE FIX: Appending a timestamp forces the browser to re-download the file.
       const response = await fetch(`styles.css?v=${new Date().getTime()}`);
       if (!response.ok) throw new Error('styles.css could not be loaded.');
       const cssText = await response.text();
@@ -38,6 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
       
       const themeRegex = /\/\*\s*(.*?)\s*\*\/\s*\.([\w-]+)\s*\{([^}]+)\}/g;
       let themeMatch;
+      // Clear existing themes before parsing to prevent duplicates on manual refresh
+      allThemes = {}; 
       while ((themeMatch = themeRegex.exec(cssText)) !== null) {
         const [, name, className, properties] = themeMatch;
         const colors = [
@@ -171,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function createConfigFile() {
-    triggerDownload(`const widgetConfig = {\n  theme: '${state.selectedTheme}',\n  alignment: '${state.selectedAlignment}'\n};`, 'config.js');
+    triggerDownload(`const widgetConfig = {\n  theme: '${state.selectedTheme || ''}',\n  alignment: '${state.selectedAlignment}'\n};`, 'config.js');
   }
 
   function downloadStylesFile() {
