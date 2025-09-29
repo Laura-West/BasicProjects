@@ -15,10 +15,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const downloadConfigBtn = document.getElementById('download-config-btn');
   const downloadStylesBtn = document.getElementById('download-styles-btn');
   const alignmentControls = document.getElementById('alignment-controls');
-  
+  const stylesSaveSection = document.getElementById('styles-save-section'); // New element reference
+
   let allThemes = {};
   let state = { selectedTheme: 'soft-evergreen-theme', selectedAlignment: 'center' };
   let loadedCssVersion = 1.0;
+  
+  // --- NEW FUNCTIONS to control save section visibility ---
+  function showStylesSaveSection() {
+    stylesSaveSection.style.display = 'flex';
+  }
+
+  function hideStylesSaveSection() {
+    stylesSaveSection.style.display = 'none';
+  }
+  // ---------------------------------------------------------
+
 
   async function initializeStateFromCSS() {
     for (const id in DEFAULT_FUNCTIONAL_COLOURS) {
@@ -75,16 +87,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /**
-   * Calculates the perceived brightness of a hex colour and returns
-   * either black or white for the best contrast.
-   */
   function getContrastingTextColor(hex) {
     if (!hex || hex.length < 7) return '#000000';
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
-    // Standard luminance calculation
     const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
     return luminance > 128 ? '#000000' : '#FFFFFF';
   }
@@ -97,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const textColour = getContrastingTextColor(bgColour);
 
     dashboardContainer.style.setProperty('--primary-bg-color', bgColour);
-    dashboardContainer.style.setProperty('--primary-text-color', textColour); // DYNAMIC TEXT COLOUR
+    dashboardContainer.style.setProperty('--primary-text-color', textColour);
     dashboardContainer.style.setProperty('--accent-color', theme.colors[2]);
     dashboardContainer.style.setProperty('--secondary-bg-color', theme.colors[3]);
     dashboardContainer.style.setProperty('--border-color', theme.colors[3]);
@@ -163,7 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
         state.selectedTheme = key;
         applyDashboardTheme(key);
         renderThemes();
-        showSaveAndUploadElements();
     }
     if (e.target.classList.contains('btn-edit')) { row.classList.add('editing'); }
     if (e.target.classList.contains('btn-cancel')) {
@@ -178,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (state.selectedTheme) applyDashboardTheme(state.selectedTheme);
         }
         renderThemes();
-        showSaveAndUploadElements();
+        showStylesSaveSection(); // Show save section on delete
       }
     }
     if (e.target.classList.contains('btn-save')) {
@@ -199,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         colors: Array.from(colourInputs).map(input => input.value)
       };
       renderThemes();
-      showSaveAndUploadElements();
+      showStylesSaveSection(); // Show save section on save
     }
   });
 
@@ -212,11 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.alignment-option').forEach(opt => opt.classList.toggle('active', opt.dataset.alignment === state.selectedAlignment));
   }
 
-  function showSaveAndUploadElements() {
-    downloadStylesBtn.style.display = 'inline-block';
-    downloadConfigBtn.classList.remove('clicked');
-  }
-
   function triggerDownload(content, fileName) {
     const blob = new Blob([content], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
@@ -227,12 +228,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function createConfigFile() {
     triggerDownload(`const widgetConfig = {\n  theme: '${state.selectedTheme || ''}',\n  alignment: '${state.selectedAlignment}'\n};`, 'config.js');
-    downloadConfigBtn.classList.add('clicked');
-}
+    downloadConfigBtn.classList.remove('clicked'); // Reset state if needed
+  }
 
   function downloadStylesFile() {
     triggerDownload(generateCssContent(), 'styles.css');
-    downloadStylesBtn.classList.add('clicked');
+    hideStylesSaveSection(); // Hide section after saving
   }
 
   function generateCssContent() {
@@ -273,8 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     alignmentControls.querySelectorAll('.alignment-option').forEach(option => {
       option.addEventListener('click', () => { 
-          state.selectedAlignment = option.dataset.alignment; 
-          showSaveAndUploadElements(); 
+          state.selectedAlignment = option.dataset.alignment;
           updateActiveControls(); 
       });
     });
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const picker = e.target.parentElement.querySelector('input[type="color"]');
                 if(picker) picker.value = e.target.value;
             }
-            showSaveAndUploadElements();
+            showStylesSaveSection(); // Show save section on colour change
         });
     });
   }
