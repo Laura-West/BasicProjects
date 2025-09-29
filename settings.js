@@ -1,13 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const DASHBOARD_VERSION = 'v3.6';
+  const DASHBOARD_VERSION = 'v3.8';
 
   const DEFAULT_FUNCTIONAL_COLOURS = {
-    'colour-success': '#28a745',
-    'colour-status-0': '#DC143C',
-    'colour-status-1': '#FF8C00',
-    'colour-status-2': '#FFD700',
-    'colour-status-3': '#32CD32',
-    'colour-status-4': '#DA70D6',
+    'colour-success': '#28a745', 'colour-status-0': '#DC143C', 'colour-status-1': '#FF8C00',
+    'colour-status-2': '#FFD700', 'colour-status-3': '#32CD32', 'colour-status-4': '#DA70D6',
     'colour-status-5': '#ffc107'
   };
 
@@ -79,11 +75,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  /**
+   * Calculates the perceived brightness of a hex colour and returns
+   * either black or white for the best contrast.
+   */
+  function getContrastingTextColor(hex) {
+    if (!hex || hex.length < 7) return '#000000';
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    // Standard luminance calculation
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
+    return luminance > 128 ? '#000000' : '#FFFFFF';
+  }
+
   function applyDashboardTheme(themeKey) {
     const theme = allThemes[themeKey];
     if (!theme) return;
-    dashboardContainer.style.setProperty('--primary-bg-color', theme.colors[0]);
-    dashboardContainer.style.setProperty('--primary-text-color', theme.colors[1]);
+
+    const bgColour = theme.colors[0];
+    const textColour = getContrastingTextColor(bgColour);
+
+    dashboardContainer.style.setProperty('--primary-bg-color', bgColour);
+    dashboardContainer.style.setProperty('--primary-text-color', textColour); // DYNAMIC TEXT COLOUR
     dashboardContainer.style.setProperty('--accent-color', theme.colors[2]);
     dashboardContainer.style.setProperty('--secondary-bg-color', theme.colors[3]);
     dashboardContainer.style.setProperty('--border-color', theme.colors[3]);
@@ -136,12 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
   themeListContainer.addEventListener('input', (e) => {
     const row = e.target.closest('.theme-row.editing');
     if (!row) return;
-    if (e.target.matches('input[type="color"]')) {
-      e.target.nextElementSibling.value = e.target.value;
-    }
-    if (e.target.matches('.colour-hex-input')) {
-      e.target.previousElementSibling.value = e.target.value;
-    }
+    if (e.target.matches('input[type="color"]')) { e.target.nextElementSibling.value = e.target.value; }
+    if (e.target.matches('.colour-hex-input')) { e.target.previousElementSibling.value = e.target.value; }
   });
 
   themeListContainer.addEventListener('click', (e) => {
@@ -218,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function createConfigFile() {
     triggerDownload(`const widgetConfig = {\n  theme: '${state.selectedTheme || ''}',\n  alignment: '${state.selectedAlignment}'\n};`, 'config.js');
     downloadConfigBtn.classList.add('clicked');
-  }
+}
 
   function downloadStylesFile() {
     triggerDownload(generateCssContent(), 'styles.css');
