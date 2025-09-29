@@ -1,4 +1,4 @@
 const widgetConfig = {
-  theme: 'soft-evergreen-theme',
+  theme: 'ocean-breeze-theme',
   alignment: 'center'
 };
