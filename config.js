@@ -1,4 +1,4 @@
 const widgetConfig = {
-  theme: 'null',
+  theme: 'ocean-breeze-theme',
   alignment: 'center'
 };
