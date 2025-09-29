@@ -79,25 +79,9 @@
         details { width: 100%; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 10px; }
         summary { cursor: pointer; font-weight: 600; font-size: 1.5em; text-align: center; padding: 10px; color: var(--primary-text-color); }
         
-        /* MODIFIED Save Section Styles */
-        .save-section-container { 
-            display: flex; 
-            justify-content: center; 
-            flex-wrap: wrap; 
-            gap: 20px; 
-        }
-        .save-section { 
-            background-color: var(--secondary-bg-color); 
-            padding: 20px; 
-            border-radius: 8px; 
-            border: 1px solid var(--border-color); 
-            display: flex; 
-            flex-direction: column; 
-            gap: 15px; 
-            text-align: center;
-            width: 100%;
-            max-width: 350px; /* Controls the max width of each card */
-        }
+        /* Reverted to original Save Section Styles */
+        .save-section-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .save-section { background-color: var(--secondary-bg-color); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 15px; text-align: center; }
         .save-section .filename { font-weight: 600; font-size: 1.1em; background-color: var(--primary-bg-color); padding: 5px 10px; border-radius: 5px; border: 1px solid var(--border-color); display: inline-block; margin: 0 auto; }
         .save-section p { font-size: 0.9em; line-height: 1.5; color: var(--primary-text-color); margin: 0; }
         .save-section .btn { margin-top: auto; }
@@ -141,11 +125,11 @@
 
         <h2 style="border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px;">Save & Upload Files</h2>
         <div class="save-section-container">
-            <div class="save-section" id="styles-save-section" style="display: none;">
+            <div class="save-section">
                 <h3>Theme Library</h3>
                 <span class="filename">styles.css</span>
                 <p>This is the master library of all your themes and functional colours. Save this file when you add, edit, or delete any theme or colour.</p>
-                <button id="download-styles-btn" class="btn">Save Styles</button>
+                <button id="download-styles-btn" class="btn" style="display: none;">Save Styles</button>
             </div>
             <div class="save-section">
                 <h3>Widget Settings</h3>
@@ -161,6 +145,6 @@
         </div>
     </div>
     
-    <script src="settings.js?v=3.8"></script>
+    <script src="settings.js?v=3.9"></script>
 </body>
 </html>

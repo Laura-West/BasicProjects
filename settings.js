@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const DASHBOARD_VERSION = 'v3.8';
+  const DASHBOARD_VERSION = 'v3.9';
 
   const DEFAULT_FUNCTIONAL_COLOURS = {
     'colour-success': '#28a745', 'colour-status-0': '#DC143C', 'colour-status-1': '#FF8C00',
@@ -15,21 +15,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const downloadConfigBtn = document.getElementById('download-config-btn');
   const downloadStylesBtn = document.getElementById('download-styles-btn');
   const alignmentControls = document.getElementById('alignment-controls');
-  const stylesSaveSection = document.getElementById('styles-save-section');
 
   let allThemes = {};
   let state = { selectedTheme: 'soft-evergreen-theme', selectedAlignment: 'center' };
   let loadedCssVersion = 1.0;
   
-  function showStylesSaveSection() {
-    stylesSaveSection.style.display = 'flex';
+  // --- CORRECTED FUNCTIONS to control button visibility ---
+  function showStylesSaveButton() {
+    downloadStylesBtn.style.display = 'block';
   }
 
-  function hideStylesSaveSection() {
-    stylesSaveSection.style.display = 'none';
+  function hideStylesSaveButton() {
+    downloadStylesBtn.style.display = 'none';
   }
 
-  // --- NEW FUNCTION to indicate config.js needs saving ---
   function indicateConfigChange() {
     downloadConfigBtn.classList.remove('selected');
   }
@@ -174,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state.selectedTheme = key;
         applyDashboardTheme(key);
         renderThemes();
-        indicateConfigChange(); // FIX: Indicate config change on theme selection
+        indicateConfigChange();
     }
     if (e.target.classList.contains('btn-edit')) { row.classList.add('editing'); }
     if (e.target.classList.contains('btn-cancel')) {
@@ -189,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (state.selectedTheme) applyDashboardTheme(state.selectedTheme);
         }
         renderThemes();
-        showStylesSaveSection();
+        showStylesSaveButton();
       }
     }
     if (e.target.classList.contains('btn-save')) {
@@ -210,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
         colors: Array.from(colourInputs).map(input => input.value)
       };
       renderThemes();
-      showStylesSaveSection();
+      showStylesSaveButton();
     }
   });
 
@@ -233,12 +232,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function createConfigFile() {
     triggerDownload(`const widgetConfig = {\n  theme: '${state.selectedTheme || ''}',\n  alignment: '${state.selectedAlignment}'\n};`, 'config.js');
-    downloadConfigBtn.classList.add('selected'); // FIX: Use .selected for visual feedback
+    downloadConfigBtn.classList.add('selected');
   }
 
   function downloadStylesFile() {
     triggerDownload(generateCssContent(), 'styles.css');
-    hideStylesSaveSection();
+    hideStylesSaveButton();
   }
 
   function generateCssContent() {
@@ -281,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
       option.addEventListener('click', () => { 
           state.selectedAlignment = option.dataset.alignment;
           updateActiveControls();
-          indicateConfigChange(); // FIX: Indicate config change on alignment selection
+          indicateConfigChange();
       });
     });
     
@@ -295,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const picker = e.target.parentElement.querySelector('input[type="color"]');
                 if(picker) picker.value = e.target.value;
             }
-            showStylesSaveSection();
+            showStylesSaveButton();
         });
     });
   }
