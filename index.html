@@ -37,29 +37,13 @@
         }
         h1 { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px; font-size: 2.2em; font-weight: 700; margin-bottom: 10px; }
         .version-info { font-size: 0.5em; font-weight: 500; color: #888; background-color: var(--secondary-bg-color); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--border-color); }
-        h2 { font-size: 1.5em; font-weight: 600; text-align: center; border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px; }
+        h2 { font-size: 1.5em; font-weight: 600; text-align: center; }
         h3 { font-size: 1.2em; font-weight: 600; text-align: center; color: var(--primary-text-color); }
-        .theme-list-controls { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px; }
-        .theme-row {
-            padding: 15px;
-            background-color: var(--secondary-bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .theme-row.editing .view-mode { display: none; }
-        .theme-row:not(.editing) .edit-mode { display: none; }
-        .view-mode, .edit-mode-controls { display: flex; align-items: center; gap: 15px; }
-        .theme-name { font-weight: 600; margin-right: auto; }
-        .color-swatch-group { display: flex; gap: 5px; }
-        .color-swatch { width: 25px; height: 25px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.2); }
-        .color-inputs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; width: 100%; }
-        .color-input-group { display: flex; flex-direction: column; gap: 5px; }
-        .color-input-group label { font-weight: 500; font-size: 0.9em; color: var(--primary-text-color); }
-        .color-input-group input[type="color"] { width: 100%; height: 35px; border: 1px solid var(--border-color); cursor: pointer; padding: 0; background: none; border-radius: 5px; }
-        .color-hex-input, #new-theme-name-input { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 0.9em; box-sizing: border-box; }
+        .heading-with-button { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px; width: 100%; }
+        .section-control { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; padding: 20px; background-color: var(--secondary-bg-color); border: 1px solid var(--border-color); border-radius: 8px; }
+        .alignment-option { padding: 10px 15px; border: 2px solid #ccc; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; display: flex; align-items: center; gap: 10px; font-weight: 500; }
+        .alignment-option:hover { border-color: var(--accent-color); }
+        .alignment-option.active { border-color: var(--accent-color); background-color: var(--accent-color); color: white; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); transform: translateY(-2px); }
         .btn { padding: 10px 20px; border: none; background-color: var(--accent-color); color: white; border-radius: 8px; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: transform 0.1s ease, filter 0.1s ease; }
         .btn:hover { filter: brightness(110%); }
         .btn:active { transform: scale(0.97); filter: brightness(95%); }
@@ -68,6 +52,22 @@
         .download-section { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
         .upload-instructions { text-align: center; background-color: var(--secondary-bg-color); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); }
         .upload-instructions a { color: var(--accent-color); font-weight: 600; }
+        details { width: 100%; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 10px; }
+        summary { cursor: pointer; font-weight: 600; font-size: 1.5em; text-align: center; padding: 10px; }
+
+        /* New List-Style UI Styles */
+        .theme-row { padding: 15px; background-color: var(--secondary-bg-color); border: 1px solid var(--border-color); border-radius: 8px; display: flex; flex-direction: column; gap: 15px; }
+        .theme-row.editing .view-mode { display: none; }
+        .theme-row:not(.editing) .edit-mode { display: none; }
+        .view-mode, .edit-mode-controls { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .theme-name { font-weight: 600; margin-right: auto; }
+        .color-swatch-group { display: flex; gap: 5px; }
+        .color-swatch { width: 25px; height: 25px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.2); }
+        .color-inputs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; width: 100%; }
+        .color-input-group { display: flex; flex-direction: column; gap: 5px; }
+        .color-input-group label { font-weight: 500; font-size: 0.9em; color: var(--primary-text-color); }
+        .color-input-group input[type="color"] { width: 100%; height: 35px; border: 1px solid var(--border-color); cursor: pointer; padding: 0; background: none; border-radius: 5px; }
+        .theme-name-input { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 1em; box-sizing: border-box; grid-column: 1 / -1; } /* Span full width */
     </style>
 </head>
 <body>
@@ -78,26 +78,51 @@
             <span id="css-version-display" class="version-info">CSS: v?</span>
         </h1>
 
-        <div class="theme-list-controls">
+        <div class="heading-with-button">
             <h2>Themes</h2>
             <button id="add-new-theme-btn" class="btn">+ Add New Theme</button>
         </div>
-        <div id="theme-list-container" style="display: flex; flex-direction: column; gap: 10px;">
+        <div id="theme-list-container" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
             </div>
         
         <details>
             <summary>Global Functional Colors</summary>
-            </details>
+            <div class="section-control" style="flex-direction: column; align-items: stretch; gap: 20px;">
+                <h3>Functional Colors</h3>
+                <div class="color-inputs-grid">
+                    <div class="color-input-group">
+                        <label for="color-success">Success Color</label>
+                        <input type="color" id="color-success" value="#28a745">
+                    </div>
+                </div>
+                <h3>Counter Status Colors</h3>
+                <div class="color-inputs-grid status-colors">
+                    <div class="color-input-group"><label for="color-status-0">Status 😔</label><input type="color" id="color-status-0" value="#DC143C"></div>
+                    <div class="color-input-group"><label for="color-status-1">Status 😐</label><input type="color" id="color-status-1" value="#FF8C00"></div>
+                    <div class="color-input-group"><label for="color-status-2">Status 🙂</label><input type="color" id="color-status-2" value="#FFD700"></div>
+                    <div class="color-input-group"><label for="color-status-3">Status 😊</label><input type="color" id="color-status-3" value="#32CD32"></div>
+                    <div class="color-input-group"><label for="color-status-4">Status 😁</label><input type="color" id="color-status-4" value="#DA70D6"></div>
+                    <div class="color-input-group"><label for="color-status-5">Status 😇</label><input type="color" id="color-status-5" value="#ffc107"></div>
+                </div>
+            </div>
+        </details>
         
-        <h2>Select Text Alignment</h2>
-        <div id="alignment-controls" class="section-control"></div>
+        <h2 style="border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px;">Select Text Alignment</h2>
+        <div id="alignment-controls" class="section-control">
+            <div class="alignment-option" data-alignment="left"><span>↔ Left</span></div>
+            <div class="alignment-option" data-alignment="center"><span>↔ Center</span></div>
+            <div class="alignment-option" data-alignment="right"><span>↔ Right</span></div>
+        </div>
 
         <div class="download-section">
             <button id="download-config-btn" class="btn">Save Settings</button>
             <button id="download-styles-btn" class="btn" style="display: none;">Save Styles</button>
         </div>
         
-        <div id="upload-instructions" class="upload-instructions"></div>
+        <div id="upload-instructions" class="upload-instructions">
+             <p>After saving, upload your file(s) to GitHub:</p>
+            <a href="https://github.com/Laura-West/BasicProjects/upload/main" target="_blank">Upload Files to GitHub</a>
+        </div>
     </div>
     
     <script src="settings.js?v=3.0"></script>

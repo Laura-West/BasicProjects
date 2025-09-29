@@ -9,25 +9,72 @@ document.addEventListener('DOMContentLoaded', () => {
   const addNewThemeBtn = document.getElementById('add-new-theme-btn');
   const downloadConfigBtn = document.getElementById('download-config-btn');
   const downloadStylesBtn = document.getElementById('download-styles-btn');
+  const alignmentControls = document.getElementById('alignment-controls');
   
   let allThemes = {};
   let state = { selectedTheme: 'soft-evergreen-theme', selectedAlignment: 'center' };
   let loadedCssVersion = 1.0;
 
-  // --- Core Functions ---
-  async function initializeStateFromCSS() { /* ... unchanged from v2.7 ... */ }
-  function applyDashboardTheme(themeKey) { /* ... unchanged from v2.7 ... */ }
-  function showSaveAndUploadElements() { /* ... unchanged from v2.7 ... */ }
-  function triggerDownload(content, fileName) { /* ... unchanged from v2.7 ... */ }
+  async function initializeStateFromCSS() {
+    try {
+      const response = await fetch(`styles.css?v=${new Date().getTime()}`);
+      if (!response.ok) throw new Error('styles.css could not be loaded.');
+      const cssText = await response.text();
+      
+      const versionMatch = /CSS Version:\s*([\d.]+)/.exec(cssText);
+      if (versionMatch) {
+        loadedCssVersion = parseFloat(versionMatch[1]);
+        cssVersionDisplay.textContent = `CSS: v${loadedCssVersion.toFixed(1)}`;
+      } else {
+        cssVersionDisplay.textContent = 'CSS: v?';
+      }
 
-  /**
-   * Generates the HTML for a single theme row.
-   * This is the template for both view and edit modes.
-   */
+      const rootMatch = /:root\s*\{([^}]+)\}/.exec(cssText);
+      if (rootMatch) {
+        const rootProperties = rootMatch[1];
+        const functionalColorIds = ['color-success', ...Array.from({length: 6}, (_, i) => `color-status-${i}`)];
+        functionalColorIds.forEach(id => {
+          const variableName = `--${id.replace('color-', '')}`;
+          const match = new RegExp(`${variableName}:\\s*([^;]+);`).exec(rootProperties);
+          if (match) document.getElementById(id).value = match[1].trim();
+        });
+      }
+      
+      const themeRegex = /\/\*\s*(.*?)\s*\*\/\s*\.([\w-]+)\s*\{([^}]+)\}/g;
+      allThemes = {}; 
+      let themeMatch;
+      while ((themeMatch = themeRegex.exec(cssText)) !== null) {
+        const [, name, className, properties] = themeMatch;
+        const colors = [
+          /--primary-bg-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
+          /--primary-text-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
+          /--accent-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
+          /--secondary-bg-color:\s*([^;]+);/.exec(properties)?.[1].trim()
+        ];
+        if (colors.every(c => c)) {
+          allThemes[className] = { name, class: className, colors };
+        }
+      }
+    } catch (error) {
+      console.error("Initialization failed:", error);
+      alert("Error: Could not load styles.css.");
+    }
+  }
+
+  function applyDashboardTheme(themeKey) {
+    const theme = allThemes[themeKey];
+    if (!theme) return;
+    dashboardContainer.style.setProperty('--primary-bg-color', theme.colors[0]);
+    dashboardContainer.style.setProperty('--primary-text-color', theme.colors[1]);
+    dashboardContainer.style.setProperty('--accent-color', theme.colors[2]);
+    dashboardContainer.style.setProperty('--secondary-bg-color', theme.colors[3]);
+    dashboardContainer.style.setProperty('--border-color', theme.colors[3]);
+  }
+
   function createThemeRowHTML(themeKey, theme) {
     const isNew = !themeKey;
     const name = isNew ? '' : theme.name;
-    const colors = isNew ? ['#ffffff', '#333333', '#007bff', '#e9ecef'] : theme.colors;
+    const colors = isNew ? ['#f0f0f0', '#333333', '#007bff', '#cccccc'] : theme.colors;
     
     return `
       <div class="theme-row ${isNew ? 'editing' : ''}" data-key="${themeKey || ''}">
@@ -42,10 +89,9 @@ document.addEventListener('DOMContentLoaded', () => {
           <button class="btn btn-edit">Edit</button>
           <button class="btn btn-danger btn-delete">Delete</button>
         </div>
-        
         <div class="edit-mode">
-          <input type="text" class="new-theme-name-input" placeholder="Theme Name" value="${name}">
           <div class="color-inputs-grid">
+            <input type="text" class="theme-name-input" placeholder="Theme Name" value="${name}">
             <div class="color-input-group"><label>Primary BG</label><input type="color" value="${colors[0]}"></div>
             <div class="color-input-group"><label>Primary Text</label><input type="color" value="${colors[1]}"></div>
             <div class="color-input-group"><label>Accent</label><input type="color" value="${colors[2]}"></div>
@@ -60,43 +106,29 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
   }
 
-  /**
-   * Renders all themes from the 'allThemes' object into the container.
-   */
   function renderThemes() {
     themeListContainer.innerHTML = '';
     for (const themeKey in allThemes) {
       themeListContainer.innerHTML += createThemeRowHTML(themeKey, allThemes[themeKey]);
     }
+    updateActiveControls();
   }
-
-  /**
-   * Main event handler for all actions within the theme list (edit, save, delete, etc.).
-   * This uses event delegation for efficiency and maintainability.
-   */
+  
   themeListContainer.addEventListener('click', (e) => {
     const row = e.target.closest('.theme-row');
     if (!row) return;
 
     const key = row.dataset.key;
 
-    // --- Edit Button ---
     if (e.target.classList.contains('btn-edit')) {
       row.classList.add('editing');
     }
 
-    // --- Cancel Button ---
     if (e.target.classList.contains('btn-cancel')) {
-      if (!key) { // If it was a new, unsaved row
-        row.remove();
-      } else {
-        row.classList.remove('editing');
-        // Optional: reset fields to original values if needed
-        renderThemes(); // Easiest way to reset
-      }
+      if (!key) { row.remove(); } 
+      else { row.classList.remove('editing'); }
     }
     
-    // --- Delete Button ---
     if (e.target.classList.contains('btn-delete')) {
       if (confirm(`Are you sure you want to delete "${allThemes[key].name}"?`)) {
         delete allThemes[key];
@@ -105,18 +137,16 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // --- Save Button ---
     if (e.target.classList.contains('btn-save')) {
-      const nameInput = row.querySelector('.new-theme-name-input');
+      const nameInput = row.querySelector('.theme-name-input');
       const colorInputs = row.querySelectorAll('input[type="color"]');
-      
       const name = nameInput.value.trim();
       if (!name) return alert('Theme name cannot be empty.');
       
       const newKey = key || name.toLowerCase().replace(/\s+/g, '-') + '-theme';
       if (!key && allThemes[newKey]) return alert('A theme with this name already exists.');
 
-      if(key && key !== newKey) {
+      if (key && key !== newKey) {
         delete allThemes[key];
       }
       
@@ -131,21 +161,81 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- Top-level button to add a new theme row ---
   addNewThemeBtn.addEventListener('click', () => {
-    // Check if a new-unsaved row already exists
-    if(document.querySelector('.theme-row[data-key=""]')) return;
+    if (document.querySelector('.theme-row[data-key=""]')) return;
     themeListContainer.insertAdjacentHTML('beforeend', createThemeRowHTML(null, null));
   });
 
-  function generateCssContent() { /* ... unchanged from v2.7 ... */ }
+  function updateActiveControls() {
+    document.querySelectorAll('.alignment-option').forEach(opt => opt.classList.toggle('active', opt.dataset.alignment === state.selectedAlignment));
+  }
 
-  // --- Main Execution ---
+  function showSaveAndUploadElements() {
+    downloadStylesBtn.style.display = 'inline-block';
+  }
+
+  function triggerDownload(content, fileName) {
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = fileName;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function createConfigFile() {
+    triggerDownload(`const widgetConfig = {\n  theme: '${state.selectedTheme || ''}',\n  alignment: '${state.selectedAlignment}'\n};`, 'config.js');
+  }
+
+  function downloadStylesFile() {
+    triggerDownload(generateCssContent(), 'styles.css');
+  }
+
+  function generateCssContent() {
+    const newCssVersion = (loadedCssVersion + 0.1).toFixed(1);
+    let cssString = `/* Widget Styles - CSS Version: ${newCssVersion} - Generated by Dashboard ${DASHBOARD_VERSION} */\n\n:root {\n`;
+    cssString += `  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;\n`;
+    const successColor = document.getElementById('color-success').value;
+    cssString += `  --success-color: ${successColor};\n`;
+    for (let i = 0; i < 6; i++) {
+        const statusColor = document.getElementById(`color-status-${i}`).value;
+        cssString += `  --status-color-${i}: ${statusColor};\n`;
+    }
+    cssString += '}\n\n';
+
+    for (const themeKey in allThemes) {
+        const theme = allThemes[themeKey];
+        cssString += `/* ${theme.name} */\n.${theme.class} {\n  --primary-bg-color: ${theme.colors[0]};\n  --primary-text-color: ${theme.colors[1]};\n  --accent-color: ${theme.colors[2]};\n  --secondary-bg-color: ${theme.colors[3]};\n}\n\n`;
+    }
+    return cssString;
+  }
+
   async function main() {
     if (versionDisplay) versionDisplay.textContent = DASHBOARD_VERSION;
     await initializeStateFromCSS();
     renderThemes();
-    // (Other initial setup like listeners for alignment, downloads, etc.)
+    updateActiveControls();
+
+    if (state.selectedTheme && allThemes[state.selectedTheme]) {
+        applyDashboardTheme(state.selectedTheme);
+    } else if (Object.keys(allThemes).length > 0) {
+        const firstTheme = Object.keys(allThemes)[0];
+        state.selectedTheme = firstTheme;
+        applyDashboardTheme(firstTheme);
+    }
+    
+    downloadConfigBtn.addEventListener('click', createConfigFile);
+    downloadStylesBtn.addEventListener('click', downloadStylesFile);
+    
+    alignmentControls.querySelectorAll('.alignment-option').forEach(option => {
+      option.addEventListener('click', () => { 
+          state.selectedAlignment = option.dataset.alignment; 
+          showSaveAndUploadElements(); 
+          updateActiveControls(); 
+      });
+    });
+    document.querySelectorAll('details input[type="color"]').forEach(input => {
+        input.addEventListener('input', showSaveAndUploadElements);
+    });
   }
 
   main();
