@@ -11,101 +11,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const colorPickers = document.querySelectorAll('input[type="color"]');
   const uploadInstructions = document.getElementById('upload-instructions');
 
-  // Themes object - This is dynamically generated
+  // Themes object - This is the master list of themes.
   const allThemes = {
-  "soft-evergreen-theme": {
-    "name": "Soft Evergreen",
-    "class": "soft-evergreen-theme",
-    "colors": [
-      "#e8f0ef",
-      "#3f514b",
-      "#6a9a8d",
-      "#cedbd9"
-    ],
-    "isDefault": true
-  },
-  "desert-bloom-theme": {
-    "name": "Desert Bloom",
-    "class": "desert-bloom-theme",
-    "colors": [
-      "#fcf8f3",
-      "#5d4037",
-      "#d17a7a",
-      "#e5d5c9"
-    ],
-    "isDefault": true
-  },
-  "muted-clay-theme": {
-    "name": "Muted Clay",
-    "class": "muted-clay-theme",
-    "colors": [
-      "#e7e0d9",
-      "#4a4a4a",
-      "#a38c82",
-      "#d1c7c0"
-    ],
-    "isDefault": true
-  },
-  "stormy-sky-theme": {
-    "name": "Stormy Sky",
-    "class": "stormy-sky-theme",
-    "colors": [
-      "#e9ecef",
-      "#2c3e50",
-      "#7b9ebc",
-      "#c7d2da"
-    ],
-    "isDefault": true
-  },
-  "stone-grey-theme": {
-    "name": "Stone Grey",
-    "class": "stone-grey-theme",
-    "colors": [
-      "#f5f5f5",
-      "#424242",
-      "#9e9e9e",
-      "#e0e0e0"
-    ],
-    "isDefault": true
-  },
-  "soft-lavender-theme": {
-    "name": "Soft Lavender",
-    "class": "soft-lavender-theme",
-    "colors": [
-      "#f7f3f9",
-      "#544458",
-      "#a08da6",
-      "#e1dbe4"
-    ],
-    "isDefault": true
-  },
-  "gilded-iris-theme": {
-    "name": "Gilded Iris",
-    "class": "gilded-iris-theme",
-    "colors": [
-      "#fdfaf3",
-      "#4b422e",
-      "#c5a76c",
-      "#e9e2d3"
-    ],
-    "isDefault": true
-  },
-  "ocean-breeze-theme": {
-    "name": "Ocean Breeze",
-    "class": "ocean-breeze-theme",
-    "colors": [
-      "#01579b",
-      "#e1f5fe",
-      "#4fc3f7",
-      "#b3e5fc"
-    ],
-    "isDefault": false
-  }
-};
+    "soft-evergreen-theme": { "name": "Soft Evergreen", "class": "soft-evergreen-theme", "colors": ["#e8f0ef", "#3f514b", "#6a9a8d", "#cedbd9"], "isDefault": true },
+    "desert-bloom-theme": { "name": "Desert Bloom", "class": "desert-bloom-theme", "colors": ["#fcf8f3", "#5d4037", "#d17a7a", "#f0e4d7"], "isDefault": true },
+    "ocean-breeze-theme": { "name": "Ocean Breeze", "class": "ocean-breeze-theme", "colors": ["#eef7f9", "#2c4a52", "#6ab8c8", "#b3e5fc"], "isDefault": true },
+    "charcoal-ember-theme": { "name": "Charcoal & Ember", "class": "charcoal-ember-theme", "colors": ["#363636", "#f5f5f5", "#ff5722", "#4a4a4a"], "isDefault": true },
+    "simple-mono-theme": { "name": "Simple Mono", "class": "simple-mono-theme", "colors": ["#f5f5f5", "#424242", "#9e9e9e", "#e0e0e0"], "isDefault": true },
+    "soft-lavender-theme": { "name": "Soft Lavender", "class": "soft-lavender-theme", "colors": ["#f7f3f9", "#544458", "#a08da6", "#e1dbe4"], "isDefault": true }
+  };
 
   // State object to track user selections
   let state = {
-    selectedTheme: 'soft-evergreen-theme',
+    selectedTheme: 'ocean-breeze-theme', // Default selection
     selectedAlignment: 'center'
   };
 
@@ -150,13 +68,6 @@ const widgetConfig = {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
-
-  function addThemeStyle(themeKey, colors) {
-    const style = document.createElement('style');
-    style.id = `style-${themeKey}`;
-    style.innerHTML = `.${themeKey}{--primary-bg-color:${colors[0]};--primary-text-color:${colors[1]};--accent-color:${colors[2]};--secondary-bg-color:${colors[3]};}`;
-    document.head.appendChild(style);
-  }
   
   function showSaveAndUploadElements() {
       downloadStylesBtn.style.display = 'inline-block';
@@ -173,42 +84,80 @@ const widgetConfig = {
       const option = document.createElement('div');
       option.className = 'theme-option';
       option.dataset.theme = theme.class;
+      option.dataset.key = themeKey; // For edit click listener
       option.innerHTML = `<div class="color-swatch" style="background-color: ${theme.colors[0]};"></div><span>${theme.name}</span>${!theme.isDefault ? `<button class="delete-btn" data-theme-key="${themeKey}">×</button>` : ''}`;
+      
       option.addEventListener('click', (e) => {
         if (e.target.classList.contains('delete-btn')) return;
-        state.selectedTheme = option.dataset.theme;
+        state.selectedTheme = e.currentTarget.dataset.theme;
         downloadConfigBtn.classList.remove('clicked');
-        updateActiveControls();
+        if (allThemes[e.currentTarget.dataset.key].isDefault) {
+            updateActiveControls();
+        } else {
+            editTheme(e.currentTarget.dataset.key);
+        }
       });
+
       themeControls.appendChild(option);
     }
     document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', deleteTheme));
     updateActiveControls();
   }
 
+  function editTheme(themeKey) {
+    const theme = allThemes[themeKey];
+    if (!theme) return;
+
+    newThemeNameInput.value = theme.name;
+    document.getElementById('color-primary-bg').value = theme.colors[0];
+    document.getElementById('color-primary-text').value = theme.colors[1];
+    document.getElementById('color-accent').value = theme.colors[2];
+    document.getElementById('color-secondary-bg').value = theme.colors[3];
+    
+    colorPickers.forEach(picker => {
+        document.querySelector(`.color-hex-input[data-picker="${picker.id}"]`).value = picker.value;
+    });
+
+    addThemeBtn.textContent = 'Update Theme';
+    addThemeBtn.dataset.editingKey = themeKey;
+  }
+
   function addNewTheme() {
     const themeName = newThemeNameInput.value.trim();
     if (!themeName) { alert('Please enter a theme name.'); return; }
-    const themeKey = themeName.toLowerCase().replace(/\s+/g, '-') + '-theme';
-    if (allThemes[themeKey]) { alert('A theme with this name already exists.'); return; }
+
+    const editingKey = addThemeBtn.dataset.editingKey;
     const colors = [
         document.getElementById('color-primary-bg').value,
         document.getElementById('color-primary-text').value,
         document.getElementById('color-accent').value,
         document.getElementById('color-secondary-bg').value
     ];
-    allThemes[themeKey] = { name: themeName, class: themeKey, colors: colors, isDefault: false };
-    addThemeStyle(themeKey, colors);
-    renderThemes();
+
+    if (editingKey) {
+      // --- UPDATE LOGIC ---
+      const originalTheme = allThemes[editingKey];
+      originalTheme.name = themeName;
+      originalTheme.colors = colors;
+    } else {
+      // --- ADD NEW LOGIC ---
+      const themeKey = themeName.toLowerCase().replace(/\s+/g, '-') + '-theme';
+      if (allThemes[themeKey]) { alert('A theme with this name already exists.'); return; }
+      allThemes[themeKey] = { name: themeName, class: themeKey, colors: colors, isDefault: false };
+    }
+    
     newThemeNameInput.value = '';
+    addThemeBtn.textContent = 'Add New Theme';
+    delete addThemeBtn.dataset.editingKey;
+
+    renderThemes();
     showSaveAndUploadElements();
   }
 
   function deleteTheme(event) {
+    event.stopPropagation(); // Prevent the edit click event
     const themeKey = event.target.dataset.themeKey;
-    if (allThemes[themeKey]) {
-        const styleTag = document.getElementById(`style-${themeKey}`);
-        if (styleTag) styleTag.remove();
+    if (allThemes[themeKey] && confirm(`Are you sure you want to delete the "${allThemes[themeKey].name}" theme?`)) {
         delete allThemes[themeKey];
         if (state.selectedTheme === themeKey) { state.selectedTheme = Object.keys(allThemes)[0]; }
         renderThemes();
@@ -231,20 +180,271 @@ const widgetConfig = {
     });
   });
   
-  colorPickers.forEach(picker => picker.addEventListener('input', (e) => { document.querySelector(`.color-hex-input[data-picker="${e.target.id}"]`).value = e.target.value; }));
-  colorHexInputs.forEach(input => input.addEventListener('input', (e) => { document.getElementById(e.target.dataset.picker).value = e.target.value; }));
+  colorPickers.forEach(picker => picker.addEventListener('input', (e) => { 
+      document.querySelector(`.color-hex-input[data-picker="${e.target.id}"]`).value = e.target.value; 
+      showSaveAndUploadElements(); // Show save buttons if functional colors are changed
+  }));
+  colorHexInputs.forEach(input => input.addEventListener('input', (e) => { 
+      document.getElementById(e.target.dataset.picker).value = e.target.value; 
+      showSaveAndUploadElements(); // Show save buttons if functional colors are changed
+  }));
 
-  Object.keys(allThemes).forEach(key => addThemeStyle(key, allThemes[key].colors));
   renderThemes();
   updateActiveControls();
   
   // --- TEMPLATE FUNCTIONS FOR FILE GENERATION --- //
   
   function generateCssContent() {
-    // This function is defined above
+    const successColor = document.getElementById('color-success').value;
+    const statusColor0 = document.getElementById('color-status-0').value;
+    const statusColor1 = document.getElementById('color-status-1').value;
+    const statusColor2 = document.getElementById('color-status-2').value;
+    const statusColor3 = document.getElementById('color-status-3').value;
+    const statusColor4 = document.getElementById('color-status-4').value;
+    const statusColor5 = document.getElementById('color-status-5').value;
+
+    let cssString = `/*
+ * This file is generated by the Widget Admin Dashboard.
+ * It contains all the color themes for your widgets.
+ */
+
+:root {
+  /* Default colors - used as a fallback */
+  --primary-bg-color: #f4f7f6;
+  --primary-text-color: #333333;
+  --accent-color: #6a9a8d;
+  --secondary-bg-color: #e0e6e4;
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+  /* Functional Colors */
+  --success-color: ${successColor};
+
+  /* Status colors for the counter */
+  --status-color-0: ${statusColor0}; /* 😔 */
+  --status-color-1: ${statusColor1}; /* 😐 */
+  --status-color-2: ${statusColor2}; /* 🙂 */
+  --status-color-3: ${statusColor3}; /* 😊 */
+  --status-color-4: ${statusColor4}; /* 😁 */
+  --status-color-5: ${statusColor5}; /* 😇 */
+}
+
+/* Apply status colors based on data attribute from JS */
+.widget[data-count-level="0"] #count-display { color: var(--status-color-0); }
+.widget[data-count-level="1"] #count-display { color: var(--status-color-1); }
+.widget[data-count-level="2"] #count-display { color: var(--status-color-2); }
+.widget[data-count-level="3"] #count-display { color: var(--status-color-3); }
+.widget[data-count-level="4"] #count-display { color: var(--status-color-4); }
+.widget[data-count-level="5"] #count-display { color: var(--status-color-5); }
+
+`;
+
+    for (const themeKey in allThemes) {
+        const theme = allThemes[themeKey];
+        cssString += `/* ${theme.name} */
+.${theme.class} {
+  --primary-bg-color: ${theme.colors[0]};
+  --primary-text-color: ${theme.colors[1]};
+  --accent-color: ${theme.colors[2]};
+  --secondary-bg-color: ${theme.colors[3]};
+}
+
+`;
+    }
+    return cssString;
   }
 
   function generateSettingsJsContent() {
-    // This function is defined above
+    const themesObjectString = JSON.stringify(allThemes, null, 2);
+
+    const newFileContent = `document.addEventListener('DOMContentLoaded', () => {
+  // DOM Element References
+  const themeControls = document.getElementById('theme-controls');
+  const alignmentControls = document.getElementById('alignment-controls');
+  const downloadConfigBtn = document.getElementById('download-config-btn');
+  const downloadStylesBtn = document.getElementById('download-styles-btn');
+  const updateInterfaceBtn = document.getElementById('update-interface-btn');
+  const addThemeBtn = document.getElementById('add-theme-btn');
+  const newThemeNameInput = document.getElementById('new-theme-name');
+  const colorHexInputs = document.querySelectorAll('.color-hex-input');
+  const colorPickers = document.querySelectorAll('input[type="color"]');
+  const uploadInstructions = document.getElementById('upload-instructions');
+
+  // Themes object - This is dynamically generated
+  const allThemes = ${themesObjectString};
+
+  // State object to track user selections
+  let state = {
+    selectedTheme: '${state.selectedTheme}',
+    selectedAlignment: '${state.selectedAlignment}'
+  };
+
+  // --- FUNCTIONS --- //
+
+  function updateActiveControls() {
+    document.querySelectorAll('.theme-option').forEach(opt => opt.classList.toggle('active', opt.dataset.theme === state.selectedTheme));
+    document.querySelectorAll('.alignment-option').forEach(opt => opt.classList.toggle('active', opt.dataset.alignment === state.selectedAlignment));
+  }
+
+  function createConfigFile() {
+    const configContent = \`// Widget configuration file
+// This file is generated by the Admin Dashboard.
+const widgetConfig = {
+  theme: '\${state.selectedTheme}',
+  alignment: '\${state.selectedAlignment}'
+};\`;
+    triggerDownload(configContent, 'config.js', 'text/javascript');
+    downloadConfigBtn.classList.add('clicked');
+  }
+
+  function downloadStylesFile() {
+      const cssContent = generateCssContent();
+      triggerDownload(cssContent, 'styles.css', 'text/css');
+      downloadStylesBtn.classList.add('clicked');
+  }
+
+  function downloadSettingsJsFile() {
+      const settingsJsContent = generateSettingsJsContent();
+      triggerDownload(settingsJsContent, 'settings.js', 'text/javascript');
+      updateInterfaceBtn.classList.add('clicked');
+  }
+
+  function triggerDownload(content, fileName, mimeType) {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+  
+  function showSaveAndUploadElements() {
+      downloadStylesBtn.style.display = 'inline-block';
+      updateInterfaceBtn.style.display = 'inline-block';
+      uploadInstructions.style.display = 'block';
+      downloadStylesBtn.classList.remove('clicked');
+      updateInterfaceBtn.classList.remove('clicked');
+  }
+
+  function renderThemes() {
+    themeControls.innerHTML = '';
+    for (const themeKey in allThemes) {
+      const theme = allThemes[themeKey];
+      const option = document.createElement('div');
+      option.className = 'theme-option';
+      option.dataset.theme = theme.class;
+      option.dataset.key = themeKey; // For edit click listener
+      option.innerHTML = \`<div class="color-swatch" style="background-color: \${theme.colors[0]};"></div><span>\${theme.name}</span>\${!theme.isDefault ? \`<button class="delete-btn" data-theme-key="\${themeKey}">×</button>\` : ''}\`;
+      
+      option.addEventListener('click', (e) => {
+        if (e.target.classList.contains('delete-btn')) return;
+        state.selectedTheme = e.currentTarget.dataset.theme;
+        downloadConfigBtn.classList.remove('clicked');
+        if (allThemes[e.currentTarget.dataset.key].isDefault) {
+            updateActiveControls();
+        } else {
+            editTheme(e.currentTarget.dataset.key);
+        }
+      });
+
+      themeControls.appendChild(option);
+    }
+    document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', deleteTheme));
+    updateActiveControls();
+  }
+
+  function editTheme(themeKey) {
+    const theme = allThemes[themeKey];
+    if (!theme) return;
+
+    newThemeNameInput.value = theme.name;
+    document.getElementById('color-primary-bg').value = theme.colors[0];
+    document.getElementById('color-primary-text').value = theme.colors[1];
+    document.getElementById('color-accent').value = theme.colors[2];
+    document.getElementById('color-secondary-bg').value = theme.colors[3];
+    
+    colorPickers.forEach(picker => {
+        document.querySelector(\`.color-hex-input[data-picker="\${picker.id}"]\`).value = picker.value;
+    });
+
+    addThemeBtn.textContent = 'Update Theme';
+    addThemeBtn.dataset.editingKey = themeKey;
+  }
+
+  function addNewTheme() {
+    const themeName = newThemeNameInput.value.trim();
+    if (!themeName) { alert('Please enter a theme name.'); return; }
+
+    const editingKey = addThemeBtn.dataset.editingKey;
+    const colors = [
+        document.getElementById('color-primary-bg').value,
+        document.getElementById('color-primary-text').value,
+        document.getElementById('color-accent').value,
+        document.getElementById('color-secondary-bg').value
+    ];
+
+    if (editingKey) {
+      // --- UPDATE LOGIC ---
+      const originalTheme = allThemes[editingKey];
+      originalTheme.name = themeName;
+      originalTheme.colors = colors;
+    } else {
+      // --- ADD NEW LOGIC ---
+      const themeKey = themeName.toLowerCase().replace(/\\s+/g, '-') + '-theme';
+      if (allThemes[themeKey]) { alert('A theme with this name already exists.'); return; }
+      allThemes[themeKey] = { name: themeName, class: themeKey, colors: colors, isDefault: false };
+    }
+    
+    newThemeNameInput.value = '';
+    addThemeBtn.textContent = 'Add New Theme';
+    delete addThemeBtn.dataset.editingKey;
+
+    renderThemes();
+    showSaveAndUploadElements();
+  }
+
+  function deleteTheme(event) {
+    event.stopPropagation();
+    const themeKey = event.target.dataset.themeKey;
+    if (allThemes[themeKey] && confirm(\`Are you sure you want to delete the "\${allThemes[themeKey].name}" theme?\`)) {
+        delete allThemes[themeKey];
+        if (state.selectedTheme === themeKey) { state.selectedTheme = Object.keys(allThemes)[0]; }
+        renderThemes();
+        showSaveAndUploadElements();
+    }
+  }
+
+  // --- EVENT LISTENERS & INITIALIZATION --- //
+
+  downloadConfigBtn.addEventListener('click', createConfigFile);
+  downloadStylesBtn.addEventListener('click', downloadStylesFile);
+  updateInterfaceBtn.addEventListener('click', downloadSettingsJsFile);
+  addThemeBtn.addEventListener('click', addNewTheme);
+  
+  alignmentControls.querySelectorAll('.alignment-option').forEach(option => {
+    option.addEventListener('click', () => { 
+        state.selectedAlignment = option.dataset.alignment; 
+        downloadConfigBtn.classList.remove('clicked');
+        updateActiveControls(); 
+    });
+  });
+  
+  colorPickers.forEach(picker => picker.addEventListener('input', (e) => { 
+      document.querySelector(\`.color-hex-input[data-picker="\${e.target.id}"]\`).value = e.target.value; 
+      showSaveAndUploadElements();
+  }));
+  colorHexInputs.forEach(input => input.addEventListener('input', (e) => { 
+      document.getElementById(e.target.dataset.picker).value = e.target.value; 
+      showSaveAndUploadElements();
+  }));
+
+  renderThemes();
+  updateActiveControls();
+  
+  // (The generateCssContent and generateSettingsJsContent functions would be here)
+});`;
+    return newFileContent;
   }
 });
