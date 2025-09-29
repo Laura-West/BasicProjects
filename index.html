@@ -1,3 +1,6 @@
+Certainly, here is the full, updated code incorporating all the changes. You can copy and paste this to overwrite your old file.
+
+```html
 <!DOCTYPE html>
 <html lang="en-AU">
 <head>
@@ -39,23 +42,19 @@
              color: var(--primary-text-color); 
         }
         h1 { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px; font-size: 2.2em; font-weight: 700; margin-bottom: 10px; }
-        .version-info { font-size: 0.5em; font-weight: 500; color: var(--primary-text-color); /* MODIFIED */ background-color: var(--secondary-bg-color); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--border-color); opacity: 0.7; }
+        .version-info { font-size: 0.5em; font-weight: 500; color: var(--primary-text-color); background-color: var(--secondary-bg-color); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--border-color); opacity: 0.7; }
         h2 { font-size: 1.5em; font-weight: 600; text-align: center; }
         h3 { font-size: 1.2em; font-weight: 600; text-align: center; margin-bottom: 15px; }
         .heading-with-button { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px; width: 100%; }
         .section-control { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; padding: 20px; background-color: var(--secondary-bg-color); border: 1px solid var(--border-color); border-radius: 8px; }
-        .alignment-option { padding: 10px 15px; border: 2px solid #ccc; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; display: flex; align-items: center; gap: 10px; font-weight: 500; }
-        .alignment-option:hover { border-color: var(--accent-color); }
-        .alignment-option.active { border-color: var(--accent-color); background-color: var(--accent-color); color: white; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); transform: translateY(-2px); }
         .btn { padding: 10px 20px; border: none; background-color: var(--accent-color); color: white; border-radius: 8px; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: transform 0.1s ease, filter 0.1s ease; }
         .btn:hover { filter: brightness(110%); }
         .btn:active { transform: scale(0.97); filter: brightness(95%); }
         .btn.secondary { background-color: #6c757d; }
         .btn.danger { background-color: #dc3545; }
-        .btn.selected { background-color: #28a745; cursor: default; }
-        .btn.selected:hover { filter: none; }
+        .btn.selected, .btn.alignment-option.active { background-color: #28a745; cursor: default; }
+        .btn.selected:hover, .btn.alignment-option.active:hover { filter: none; }
         
-        /* MODIFICATION STARTS HERE */
         .upload-instructions {
             text-align: center;
             width: 100%;
@@ -63,8 +62,6 @@
             padding-top: 25px;
             margin-top: 10px;
         }
-        /* MODIFICATION ENDS HERE */
-        
         .upload-instructions a { color: var(--accent-color); font-weight: 600; }
 
         /* List-Style & Grid UI Styles */
@@ -83,13 +80,13 @@
         .theme-name-input { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 1em; box-sizing: border-box; grid-column: 1 / -1; }
         
         details { width: 100%; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 10px; }
-        summary { cursor: pointer; font-weight: 600; font-size: 1.5em; text-align: center; padding: 10px; color: var(--primary-text-color); } /* MODIFIED */
+        summary { cursor: pointer; font-weight: 600; font-size: 1.5em; text-align: center; padding: 10px; color: var(--primary-text-color); }
         
         /* New Save Section Styles */
         .save-section-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .save-section { background-color: var(--secondary-bg-color); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 15px; text-align: center; }
         .save-section .filename { font-weight: 600; font-size: 1.1em; background-color: var(--primary-bg-color); padding: 5px 10px; border-radius: 5px; border: 1px solid var(--border-color); display: inline-block; margin: 0 auto; }
-        .save-section p { font-size: 0.9em; line-height: 1.5; color: var(--primary-text-color); margin: 0; } /* MODIFIED */
+        .save-section p { font-size: 0.9em; line-height: 1.5; color: var(--primary-text-color); margin: 0; }
         .save-section .btn { margin-top: auto; }
     </style>
 </head>
@@ -124,9 +121,9 @@
         
         <h2 style="border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px;">Select Text Alignment</h2>
         <div id="alignment-controls" class="section-control">
-            <div class="alignment-option" data-alignment="left"><span>↔ Left</span></div>
-            <div class="alignment-option" data-alignment="center"><span>↔ Centre</span></div>
-            <div class="alignment-option" data-alignment="right"><span>↔ Right</span></div>
+            <button class="btn alignment-option" data-alignment="left">↔ Left</button>
+            <button class="btn alignment-option" data-alignment="center">↔ Centre</button>
+            <button class="btn alignment-option" data-alignment="right">↔ Right</button>
         </div>
 
         <h2 style="border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px;">Save & Upload Files</h2>
