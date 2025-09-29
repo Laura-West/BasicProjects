@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const DASHBOARD_VERSION = 'v3.9';
+  const DASHBOARD_VERSION = 'v4.0';
 
   const DEFAULT_FUNCTIONAL_COLOURS = {
     'colour-success': '#28a745', 'colour-status-0': '#DC143C', 'colour-status-1': '#FF8C00',
@@ -15,18 +15,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const downloadConfigBtn = document.getElementById('download-config-btn');
   const downloadStylesBtn = document.getElementById('download-styles-btn');
   const alignmentControls = document.getElementById('alignment-controls');
+  const stylesSaveSection = document.getElementById('styles-save-section'); // Target the whole section
 
   let allThemes = {};
   let state = { selectedTheme: 'soft-evergreen-theme', selectedAlignment: 'center' };
   let loadedCssVersion = 1.0;
   
-  // --- CORRECTED FUNCTIONS to control button visibility ---
-  function showStylesSaveButton() {
-    downloadStylesBtn.style.display = 'block';
+  // --- CORRECTED FUNCTIONS to control SECTION visibility ---
+  function showStylesSaveSection() {
+    stylesSaveSection.style.display = 'flex';
   }
 
-  function hideStylesSaveButton() {
-    downloadStylesBtn.style.display = 'none';
+  function hideStylesSaveSection() {
+    stylesSaveSection.style.display = 'none';
   }
 
   function indicateConfigChange() {
@@ -160,8 +161,14 @@ document.addEventListener('DOMContentLoaded', () => {
   themeListContainer.addEventListener('input', (e) => {
     const row = e.target.closest('.theme-row.editing');
     if (!row) return;
-    if (e.target.matches('input[type="color"]')) { e.target.nextElementSibling.value = e.target.value; }
-    if (e.target.matches('.colour-hex-input')) { e.target.previousElementSibling.value = e.target.value; }
+    if (e.target.matches('input[type="color"]')) { 
+      e.target.nextElementSibling.value = e.target.value; 
+      showStylesSaveSection(); // Show section when editing colours
+    }
+    if (e.target.matches('.colour-hex-input')) { 
+      e.target.previousElementSibling.value = e.target.value; 
+      showStylesSaveSection(); // Show section when editing colours
+    }
   });
 
   themeListContainer.addEventListener('click', (e) => {
@@ -175,7 +182,9 @@ document.addEventListener('DOMContentLoaded', () => {
         renderThemes();
         indicateConfigChange();
     }
-    if (e.target.classList.contains('btn-edit')) { row.classList.add('editing'); }
+    if (e.target.classList.contains('btn-edit')) { 
+      row.classList.add('editing'); 
+    }
     if (e.target.classList.contains('btn-cancel')) {
       if (!key) { row.remove(); } 
       else { renderThemes(); }
@@ -188,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (state.selectedTheme) applyDashboardTheme(state.selectedTheme);
         }
         renderThemes();
-        showStylesSaveButton();
+        showStylesSaveSection(); // Show section on delete
       }
     }
     if (e.target.classList.contains('btn-save')) {
@@ -209,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
         colors: Array.from(colourInputs).map(input => input.value)
       };
       renderThemes();
-      showStylesSaveButton();
+      showStylesSaveSection(); // Show section on save
     }
   });
 
@@ -237,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function downloadStylesFile() {
     triggerDownload(generateCssContent(), 'styles.css');
-    hideStylesSaveButton();
+    hideStylesSaveSection(); // Hide section after saving
   }
 
   function generateCssContent() {
@@ -284,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
     
-    document.querySelectorAll('.colour-hex-input, input[type="color"]').forEach(input => {
+    document.querySelectorAll('#functional-colours-container input').forEach(input => {
         input.addEventListener('input', (e) => {
             if(e.target.matches('input[type="color"]')) {
                 const hexInput = e.target.parentElement.querySelector('.colour-hex-input');
@@ -294,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const picker = e.target.parentElement.querySelector('input[type="color"]');
                 if(picker) picker.value = e.target.value;
             }
-            showStylesSaveButton();
+            showStylesSaveSection(); // Show section on functional colour change
         });
     });
   }
