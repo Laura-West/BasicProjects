@@ -35,8 +35,8 @@
             gap: 25px;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-        h1 { display: flex; justify-content: center; align-items: center; gap: 15px; font-size: 2.2em; font-weight: 700; margin-bottom: 10px; }
-        #version-display { font-size: 0.5em; font-weight: 500; color: #888; background-color: var(--secondary-bg-color); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--border-color); }
+        h1 { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px; font-size: 2.2em; font-weight: 700; margin-bottom: 10px; }
+        .version-info { font-size: 0.5em; font-weight: 500; color: #888; background-color: var(--secondary-bg-color); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--border-color); }
         h2 { font-size: 1.5em; font-weight: 600; text-align: center; border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px; }
         h3 { font-size: 1.2em; font-weight: 600; text-align: center; color: var(--primary-text-color); }
         .section-control { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; padding: 20px; background-color: var(--secondary-bg-color); border: 1px solid var(--border-color); border-radius: 8px; }
@@ -65,77 +65,34 @@
 </head>
 <body>
     <div class="container" id="dashboard-container">
-        <h1>Widget Dashboard <span id="version-display"></span></h1>
+        <h1>
+            Widget Dashboard 
+            <span id="version-display" class="version-info"></span>
+            <span id="css-version-display" class="version-info">CSS: v?</span>
+        </h1>
 
         <h2>Select & Edit Themes</h2>
         <div id="theme-controls" class="section-control"></div>
 
         <div class="section-control" style="flex-direction: column; align-items: stretch; gap: 20px;">
             <input type="text" id="new-theme-name" placeholder="Enter New Theme Name or Update Name">
-            <div class="color-inputs-grid">
-                <div class="color-input-group">
-                    <label for="color-primary-bg">Primary BG</label>
-                    <input type="color" id="color-primary-bg" value="#e8f0ef"><input type="text" class="color-hex-input" data-picker="color-primary-bg" value="#e8f0ef">
-                </div>
-                <div class="color-input-group">
-                    <label for="color-primary-text">Primary Text</label>
-                    <input type="color" id="color-primary-text" value="#3f514b"><input type="text" class="color-hex-input" data-picker="color-primary-text" value="#3f514b">
-                </div>
-                <div class="color-input-group">
-                    <label for="color-accent">Accent</label>
-                    <input type="color" id="color-accent" value="#6a9a8d"><input type="text" class="color-hex-input" data-picker="color-accent" value="#6a9a8d">
-                </div>
-                <div class="color-input-group">
-                    <label for="color-secondary-bg">Secondary BG</label>
-                    <input type="color" id="color-secondary-bg" value="#cedbd9"><input type="text" class="color-hex-input" data-picker="color-secondary-bg" value="#cedbd9">
-                </div>
-            </div>
+            <div class="color-inputs-grid"></div>
             <div class="editor-buttons">
                 <button id="add-theme-btn" class="btn">Add New Theme</button>
                 <button id="new-theme-btn" class="btn secondary" title="Clear form to create a new theme">+ New</button>
             </div>
         </div>
 
-        <details>
-            <summary>Global Functional Colors</summary>
-            <div class="section-control" style="flex-direction: column; align-items: stretch; gap: 20px;">
-                <h3>Functional Colors</h3>
-                <div class="color-inputs-grid">
-                    <div class="color-input-group">
-                        <label for="color-success">Success Color</label>
-                        <input type="color" id="color-success" value="#28a745"><input type="text" class="color-hex-input" data-picker="color-success" value="#28a745">
-                    </div>
-                </div>
-                <h3>Counter Status Colors</h3>
-                <div class="color-inputs-grid status-colors">
-                    <div class="color-input-group"><label for="color-status-0">Status 😔</label><input type="color" id="color-status-0" value="#DC143C"><input type="text" class="color-hex-input" data-picker="color-status-0" value="#DC143C"></div>
-                    <div class="color-input-group"><label for="color-status-1">Status 😐</label><input type="color" id="color-status-1" value="#FF8C00"><input type="text" class="color-hex-input" data-picker="color-status-1" value="#FF8C00"></div>
-                    <div class="color-input-group"><label for="color-status-2">Status 🙂</label><input type="color" id="color-status-2" value="#FFD700"><input type="text" class="color-hex-input" data-picker="color-status-2" value="#FFD700"></div>
-                    <div class="color-input-group"><label for="color-status-3">Status 😊</label><input type="color" id="color-status-3" value="#32CD32"><input type="text" class="color-hex-input" data-picker="color-status-3" value="#32CD32"></div>
-                    <div class="color-input-group"><label for="color-status-4">Status 😁</label><input type="color" id="color-status-4" value="#DA70D6"><input type="text" class="color-hex-input" data-picker="color-status-4" value="#DA70D6"></div>
-                    <div class="color-input-group"><label for="color-status-5">Status 😇</label><input type="color" id="color-status-5" value="#ffc107"><input type="text" class="color-hex-input" data-picker="color-status-5" value="#ffc107"></div>
-                </div>
-            </div>
-        </details>
+        <details></details>
         
         <h2>Select Text Alignment</h2>
-        <div id="alignment-controls" class="section-control">
-            <div class="alignment-option" data-alignment="left"><span>↔ Left</span></div>
-            <div class="alignment-option" data-alignment="center"><span>↔ Center</span></div>
-            <div class="alignment-option" data-alignment="right"><span>↔ Right</span></div>
-        </div>
+        <div id="alignment-controls" class="section-control"></div>
 
-        <div class="download-section">
-            <button id="download-config-btn" class="btn">Save Settings</button>
-            <button id="download-styles-btn" class="btn" style="display: none;">Save Styles</button>
-        </div>
+        <div class="download-section"></div>
         
-        <div id="upload-instructions" class="upload-instructions">
-             <p>After saving, upload your file(s) to GitHub:</p>
-            <a href="https://github.com/Laura-West/BasicProjects/upload/main" target="_blank">Upload Files to GitHub</a>
-        </div>
+        <div id="upload-instructions" class="upload-instructions"></div>
     </div>
     
-    <script src="settings.js?v=2.2"></script>
+    <script src="settings.js?v=2.4"></script>
 </body>
 </html>
