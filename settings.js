@@ -75,16 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /**
-   * Calculates the perceived brightness of a hex colour and returns
-   * either black or white for the best contrast.
-   */
   function getContrastingTextColor(hex) {
     if (!hex || hex.length < 7) return '#000000';
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
-    // Standard luminance calculation
     const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
     return luminance > 128 ? '#000000' : '#FFFFFF';
   }
@@ -97,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const textColour = getContrastingTextColor(bgColour);
 
     dashboardContainer.style.setProperty('--primary-bg-color', bgColour);
-    dashboardContainer.style.setProperty('--primary-text-color', textColour); // DYNAMIC TEXT COLOUR
+    dashboardContainer.style.setProperty('--primary-text-color', textColour);
     dashboardContainer.style.setProperty('--accent-color', theme.colors[2]);
     dashboardContainer.style.setProperty('--secondary-bg-color', theme.colors[3]);
     dashboardContainer.style.setProperty('--border-color', theme.colors[3]);
@@ -228,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function createConfigFile() {
     triggerDownload(`const widgetConfig = {\n  theme: '${state.selectedTheme || ''}',\n  alignment: '${state.selectedAlignment}'\n};`, 'config.js');
     downloadConfigBtn.classList.add('clicked');
-}
+  }
 
   function downloadStylesFile() {
     triggerDownload(generateCssContent(), 'styles.css');
