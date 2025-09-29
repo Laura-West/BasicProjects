@@ -59,17 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
       let themeMatch;
       while ((themeMatch = themeRegex.exec(cssText)) !== null) {
         const [, name, className, properties] = themeMatch;
-        const colours = {
-          primaryBg: /--primary-bg-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
-          primaryText: /--primary-text-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
-          accent: /--accent-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
-          secondaryBg: /--secondary-bg-color:\s*([^;]+);/.exec(properties)?.[1].trim()
-        };
-        
-        if (Object.values(colours).every(c => c)) {
-          allThemes[className] = { name, class: className, colors: Object.values(colours) };
-        } else {
-          console.warn(`Theme "${name}" (${className}) was skipped. It might be missing one or more required CSS variables (--primary-bg-color, --primary-text-color, --accent-color, --secondary-bg-color).`);
+        const colours = [
+          /--primary-bg-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
+          /--primary-text-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
+          /--accent-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
+          /--secondary-bg-color:\s*([^;]+);/.exec(properties)?.[1].trim()
+        ];
+        if (colours.every(c => c)) {
+          allThemes[className] = { name, class: className, colors: colours };
         }
       }
     } catch (error) {
@@ -113,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="theme-name">${name}</span>
           <div class="colour-swatch-group">
             <div class="colour-swatch" style="background-color: ${colours[0]}"></div>
-            <div class="colour-swatch" style="background-color: ${colours[1]}"></div>
+            <div class.colour-swatch" style="background-color: ${colours[1]}"></div>
             <div class="colour-swatch" style="background-color: ${colours[2]}"></div>
             <div class="colour-swatch" style="background-color: ${colours[3]}"></div>
           </div>
@@ -246,7 +243,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     for (const themeKey in allThemes) {
         const theme = allThemes[themeKey];
-        // **FIXED:** This line is now complete and correctly formats the CSS for each theme.
         cssString += `/* ${theme.name} */\n.${theme.class} {\n  --primary-bg-color: ${theme.colors[0]};\n  --primary-text-color: ${theme.colors[1]};\n  --accent-color: ${theme.colors[2]};\n  --secondary-bg-color: ${theme.colors[3]};\n}\n\n`;
     }
     return cssString;
