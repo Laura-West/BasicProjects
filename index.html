@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-AU">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,18 +56,21 @@
         .upload-instructions a { color: var(--accent-color); font-weight: 600; }
 
         /* List-Style UI Styles */
-        .theme-row, .functional-color-row { padding: 15px; background-color: var(--secondary-bg-color); border: 1px solid var(--border-color); border-radius: 8px; display: flex; flex-direction: column; gap: 15px; }
+        .theme-row, .functional-colour-row { padding: 15px; background-color: var(--secondary-bg-color); border: 1px solid var(--border-color); border-radius: 8px; display: flex; flex-direction: column; gap: 15px; }
         .theme-row.editing .view-mode { display: none; }
         .theme-row:not(.editing) .edit-mode { display: none; }
-        .view-mode, .edit-mode-controls, .functional-color-row .controls { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
-        .theme-name, .functional-color-row .label { font-weight: 600; margin-right: auto; }
-        .color-swatch-group { display: flex; gap: 5px; }
-        .color-swatch { width: 25px; height: 25px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.2); }
-        .color-inputs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; width: 100%; }
-        .color-input-group { display: flex; flex-direction: column; gap: 5px; }
-        .color-input-group label { font-weight: 500; font-size: 0.9em; color: var(--primary-text-color); }
-        .color-input-group input[type="color"] { width: 100%; height: 35px; border: 1px solid var(--border-color); cursor: pointer; padding: 0; background: none; border-radius: 5px; }
+        .view-mode, .edit-mode-controls, .functional-colour-row .controls { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .theme-name, .functional-colour-row .label { font-weight: 600; margin-right: auto; }
+        .colour-swatch-group { display: flex; gap: 5px; }
+        .colour-swatch { width: 25px; height: 25px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.2); }
+        .colour-inputs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; width: 100%; }
+        .colour-input-group { display: flex; flex-direction: column; gap: 5px; }
+        .colour-input-group label { font-weight: 500; font-size: 0.9em; color: var(--primary-text-color); }
+        .colour-input-group input[type="color"] { width: 100%; height: 35px; border: 1px solid var(--border-color); cursor: pointer; padding: 0; background: none; border-radius: 5px; }
         .theme-name-input { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 1em; box-sizing: border-box; grid-column: 1 / -1; }
+        
+        details { width: 100%; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 10px; }
+        summary { cursor: pointer; font-weight: 600; font-size: 1.5em; text-align: center; padding: 10px; }
     </style>
 </head>
 <body>
@@ -84,32 +87,34 @@
         </div>
         <div id="theme-list-container" style="display: flex; flex-direction: column; gap: 10px; width: 100%;"></div>
         
-        <h2 style="border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px;">Global Functional Colors</h2>
-        <div id="functional-colors-container" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
-            <h3>Functional Colors</h3>
-            <div class="functional-color-row">
-                <div class="controls"><span class="label">Success Color</span><input type="color" id="color-success" value="#28a745"></div>
+        <details>
+            <summary>Global Functional Colours</summary>
+            <div id="functional-colours-container" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                <h3>Functional Colours</h3>
+                <div class="functional-colour-row">
+                    <div class="controls"><span class="label">Success Colour</span><input type="color" id="colour-success" value="#28a745"></div>
+                </div>
+                <h3>Counter Status Colours</h3>
+                <div class="functional-colour-row">
+                    <div class="controls"><span class="label">Status 0</span><input type="color" id="colour-status-0" value="#DC143C"></div>
+                </div>
+                <div class="functional-colour-row">
+                    <div class="controls"><span class="label">Status 1</span><input type="color" id="colour-status-1" value="#FF8C00"></div>
+                </div>
+                <div class="functional-colour-row">
+                    <div class="controls"><span class="label">Status 2</span><input type="color" id="colour-status-2" value="#FFD700"></div>
+                </div>
+                <div class="functional-colour-row">
+                    <div class="controls"><span class="label">Status 3</span><input type="color" id="colour-status-3" value="#32CD32"></div>
+                </div>
+                <div class="functional-colour-row">
+                    <div class="controls"><span class="label">Status 4</span><input type="color" id="colour-status-4" value="#DA70D6"></div>
+                </div>
+                <div class="functional-colour-row">
+                    <div class="controls"><span class="label">Status 5</span><input type="color" id="colour-status-5" value="#ffc107"></div>
+                </div>
             </div>
-            <h3>Counter Status Colors</h3>
-            <div class="functional-color-row">
-                <div class="controls"><span class="label">Status 0</span><input type="color" id="color-status-0" value="#DC143C"></div>
-            </div>
-            <div class="functional-color-row">
-                <div class="controls"><span class="label">Status 1</span><input type="color" id="color-status-1" value="#FF8C00"></div>
-            </div>
-            <div class="functional-color-row">
-                <div class="controls"><span class="label">Status 2</span><input type="color" id="color-status-2" value="#FFD700"></div>
-            </div>
-            <div class="functional-color-row">
-                <div class="controls"><span class="label">Status 3</span><input type="color" id="color-status-3" value="#32CD32"></div>
-            </div>
-            <div class="functional-color-row">
-                <div class="controls"><span class="label">Status 4</span><input type="color" id="color-status-4" value="#DA70D6"></div>
-            </div>
-            <div class="functional-color-row">
-                <div class="controls"><span class="label">Status 5</span><input type="color" id="color-status-5" value="#ffc107"></div>
-            </div>
-        </div>
+        </details>
         
         <h2 style="border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px;">Select Text Alignment</h2>
         <div id="alignment-controls" class="section-control">
@@ -129,6 +134,6 @@
         </div>
     </div>
     
-    <script src="settings.js?v=3.4"></script>
+    <script src="settings.js?v=3.5"></script>
 </body>
 </html>
