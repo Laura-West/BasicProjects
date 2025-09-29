@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const DASHBOARD_VERSION = 'v3.0';
+  const DASHBOARD_VERSION = 'v3.1';
 
   // DOM Element References
   const versionDisplay = document.getElementById('version-display');
@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isNew = !themeKey;
     const name = isNew ? '' : theme.name;
     const colors = isNew ? ['#f0f0f0', '#333333', '#007bff', '#cccccc'] : theme.colors;
+    const isSelected = themeKey === state.selectedTheme;
     
     return `
       <div class="theme-row ${isNew ? 'editing' : ''}" data-key="${themeKey || ''}">
@@ -86,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="color-swatch" style="background-color: ${colors[2]}"></div>
             <div class="color-swatch" style="background-color: ${colors[3]}"></div>
           </div>
+          <button class="btn btn-select ${isSelected ? 'selected' : ''}">${isSelected ? '✓ Selected' : 'Select'}</button>
           <button class="btn btn-edit">Edit</button>
           <button class="btn btn-danger btn-delete">Delete</button>
         </div>
@@ -111,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
     for (const themeKey in allThemes) {
       themeListContainer.innerHTML += createThemeRowHTML(themeKey, allThemes[themeKey]);
     }
-    updateActiveControls();
   }
   
   themeListContainer.addEventListener('click', (e) => {
@@ -119,6 +120,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!row) return;
 
     const key = row.dataset.key;
+    
+    // --- Select Button ---
+    if (e.target.classList.contains('btn-select')) {
+        state.selectedTheme = key;
+        applyDashboardTheme(key);
+        renderThemes();
+        showSaveAndUploadElements();
+    }
 
     if (e.target.classList.contains('btn-edit')) {
       row.classList.add('editing');
@@ -147,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!key && allThemes[newKey]) return alert('A theme with this name already exists.');
 
       if (key && key !== newKey) {
+        if (state.selectedTheme === key) state.selectedTheme = newKey;
         delete allThemes[key];
       }
       
@@ -221,6 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const firstTheme = Object.keys(allThemes)[0];
         state.selectedTheme = firstTheme;
         applyDashboardTheme(firstTheme);
+        renderThemes(); // Re-render to show the first theme as selected
     }
     
     downloadConfigBtn.addEventListener('click', createConfigFile);

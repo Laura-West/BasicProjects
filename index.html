@@ -49,13 +49,15 @@
         .btn:active { transform: scale(0.97); filter: brightness(95%); }
         .btn.secondary { background-color: #6c757d; }
         .btn.danger { background-color: #dc3545; }
+        .btn.selected { background-color: #28a745; cursor: default; }
+        .btn.selected:hover { filter: none; }
         .download-section { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
         .upload-instructions { text-align: center; background-color: var(--secondary-bg-color); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); }
         .upload-instructions a { color: var(--accent-color); font-weight: 600; }
         details { width: 100%; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 10px; }
         summary { cursor: pointer; font-weight: 600; font-size: 1.5em; text-align: center; padding: 10px; }
 
-        /* New List-Style UI Styles */
+        /* List-Style UI Styles */
         .theme-row { padding: 15px; background-color: var(--secondary-bg-color); border: 1px solid var(--border-color); border-radius: 8px; display: flex; flex-direction: column; gap: 15px; }
         .theme-row.editing .view-mode { display: none; }
         .theme-row:not(.editing) .edit-mode { display: none; }
@@ -67,7 +69,7 @@
         .color-input-group { display: flex; flex-direction: column; gap: 5px; }
         .color-input-group label { font-weight: 500; font-size: 0.9em; color: var(--primary-text-color); }
         .color-input-group input[type="color"] { width: 100%; height: 35px; border: 1px solid var(--border-color); cursor: pointer; padding: 0; background: none; border-radius: 5px; }
-        .theme-name-input { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 1em; box-sizing: border-box; grid-column: 1 / -1; } /* Span full width */
+        .theme-name-input { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 1em; box-sizing: border-box; grid-column: 1 / -1; }
     </style>
 </head>
 <body>
@@ -90,19 +92,16 @@
             <div class="section-control" style="flex-direction: column; align-items: stretch; gap: 20px;">
                 <h3>Functional Colors</h3>
                 <div class="color-inputs-grid">
-                    <div class="color-input-group">
-                        <label for="color-success">Success Color</label>
-                        <input type="color" id="color-success" value="#28a745">
-                    </div>
+                    <div class="color-input-group"><label for="color-success">Success Color</label><input type="color" id="color-success"></div>
                 </div>
                 <h3>Counter Status Colors</h3>
                 <div class="color-inputs-grid status-colors">
-                    <div class="color-input-group"><label for="color-status-0">Status 😔</label><input type="color" id="color-status-0" value="#DC143C"></div>
-                    <div class="color-input-group"><label for="color-status-1">Status 😐</label><input type="color" id="color-status-1" value="#FF8C00"></div>
-                    <div class="color-input-group"><label for="color-status-2">Status 🙂</label><input type="color" id="color-status-2" value="#FFD700"></div>
-                    <div class="color-input-group"><label for="color-status-3">Status 😊</label><input type="color" id="color-status-3" value="#32CD32"></div>
-                    <div class="color-input-group"><label for="color-status-4">Status 😁</label><input type="color" id="color-status-4" value="#DA70D6"></div>
-                    <div class="color-input-group"><label for="color-status-5">Status 😇</label><input type="color" id="color-status-5" value="#ffc107"></div>
+                    <div class="color-input-group"><label for="color-status-0">Status 😔</label><input type="color" id="color-status-0"></div>
+                    <div class="color-input-group"><label for="color-status-1">Status 😐</label><input type="color" id="color-status-1"></div>
+                    <div class="color-input-group"><label for="color-status-2">Status 🙂</label><input type="color" id="color-status-2"></div>
+                    <div class="color-input-group"><label for="color-status-3">Status 😊</label><input type="color" id="color-status-3"></div>
+                    <div class="color-input-group"><label for="color-status-4">Status 😁</label><input type="color" id="color-status-4"></div>
+                    <div class="color-input-group"><label for="color-status-5">Status 😇</label><input type="color" id="color-status-5"></div>
                 </div>
             </div>
         </details>
@@ -125,6 +124,6 @@
         </div>
     </div>
     
-    <script src="settings.js?v=3.0"></script>
+    <script src="settings.js?v=3.1"></script>
 </body>
 </html>
