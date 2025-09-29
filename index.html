@@ -53,7 +53,16 @@
             border-radius: 5px;
             border: 1px solid var(--border-color);
         }
-        h2 { font-size: 1.5em; font-weight: 600; border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px; text-align: center; }
+        h2 { font-size: 1.5em; font-weight: 600; text-align: center; }
+        .heading-with-button {
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             gap: 15px;
+             border-top: 1px solid var(--border-color);
+             padding-top: 25px;
+             margin-top: 10px;
+        }
         .section-control { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; padding: 20px; background-color: var(--secondary-bg-color); border: 1px solid var(--border-color); border-radius: 8px; }
         .theme-option, .alignment-option { padding: 10px 15px; border: 2px solid #ccc; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; display: flex; align-items: center; gap: 10px; font-weight: 500; }
         .theme-option:hover, .alignment-option:hover { border-color: var(--accent-color); }
@@ -66,7 +75,9 @@
         .color-input-group label { font-weight: 500; color: var(--primary-text-color); }
         .color-input-group input[type="color"] { width: 100%; height: 40px; border: none; cursor: pointer; padding: 0; background: none; border-radius: 5px; overflow: hidden; }
         .color-hex-input, #new-theme-name { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 0.9em; box-sizing: border-box; }
-        .btn { padding: 12px 25px; border: none; background-color: var(--accent-color); color: white; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 600; }
+        .btn { padding: 12px 25px; border: none; background-color: var(--accent-color); color: white; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 600; transition: transform 0.1s ease, filter 0.1s ease; }
+        .btn:hover { filter: brightness(110%); }
+        .btn:active { transform: scale(0.97); filter: brightness(95%); } /* <-- Visual feedback on press */
         .download-section { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
         .upload-instructions { text-align: center; background-color: var(--secondary-bg-color); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); }
         .upload-instructions a { color: var(--accent-color); font-weight: 600; }
@@ -76,7 +87,10 @@
     <div class="container" id="dashboard-container">
         <h1>Widget Dashboard <span id="version-display"></span></h1>
 
-        <h2>Select & Edit Themes</h2>
+        <div class="heading-with-button">
+            <h2>Select & Edit Themes</h2>
+            <button id="new-theme-btn" class="btn" title="Clear form to create a new theme" style="padding: 5px 12px; font-size: 0.9em;">+ New</button>
+        </div>
         <div id="theme-controls" class="section-control">
             </div>
 
@@ -103,7 +117,7 @@
             <button id="add-theme-btn" class="btn">Add New Theme</button>
         </div>
         
-        <h2>Select Text Alignment</h2>
+        <h2 style="border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px;">Select Text Alignment</h2>
         <div id="alignment-controls" class="section-control">
             <div class="alignment-option" data-alignment="left"><span>↔ Left</span></div>
             <div class="alignment-option" data-alignment="center"><span>↔ Center</span></div>

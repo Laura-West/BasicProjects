@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const DASHBOARD_VERSION = 'v1.0';
+  const DASHBOARD_VERSION = 'v1.5';
 
   // DOM Element References
   const versionDisplay = document.getElementById('version-display');
@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const downloadConfigBtn = document.getElementById('download-config-btn');
   const downloadStylesBtn = document.getElementById('download-styles-btn');
   const addThemeBtn = document.getElementById('add-theme-btn');
+  const newThemeBtn = document.getElementById('new-theme-btn'); // New button
   const newThemeNameInput = document.getElementById('new-theme-name');
   
   let allThemes = {};
@@ -16,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function initializeThemes() {
     try {
-      const response = await fetch(`styles.css?v=${new Date().getTime()}`); // Cache-bust for fresh data
+      const response = await fetch(`styles.css?v=${new Date().getTime()}`);
       if (!response.ok) throw new Error('styles.css could not be loaded.');
       const cssText = await response.text();
       
@@ -25,14 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
       
       while ((match = themeRegex.exec(cssText)) !== null) {
         const [, name, className, properties] = match;
-        
         const colors = [
           /--primary-bg-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
           /--primary-text-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
           /--accent-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
           /--secondary-bg-color:\s*([^;]+);/.exec(properties)?.[1].trim()
         ];
-        
         if (colors.every(c => c)) {
           allThemes[className] = { name, class: className, colors };
         }
@@ -89,11 +88,27 @@ document.addEventListener('DOMContentLoaded', () => {
     addThemeBtn.textContent = 'Update Theme';
     addThemeBtn.dataset.editingKey = themeKey;
   }
+  
+  function clearEditForm() {
+    newThemeNameInput.value = '';
+    const defaultColors = {
+      'color-primary-bg': '#f0f0f0', 'color-primary-text': '#333333',
+      'color-accent': '#007bff', 'color-secondary-bg': '#dddddd'
+    };
+     for (const id in defaultColors) {
+        document.getElementById(id).value = defaultColors[id];
+        document.querySelector(`.color-hex-input[data-picker="${id}"]`).value = defaultColors[id];
+    }
+    addThemeBtn.textContent = 'Add New Theme';
+    delete addThemeBtn.dataset.editingKey;
+    // Also deselect any active theme in the top list
+    state.selectedTheme = null;
+    updateActiveControls();
+  }
 
   function addNewTheme() {
     const themeName = newThemeNameInput.value.trim();
     if (!themeName) { alert('Please enter a theme name.'); return; }
-
     const editingKey = addThemeBtn.dataset.editingKey;
     const colors = [
         document.getElementById('color-primary-bg').value,
@@ -103,16 +118,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     if (editingKey && allThemes[editingKey]) {
-      // Update existing theme
       allThemes[editingKey].name = themeName;
       allThemes[editingKey].colors = colors;
     } else {
-      // Add new theme
       const themeKey = themeName.toLowerCase().replace(/\s+/g, '-') + '-theme';
       if (allThemes[themeKey]) { alert('A theme with this name already exists.'); return; }
       allThemes[themeKey] = { name: themeName, class: themeKey, colors: colors };
     }
-    
     renderThemes();
     showSaveAndUploadElements();
   }
@@ -124,7 +136,12 @@ document.addEventListener('DOMContentLoaded', () => {
         delete allThemes[themeKey];
         if (state.selectedTheme === themeKey) {
             state.selectedTheme = Object.keys(allThemes)[0] || '';
-            if (state.selectedTheme) applyDashboardTheme(state.selectedTheme);
+            if (state.selectedTheme) {
+              applyDashboardTheme(state.selectedTheme);
+              editTheme(state.selectedTheme);
+            } else {
+              clearEditForm();
+            }
         }
         renderThemes();
         showSaveAndUploadElements();
@@ -153,13 +170,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function createConfigFile() {
     const content = `const widgetConfig = {\n  theme: '${state.selectedTheme}',\n  alignment: '${state.selectedAlignment}'\n};`;
     triggerDownload(content, 'config.js', 'text/javascript');
-    downloadConfigBtn.classList.add('clicked');
   }
 
   function downloadStylesFile() {
     const content = generateCssContent();
     triggerDownload(content, 'styles.css', 'text/css');
-    downloadStylesBtn.classList.add('clicked');
   }
 
   function generateCssContent() {
@@ -179,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (state.selectedTheme && allThemes[state.selectedTheme]) {
         applyDashboardTheme(state.selectedTheme);
-        editTheme(state.selectedTheme); // Load initial theme into editor
+        editTheme(state.selectedTheme);
     } else if (Object.keys(allThemes).length > 0) {
         const firstTheme = Object.keys(allThemes)[0];
         state.selectedTheme = firstTheme;
@@ -190,6 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadConfigBtn.addEventListener('click', createConfigFile);
     downloadStylesBtn.addEventListener('click', downloadStylesFile);
     addThemeBtn.addEventListener('click', addNewTheme);
+    newThemeBtn.addEventListener('click', clearEditForm); // Listener for the new button
+    
     alignmentControls.querySelectorAll('.alignment-option').forEach(option => {
       option.addEventListener('click', () => { 
           state.selectedAlignment = option.dataset.alignment; 
@@ -197,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
           updateActiveControls(); 
       });
     });
-    // Add listeners to show save button on color change
     document.querySelectorAll('.color-hex-input, input[type="color"]').forEach(input => {
         input.addEventListener('input', showSaveAndUploadElements);
     });
