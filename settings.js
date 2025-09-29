@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const DASHBOARD_VERSION = 'v3.5';
+  const DASHBOARD_VERSION = 'v3.6';
 
   const DEFAULT_FUNCTIONAL_COLOURS = {
     'colour-success': '#28a745',
@@ -26,7 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function initializeStateFromCSS() {
     for (const id in DEFAULT_FUNCTIONAL_COLOURS) {
-        document.getElementById(id).value = DEFAULT_FUNCTIONAL_COLOURS[id];
+      const colourPicker = document.getElementById(id);
+      const hexInput = document.querySelector(`.colour-hex-input[data-picker="${id}"]`);
+      if (colourPicker) colourPicker.value = DEFAULT_FUNCTIONAL_COLOURS[id];
+      if (hexInput) hexInput.value = DEFAULT_FUNCTIONAL_COLOURS[id];
     }
 
     try {
@@ -38,9 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (versionMatch) {
         loadedCssVersion = parseFloat(versionMatch[1]);
         cssVersionDisplay.textContent = `CSS: v${loadedCssVersion.toFixed(1)}`;
-      } else {
-        cssVersionDisplay.textContent = 'CSS: v?';
-      }
+      } else { cssVersionDisplay.textContent = 'CSS: v?'; }
 
       const rootMatch = /:root\s*\{([^}]+)\}/.exec(cssText);
       if (rootMatch) {
@@ -48,7 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
         for (const id in DEFAULT_FUNCTIONAL_COLOURS) {
           const variableName = `--${id.replace('colour-', '')}`;
           const match = new RegExp(`${variableName}:\\s*([^;]+);`).exec(rootProperties);
-          if (match) document.getElementById(id).value = match[1].trim();
+          if (match) {
+            const colourValue = match[1].trim();
+            document.getElementById(id).value = colourValue;
+            const hexInput = document.querySelector(`.colour-hex-input[data-picker="${id}"]`);
+            if (hexInput) hexInput.value = colourValue;
+          }
         }
       }
       
@@ -248,8 +254,20 @@ document.addEventListener('DOMContentLoaded', () => {
           updateActiveControls(); 
       });
     });
-    document.querySelectorAll('#functional-colours-container input[type="color"]').forEach(input => {
-        input.addEventListener('input', showSaveAndUploadElements);
+
+    document.querySelectorAll('input[type="color"]').forEach(picker => {
+        picker.addEventListener('input', (e) => {
+            const hexInput = document.querySelector(`.colour-hex-input[data-picker="${e.target.id}"]`);
+            if (hexInput) hexInput.value = e.target.value;
+            showSaveAndUploadElements();
+        });
+    });
+    document.querySelectorAll('.colour-hex-input').forEach(input => {
+        input.addEventListener('input', (e) => {
+            const picker = document.getElementById(e.target.dataset.picker);
+            if (picker) picker.value = e.target.value;
+            showSaveAndUploadElements();
+        });
     });
   }
 
