@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const DASHBOARD_VERSION = 'v2.6';
+  const DASHBOARD_VERSION = 'v2.7';
 
   // DOM Element References
   const versionDisplay = document.getElementById('version-display');
@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const addThemeBtn = document.getElementById('add-theme-btn');
   const newThemeBtn = document.getElementById('new-theme-btn');
   const newThemeNameInput = document.getElementById('new-theme-name');
+  const colorPickers = document.querySelectorAll('input[type="color"]');
+  const colorHexInputs = document.querySelectorAll('.color-hex-input');
   
   let allThemes = {};
   let state = { selectedTheme: 'soft-evergreen-theme', selectedAlignment: 'center' };
@@ -121,10 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateActiveControls();
   }
   
-  /**
-   * This function's name is now more accurate. It "commits" changes
-   * from the editor to the in-memory `allThemes` object.
-   */
   function commitThemeChanges() {
     const themeName = newThemeNameInput.value.trim();
     if (!themeName) { alert('Please enter a theme name.'); return; }
@@ -189,17 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
     triggerDownload(`const widgetConfig = {\n  theme: '${state.selectedTheme || ''}',\n  alignment: '${state.selectedAlignment}'\n};`, 'config.js');
   }
 
-  /**
-   * THE FIX: This function now automatically syncs any changes
-   * from the editor before generating the file.
-   */
   function downloadStylesFile() {
-    // First, run the same logic as the "Commit" button to ensure current edits are staged
     const editingKey = addThemeBtn.dataset.editingKey;
     if (editingKey) {
         commitThemeChanges();
     }
-    // Then, generate the file from the updated 'allThemes' object
     triggerDownload(generateCssContent(), 'styles.css');
   }
 
@@ -238,6 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
         editTheme(firstTheme);
     }
     
+    // Setup event listeners
     downloadConfigBtn.addEventListener('click', createConfigFile);
     downloadStylesBtn.addEventListener('click', downloadStylesFile);
     addThemeBtn.addEventListener('click', commitThemeChanges);
@@ -250,8 +243,19 @@ document.addEventListener('DOMContentLoaded', () => {
           updateActiveControls(); 
       });
     });
-    document.querySelectorAll('.color-hex-input, input[type="color"]').forEach(input => {
-        input.addEventListener('input', showSaveAndUploadElements);
+    
+    // THE FIX: Restore the two-way sync for color inputs
+    colorPickers.forEach(picker => {
+      picker.addEventListener('input', (e) => {
+        document.querySelector(`.color-hex-input[data-picker="${e.target.id}"]`).value = e.target.value;
+        showSaveAndUploadElements();
+      });
+    });
+    colorHexInputs.forEach(input => {
+      input.addEventListener('input', (e) => {
+        document.getElementById(e.target.dataset.picker).value = e.target.value;
+        showSaveAndUploadElements();
+      });
     });
   }
 
