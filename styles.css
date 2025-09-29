@@ -9,8 +9,26 @@
   --primary-text-color: #333333;
   --accent-color: #6a9a8d;
   --secondary-bg-color: #e0e6e4;
+  --success-color: #28a745;
   --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+  /* Status colors for the counter */
+  --status-color-0: #DC143C; /* 😔 */
+  --status-color-1: #FF8C00; /* 😐 */
+  --status-color-2: #FFD700; /* 🙂 */
+  --status-color-3: #32CD32; /* 😊 */
+  --status-color-4: #DA70D6; /* 😁 */
+  --status-color-5: #ffc107; /* 😇 */
 }
+
+/* Apply status colors based on data attribute from JS */
+.widget[data-count-level="0"] #count-display { color: var(--status-color-0); }
+.widget[data-count-level="1"] #count-display { color: var(--status-color-1); }
+.widget[data-count-level="2"] #count-display { color: var(--status-color-2); }
+.widget[data-count-level="3"] #count-display { color: var(--status-color-3); }
+.widget[data-count-level="4"] #count-display { color: var(--status-color-4); }
+.widget[data-count-level="5"] #count-display { color: var(--status-color-5); }
+
 
 /* Soft Evergreen */
 .soft-evergreen-theme {
@@ -18,6 +36,13 @@
   --primary-text-color: #3f514b;
   --accent-color: #6a9a8d;
   --secondary-bg-color: #cedbd9;
+  --success-color: #5f9ea0;
+  --status-color-0: #c86a6a;
+  --status-color-1: #d98c5f;
+  --status-color-2: #c4a254;
+  --status-color-3: #5a9a8c;
+  --status-color-4: #8775a1;
+  --status-color-5: #638ca6;
 }
 
 /* Desert Bloom */
@@ -26,6 +51,13 @@
   --primary-text-color: #5d4037;
   --accent-color: #d17a7a;
   --secondary-bg-color: #e5d5c9;
+  --success-color: #8fbc8f;
+  --status-color-0: #c0392b;
+  --status-color-1: #e67e22;
+  --status-color-2: #f1c40f;
+  --status-color-3: #27ae60;
+  --status-color-4: #8e44ad;
+  --status-color-5: #2980b9;
 }
 
 /* Muted Clay */
@@ -34,6 +66,13 @@
   --primary-text-color: #4a4a4a;
   --accent-color: #a38c82;
   --secondary-bg-color: #d1c7c0;
+  --success-color: #7e8a8b;
+  --status-color-0: #a96363;
+  --status-color-1: #b58057;
+  --status-color-2: #ad9a5f;
+  --status-color-3: #7e9a8d;
+  --status-color-4: #977e9e;
+  --status-color-5: #7b8ea3;
 }
 
 /* Stormy Sky */
@@ -42,6 +81,13 @@
   --primary-text-color: #2c3e50;
   --accent-color: #7b9ebc;
   --secondary-bg-color: #c7d2da;
+  --success-color: #6c757d;
+  --status-color-0: #e74c3c;
+  --status-color-1: #f39c12;
+  --status-color-2: #f1c40f;
+  --status-color-3: #2ecc71;
+  --status-color-4: #9b59b6;
+  --status-color-5: #3498db;
 }
 
 /* Stone Grey */
@@ -50,6 +96,13 @@
   --primary-text-color: #424242;
   --accent-color: #9e9e9e;
   --secondary-bg-color: #e0e0e0;
+  --success-color: #757575;
+  --status-color-0: #ef5350;
+  --status-color-1: #ffa726;
+  --status-color-2: #ffee58;
+  --status-color-3: #66bb6a;
+  --status-color-4: #ab47bc;
+  --status-color-5: #29b6f6;
 }
 
 /* Soft Lavender */
@@ -58,6 +111,13 @@
   --primary-text-color: #544458;
   --accent-color: #a08da6;
   --secondary-bg-color: #e1dbe4;
+  --success-color: #8c82a3;
+  --status-color-0: #c78283;
+  --status-color-1: #d19f80;
+  --status-color-2: #c4b387;
+  --status-color-3: #8aa39b;
+  --status-color-4: #a38ca0;
+  --status-color-5: #8c96a3;
 }
 
 /* Gilded Iris */
@@ -66,12 +126,26 @@
   --primary-text-color: #4b422e;
   --accent-color: #c5a76c;
   --secondary-bg-color: #e9e2d3;
+  --success-color: #a49e8e;
+  --status-color-0: #b57b7a;
+  --status-color-1: #c2986e;
+  --status-color-2: #bfa86d;
+  --status-color-3: #8a9e91;
+  --status-color-4: #a78fa8;
+  --status-color-5: #8f9aaa;
 }
 
 /* Ocean Breeze */
 .ocean-breeze-theme {
-  --primary-bg-color: #01579b;
-  --primary-text-color: #e1f5fe;
+  --primary-bg-color: #e1f5fe;
+  --primary-text-color: #01579b;
   --accent-color: #4fc3f7;
   --secondary-bg-color: #b3e5fc;
+  --success-color: #80deea;
+  --status-color-0: #ef5350;
+  --status-color-1: #ff7043;
+  --status-color-2: #ffca28;
+  --status-color-3: #26a69a;
+  --status-color-4: #5c6bc0;
+  --status-color-5: #7e57c2;
 }

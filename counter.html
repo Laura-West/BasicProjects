@@ -10,7 +10,7 @@
   <style>
     /* Structural and behavioral styles for the widget itself. */
     :root {
-      --success-color: #28a745; 
+      /* Font family is now the single source of truth from styles.css */
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -44,6 +44,7 @@
     .control-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
     .control-btn:active { transform: translateY(0); }
     #increment-btn { background-color: var(--accent-color); }
+    /* The --success-color is now defined in styles.css for proper theming */
     #reset-btn { background-color: var(--success-color); }
   </style>
 </head>
@@ -62,11 +63,10 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // *** THIS IS THE NEW LINE ***
-      // It calls the function from widget.js to apply the theme.
       initializeWidget(); 
 
       // Element selectors
+      const widgetEl = document.getElementById('daily-counter-widget');
       const countDisplayEl = document.getElementById('count-display');
       const iconDisplayEl = document.getElementById('icon-display');
       const winsTextEl = document.getElementById('wins-text');
@@ -79,15 +79,18 @@
         if (count > 4) return "😇"; if (count === 4) return "😁"; if (count === 3) return "😊"; if (count === 2) return "🙂"; if (count === 1) return "😐"; return "😔";
       }
 
-      function getColorForCount(count) {
-        if (count > 4) return "#ffc107"; if (count === 4) return "#DA70D6"; if (count === 3) return "#32CD32"; if (count === 2) return "#FFD700"; if (count === 1) return "#FF8C00"; return "#DC143C";
+      function getCountLevel(count) {
+          if (count > 4) return 5;
+          if (count > 0 && count <= 4) return count;
+          return 0;
       }
 
       function updateDisplay() {
         countDisplayEl.textContent = state.count;
-        countDisplayEl.style.color = getColorForCount(state.count);
         iconDisplayEl.textContent = getEmojiForCount(state.count);
         winsTextEl.textContent = state.count === 1 ? 'win' : 'wins';
+        // Set a data attribute on the widget. CSS will handle the color change.
+        widgetEl.dataset.countLevel = getCountLevel(state.count);
       }
 
       function loadCounter() {
