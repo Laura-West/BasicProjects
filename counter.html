@@ -37,10 +37,32 @@
     }
     #icon-display { font-size: clamp(3.5rem, 16vw, 5rem); line-height: 1; }
     #count-container { display: flex; align-items: baseline; justify-content: center; gap: clamp(8px, 2vw, 12px); }
-    #count-display { font-size: clamp(3.5rem, 18vw, 5.5rem); font-weight: 700; line-height: 1; color: var(--primary-text-color); transition: color 0.3s ease-in-out; }
+    #count-display { 
+      font-size: clamp(3.5rem, 18vw, 5.5rem); 
+      font-weight: 700; 
+      line-height: 1; 
+      color: var(--primary-text-color); 
+      transition: color 0.3s ease-in-out; 
+      /* Ensure text-shadow can be applied */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
     #wins-text { font-size: clamp(1.25rem, 5vw, 2rem); font-weight: 500; color: var(--primary-text-color); opacity: 0.8; }
     #button-container { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(10px, 3vw, 15px); width: 100%; }
-    .control-btn { color: var(--primary-bg-color); border: none; border-radius: 12px; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.08); font-size: clamp(1rem, 4vw, 1.2rem); font-weight: bold; line-height: 1; padding: clamp(12px, 3vw, 16px) clamp(18px, 5vw, 24px); flex-grow: 1; max-width: 150px; }
+    .control-btn { 
+      color: var(--primary-bg-color); 
+      border: none; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      transition: transform 0.2s ease, box-shadow 0.2s ease; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
+      font-size: clamp(1rem, 4vw, 1.2rem); 
+      font-weight: 600; /* Updated for accessibility */
+      line-height: 1; 
+      padding: clamp(12px, 3vw, 16px) clamp(18px, 5vw, 24px); 
+      flex-grow: 1; 
+      max-width: 150px; 
+    }
     .control-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
     .control-btn:active { transform: translateY(0); }
     #increment-btn { background-color: var(--accent-color); }
@@ -83,24 +105,29 @@
       }
 
       /**
-       * NEW: Determines the luminance of the background and applies a contrasting text border.
+       * Determines the luminance of the background and applies a contrasting text border.
        */
       function updateTextBorderForContrast() {
         const bgColor = window.getComputedStyle(widgetEl).getPropertyValue('background-color');
-        const rgb = bgColor.match(/\d+/g);
-        if (!rgb) return;
+        const rgbMatch = bgColor.match(/\d+/g);
+        if (!rgbMatch || rgbMatch.length < 3) return; // Ensure valid RGB values
 
-        // Calculate luminance to determine if the background is light or dark
-        const luminance = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255;
+        const r = parseInt(rgbMatch[0]);
+        const g = parseInt(rgbMatch[1]);
+        const b = parseInt(rgbMatch[2]);
+
+        // Calculate luminance using the standard formula
+        const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
         
-        const borderColor = luminance > 0.5 ? '#000000' : '#FFFFFF';
-        const shadowOpacity = '40'; // Hex for 25% opacity
-        
+        const borderColor = luminance > 0.5 ? '#000000' : '#FFFFFF'; // Black for light backgrounds, White for dark
+        const borderThickness = '1px'; // A very thin border for the outline effect
+
+        // Apply multiple text-shadows to create a crisp outline
         countDisplayEl.style.textShadow = `
-          -1px -1px 1px ${borderColor}${shadowOpacity},
-           1px -1px 1px ${borderColor}${shadowOpacity},
-          -1px  1px 1px ${borderColor}${shadowOpacity},
-           1px  1px 1px ${borderColor}${shadowOpacity}
+          -${borderThickness} -${borderThickness} 0 ${borderColor},
+           ${borderThickness} -${borderThickness} 0 ${borderColor},
+          -${borderThickness}  ${borderThickness} 0 ${borderColor},
+           ${borderThickness}  ${borderThickness} 0 ${borderColor}
         `;
       }
 
@@ -110,7 +137,7 @@
         winsTextEl.textContent = state.count === 1 ? 'win' : 'wins';
         widgetEl.dataset.countLevel = getCountLevel(state.count);
         
-        // NEW: Call the function to set the text border
+        // Call the function to set the text border
         updateTextBorderForContrast();
       }
 
