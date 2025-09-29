@@ -17,8 +17,36 @@ document.addEventListener('DOMContentLoaded', () => {
   const alignmentControls = document.getElementById('alignment-controls');
   
   let allThemes = {};
-  let state = { selectedTheme: 'soft-evergreen-theme', selectedAlignment: 'center' };
+  // Set a default state. This will be overwritten by loadConfig if it succeeds.
+  let state = { selectedTheme: '', selectedAlignment: 'center' };
   let loadedCssVersion = 1.0;
+
+  /**
+   * Dynamically loads the config.js file to retrieve the last saved state.
+   */
+  async function loadConfig() {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      // Add a cache-busting query parameter to ensure we get the latest file
+      script.src = `config.js?v=${new Date().getTime()}`;
+      
+      script.onload = () => {
+        // This code runs after the script has been loaded and executed
+        if (typeof widgetConfig !== 'undefined') {
+          state.selectedTheme = widgetConfig.theme || '';
+          state.selectedAlignment = widgetConfig.alignment || 'center';
+        }
+        resolve(); // Indicate that loading is complete
+      };
+      
+      script.onerror = () => {
+        console.log('config.js not found or failed to load. Using default state.');
+        resolve(); // Also resolve on error so the app doesn't hang
+      };
+      
+      document.head.appendChild(script);
+    });
+  }
 
   async function initializeStateFromCSS() {
     for (const id in DEFAULT_FUNCTIONAL_COLOURS) {
@@ -248,21 +276,33 @@ document.addEventListener('DOMContentLoaded', () => {
     return cssString;
   }
 
+  /**
+   * Main function to initialize the dashboard.
+   */
   async function main() {
     if (versionDisplay) versionDisplay.textContent = DASHBOARD_VERSION;
+    
+    // First, load the saved configuration.
+    await loadConfig();
+    
+    // Second, load all available themes from the CSS file.
     await initializeStateFromCSS();
+    
+    // Now, determine the theme to apply.
+    // 1. Check if the theme from config.js actually exists in our CSS.
+    if (state.selectedTheme && allThemes[state.selectedTheme]) {
+        applyDashboardTheme(state.selectedTheme);
+    } 
+    // 2. If not, or if no theme was set, fall back to the first theme in the list.
+    else if (Object.keys(allThemes).length > 0) {
+        state.selectedTheme = Object.keys(allThemes)[0];
+        applyDashboardTheme(state.selectedTheme);
+    }
+    
+    // Finally, render the UI with the correct theme selected.
     renderThemes();
     updateActiveControls();
 
-    if (state.selectedTheme && allThemes[state.selectedTheme]) {
-        applyDashboardTheme(state.selectedTheme);
-    } else if (Object.keys(allThemes).length > 0) {
-        const firstTheme = Object.keys(allThemes)[0];
-        state.selectedTheme = firstTheme;
-        applyDashboardTheme(firstTheme);
-        renderThemes();
-    }
-    
     downloadConfigBtn.addEventListener('click', createConfigFile);
     downloadStylesBtn.addEventListener('click', downloadStylesFile);
     
