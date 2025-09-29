@@ -31,20 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function applyDashboardTheme(themeKey) {
     const theme = allThemes[themeKey];
     if (!theme) return;
-    const style = document.createElement('style');
-    style.innerHTML = `
-      :root {
-        --primary-bg-color: ${theme.colors[0]};
-        --primary-text-color: ${theme.colors[1]};
-        --accent-color: ${theme.colors[2]};
-        --secondary-bg-color: ${theme.colors[3]};
-        --border-color: ${theme.colors[3]};
-      }
-    `;
-    const oldStyle = document.head.querySelector('#dashboard-theme-style');
-    if (oldStyle) oldStyle.remove();
-    style.id = 'dashboard-theme-style';
-    document.head.appendChild(style);
+    
+    dashboardContainer.style.setProperty('--primary-bg-color', theme.colors[0]);
+    dashboardContainer.style.setProperty('--primary-text-color', theme.colors[1]);
+    dashboardContainer.style.setProperty('--accent-color', theme.colors[2]);
+    dashboardContainer.style.setProperty('--secondary-bg-color', theme.colors[3]);
+    dashboardContainer.style.setProperty('--border-color', theme.colors[3]);
   }
 
   function updateActiveControls() {
@@ -64,11 +56,17 @@ document.addEventListener('DOMContentLoaded', () => {
       
       option.addEventListener('click', (e) => {
         if (e.target.classList.contains('delete-btn')) return;
+
+        const clickedThemeKey = e.currentTarget.dataset.key;
         state.selectedTheme = e.currentTarget.dataset.theme;
+        
+        applyDashboardTheme(clickedThemeKey);
         downloadConfigBtn.classList.remove('clicked');
-        applyDashboardTheme(e.currentTarget.dataset.key);
-        if (!allThemes[e.currentTarget.dataset.key].isDefault) {
-            editTheme(e.currentTarget.dataset.key);
+
+        if (allThemes[clickedThemeKey].isDefault) {
+          clearEditForm();
+        } else {
+          editTheme(clickedThemeKey);
         }
         updateActiveControls();
       });
@@ -88,12 +86,31 @@ document.addEventListener('DOMContentLoaded', () => {
     colorIds.forEach((id, index) => {
         const colorPicker = document.getElementById(id);
         const hexInput = document.querySelector(`.color-hex-input[data-picker="${id}"]`);
-        colorPicker.value = theme.colors[index];
-        hexInput.value = theme.colors[index];
+        const colorValue = theme.colors[index];
+        colorPicker.value = colorValue;
+        hexInput.value = colorValue;
     });
 
     addThemeBtn.textContent = 'Update Theme';
     addThemeBtn.dataset.editingKey = themeKey;
+  }
+
+  function clearEditForm() {
+    newThemeNameInput.value = '';
+    const defaultColors = {
+      'color-primary-bg': '#e8f0ef',
+      'color-primary-text': '#3f514b',
+      'color-accent': '#6a9a8d',
+      'color-secondary-bg': '#cedbd9'
+    };
+    for (const id in defaultColors) {
+      const colorPicker = document.getElementById(id);
+      const hexInput = document.querySelector(`.color-hex-input[data-picker="${id}"]`);
+      colorPicker.value = defaultColors[id];
+      hexInput.value = defaultColors[id];
+    }
+    addThemeBtn.textContent = 'Add New Theme';
+    delete addThemeBtn.dataset.editingKey;
   }
 
   function addNewTheme() {
@@ -117,10 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
       allThemes[themeKey] = { name: themeName, class: themeKey, colors: colors, isDefault: false };
     }
     
-    newThemeNameInput.value = '';
-    addThemeBtn.textContent = 'Add New Theme';
-    delete addThemeBtn.dataset.editingKey;
-
+    clearEditForm();
     renderThemes();
     showSaveAndUploadElements();
   }
@@ -135,10 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
             applyDashboardTheme(state.selectedTheme);
         }
         renderThemes();
+        clearEditForm();
         showSaveAndUploadElements();
     }
   }
-
+  
   function showSaveAndUploadElements() {
     downloadStylesBtn.style.display = 'inline-block';
     updateInterfaceBtn.style.display = 'inline-block';
@@ -178,8 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateInterfaceBtn.classList.add('clicked');
   }
 
-  // --- EVENT LISTENERS & INITIALIZATION --- //
-
   downloadConfigBtn.addEventListener('click', createConfigFile);
   downloadStylesBtn.addEventListener('click', downloadStylesFile);
   updateInterfaceBtn.addEventListener('click', downloadSettingsJsFile);
@@ -207,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
   applyDashboardTheme(state.selectedTheme);
 
   // --- FILE GENERATION FUNCTIONS --- //
-
   function generateCssContent() {
     const successColor = document.getElementById('color-success').value;
     const statusColor0 = document.getElementById('color-status-0').value;
@@ -229,8 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function generateSettingsJsContent() {
     const themesObjectString = JSON.stringify(allThemes, null, 2);
     // This function regenerates itself by embedding the current theme data into a template string.
+    // NOTE: For simplicity, this template contains the JS functions as strings.
     return `document.addEventListener('DOMContentLoaded', () => {
-  // DOM Element References
   const dashboardContainer = document.getElementById('dashboard-container');
   const themeControls = document.getElementById('theme-controls');
   const alignmentControls = document.getElementById('alignment-controls');
@@ -250,26 +262,16 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedAlignment: '${state.selectedAlignment}'
   };
 
-  // --- FUNCTIONS --- //
-  // NOTE: All functions from the running script are duplicated here in the template.
-  
+  // --- All functions are embedded below ---
+
   function applyDashboardTheme(themeKey) {
     const theme = allThemes[themeKey];
     if (!theme) return;
-    const style = document.createElement('style');
-    style.innerHTML = \`
-      :root {
-        --primary-bg-color: \${theme.colors[0]};
-        --primary-text-color: \${theme.colors[1]};
-        --accent-color: \${theme.colors[2]};
-        --secondary-bg-color: \${theme.colors[3]};
-        --border-color: \${theme.colors[3]};
-      }
-    \`;
-    const oldStyle = document.head.querySelector('#dashboard-theme-style');
-    if (oldStyle) oldStyle.remove();
-    style.id = 'dashboard-theme-style';
-    document.head.appendChild(style);
+    dashboardContainer.style.setProperty('--primary-bg-color', theme.colors[0]);
+    dashboardContainer.style.setProperty('--primary-text-color', theme.colors[1]);
+    dashboardContainer.style.setProperty('--accent-color', theme.colors[2]);
+    dashboardContainer.style.setProperty('--secondary-bg-color', theme.colors[3]);
+    dashboardContainer.style.setProperty('--border-color', theme.colors[3]);
   }
 
   function updateActiveControls() {
@@ -289,11 +291,14 @@ document.addEventListener('DOMContentLoaded', () => {
       
       option.addEventListener('click', (e) => {
         if (e.target.classList.contains('delete-btn')) return;
+        const clickedThemeKey = e.currentTarget.dataset.key;
         state.selectedTheme = e.currentTarget.dataset.theme;
+        applyDashboardTheme(clickedThemeKey);
         downloadConfigBtn.classList.remove('clicked');
-        applyDashboardTheme(e.currentTarget.dataset.key);
-        if (!allThemes[e.currentTarget.dataset.key].isDefault) {
-            editTheme(e.currentTarget.dataset.key);
+        if (allThemes[clickedThemeKey].isDefault) {
+          clearEditForm();
+        } else {
+          editTheme(clickedThemeKey);
         }
         updateActiveControls();
       });
@@ -307,24 +312,40 @@ document.addEventListener('DOMContentLoaded', () => {
   function editTheme(themeKey) {
     const theme = allThemes[themeKey];
     if (!theme) return;
-
     newThemeNameInput.value = theme.name;
     const colorIds = ['color-primary-bg', 'color-primary-text', 'color-accent', 'color-secondary-bg'];
     colorIds.forEach((id, index) => {
         const colorPicker = document.getElementById(id);
         const hexInput = document.querySelector(\`.color-hex-input[data-picker="\${id}"]\`);
-        colorPicker.value = theme.colors[index];
-        hexInput.value = theme.colors[index];
+        const colorValue = theme.colors[index];
+        colorPicker.value = colorValue;
+        hexInput.value = colorValue;
     });
-
     addThemeBtn.textContent = 'Update Theme';
     addThemeBtn.dataset.editingKey = themeKey;
+  }
+
+  function clearEditForm() {
+    newThemeNameInput.value = '';
+    const defaultColors = {
+      'color-primary-bg': '#e8f0ef',
+      'color-primary-text': '#3f514b',
+      'color-accent': '#6a9a8d',
+      'color-secondary-bg': '#cedbd9'
+    };
+    for (const id in defaultColors) {
+      const colorPicker = document.getElementById(id);
+      const hexInput = document.querySelector(\`.color-hex-input[data-picker="\${id}"]\`);
+      colorPicker.value = defaultColors[id];
+      hexInput.value = defaultColors[id];
+    }
+    addThemeBtn.textContent = 'Add New Theme';
+    delete addThemeBtn.dataset.editingKey;
   }
 
   function addNewTheme() {
     const themeName = newThemeNameInput.value.trim();
     if (!themeName) { alert('Please enter a theme name.'); return; }
-
     const editingKey = addThemeBtn.dataset.editingKey;
     const colors = [
         document.getElementById('color-primary-bg').value,
@@ -332,7 +353,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('color-accent').value,
         document.getElementById('color-secondary-bg').value
     ];
-
     if (editingKey && allThemes[editingKey]) {
       allThemes[editingKey].name = themeName;
       allThemes[editingKey].colors = colors;
@@ -341,11 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (allThemes[themeKey]) { alert('A theme with this name already exists.'); return; }
       allThemes[themeKey] = { name: themeName, class: themeKey, colors: colors, isDefault: false };
     }
-    
-    newThemeNameInput.value = '';
-    addThemeBtn.textContent = 'Add New Theme';
-    delete addThemeBtn.dataset.editingKey;
-
+    clearEditForm();
     renderThemes();
     showSaveAndUploadElements();
   }
@@ -360,6 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
             applyDashboardTheme(state.selectedTheme);
         }
         renderThemes();
+        clearEditForm();
         showSaveAndUploadElements();
     }
   }
@@ -385,55 +402,10 @@ document.addEventListener('DOMContentLoaded', () => {
     URL.revokeObjectURL(url);
   }
 
-  function createConfigFile() {
-    const configContent = \`// Widget configuration file...\\nconst widgetConfig = {\\n  theme: '\${state.selectedTheme}',\\n  alignment: '\${state.selectedAlignment}'\\n};\`;
-    triggerDownload(configContent, 'config.js', 'text/javascript');
-    downloadConfigBtn.classList.add('clicked');
-  }
-
-  function downloadStylesFile() {
-    const cssContent = generateCssContent();
-    triggerDownload(cssContent, 'styles.css', 'text/css');
-    downloadStylesBtn.classList.add('clicked');
-  }
-
-  function downloadSettingsJsFile() {
-    const settingsJsContent = generateSettingsJsContent();
-    triggerDownload(settingsJsContent, 'settings.js', 'text/javascript');
-    updateInterfaceBtn.classList.add('clicked');
-  }
-
-  // --- EVENT LISTENERS & INITIALIZATION --- //
-
-  downloadConfigBtn.addEventListener('click', createConfigFile);
-  downloadStylesBtn.addEventListener('click', downloadStylesFile);
-  updateInterfaceBtn.addEventListener('click', downloadSettingsJsFile);
-  addThemeBtn.addEventListener('click', addNewTheme);
-  
-  alignmentControls.querySelectorAll('.alignment-option').forEach(option => {
-    option.addEventListener('click', () => { 
-        state.selectedAlignment = option.dataset.alignment; 
-        showSaveAndUploadElements();
-        updateActiveControls(); 
-    });
-  });
-  
-  colorPickers.forEach(picker => picker.addEventListener('input', (e) => { 
-      document.querySelector(\`.color-hex-input[data-picker="\${e.target.id}"]\`).value = e.target.value; 
-      showSaveAndUploadElements();
-  }));
-  colorHexInputs.forEach(input => input.addEventListener('input', (e) => { 
-      document.getElementById(e.target.dataset.picker).value = e.target.value; 
-      showSaveAndUploadElements();
-  }));
-  
+  // --- Initialize Page ---
   renderThemes();
   updateActiveControls();
   applyDashboardTheme(state.selectedTheme);
-
-  // --- FILE GENERATION FUNCTIONS --- //
-  // (The actual generation functions are here in the template)
-
 });`;
   }
 });
