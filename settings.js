@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const DASHBOARD_VERSION = 'v2.5';
+  const DASHBOARD_VERSION = 'v2.6';
 
   // DOM Element References
   const versionDisplay = document.getElementById('version-display');
@@ -15,13 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
   
   let allThemes = {};
   let state = { selectedTheme: 'soft-evergreen-theme', selectedAlignment: 'center' };
-  let loadedCssVersion = 1.0; // Default if not found in the file
+  let loadedCssVersion = 1.0;
 
   async function initializeStateFromCSS() {
     try {
       const response = await fetch(`styles.css?v=${new Date().getTime()}`);
       if (!response.ok) throw new Error('styles.css could not be loaded.');
-      
       const cssText = await response.text();
       
       const versionMatch = /CSS Version:\s*([\d.]+)/.exec(cssText);
@@ -121,8 +120,12 @@ document.addEventListener('DOMContentLoaded', () => {
     state.selectedTheme = null;
     updateActiveControls();
   }
-
-  function addNewTheme() {
+  
+  /**
+   * This function's name is now more accurate. It "commits" changes
+   * from the editor to the in-memory `allThemes` object.
+   */
+  function commitThemeChanges() {
     const themeName = newThemeNameInput.value.trim();
     if (!themeName) { alert('Please enter a theme name.'); return; }
     const editingKey = addThemeBtn.dataset.editingKey;
@@ -186,7 +189,17 @@ document.addEventListener('DOMContentLoaded', () => {
     triggerDownload(`const widgetConfig = {\n  theme: '${state.selectedTheme || ''}',\n  alignment: '${state.selectedAlignment}'\n};`, 'config.js');
   }
 
+  /**
+   * THE FIX: This function now automatically syncs any changes
+   * from the editor before generating the file.
+   */
   function downloadStylesFile() {
+    // First, run the same logic as the "Commit" button to ensure current edits are staged
+    const editingKey = addThemeBtn.dataset.editingKey;
+    if (editingKey) {
+        commitThemeChanges();
+    }
+    // Then, generate the file from the updated 'allThemes' object
     triggerDownload(generateCssContent(), 'styles.css');
   }
 
@@ -227,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     downloadConfigBtn.addEventListener('click', createConfigFile);
     downloadStylesBtn.addEventListener('click', downloadStylesFile);
-    addThemeBtn.addEventListener('click', addNewTheme);
+    addThemeBtn.addEventListener('click', commitThemeChanges);
     newThemeBtn.addEventListener('click', clearEditForm); 
     
     alignmentControls.querySelectorAll('.alignment-option').forEach(option => {
