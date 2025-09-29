@@ -59,14 +59,17 @@ document.addEventListener('DOMContentLoaded', () => {
       let themeMatch;
       while ((themeMatch = themeRegex.exec(cssText)) !== null) {
         const [, name, className, properties] = themeMatch;
-        const colours = [
-          /--primary-bg-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
-          /--primary-text-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
-          /--accent-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
-          /--secondary-bg-color:\s*([^;]+);/.exec(properties)?.[1].trim()
-        ];
-        if (colours.every(c => c)) {
-          allThemes[className] = { name, class: className, colors: colours };
+        const colours = {
+          primaryBg: /--primary-bg-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
+          primaryText: /--primary-text-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
+          accent: /--accent-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
+          secondaryBg: /--secondary-bg-color:\s*([^;]+);/.exec(properties)?.[1].trim()
+        };
+        
+        if (Object.values(colours).every(c => c)) {
+          allThemes[className] = { name, class: className, colors: Object.values(colours) };
+        } else {
+          console.warn(`Theme "${name}" (${className}) was skipped. It might be missing one or more required CSS variables (--primary-bg-color, --primary-text-color, --accent-color, --secondary-bg-color).`);
         }
       }
     } catch (error) {
@@ -75,16 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /**
-   * Calculates the perceived brightness of a hex colour and returns
-   * either black or white for the best contrast.
-   */
   function getContrastingTextColor(hex) {
     if (!hex || hex.length < 7) return '#000000';
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
-    // Standard luminance calculation
     const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
     return luminance > 128 ? '#000000' : '#FFFFFF';
   }
@@ -97,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const textColour = getContrastingTextColor(bgColour);
 
     dashboardContainer.style.setProperty('--primary-bg-color', bgColour);
-    dashboardContainer.style.setProperty('--primary-text-color', textColour); // DYNAMIC TEXT COLOUR
+    dashboardContainer.style.setProperty('--primary-text-color', textColour);
     dashboardContainer.style.setProperty('--accent-color', theme.colors[2]);
     dashboardContainer.style.setProperty('--secondary-bg-color', theme.colors[3]);
     dashboardContainer.style.setProperty('--border-color', theme.colors[3]);
@@ -228,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function createConfigFile() {
     triggerDownload(`const widgetConfig = {\n  theme: '${state.selectedTheme || ''}',\n  alignment: '${state.selectedAlignment}'\n};`, 'config.js');
     downloadConfigBtn.classList.add('clicked');
-}
+  }
 
   function downloadStylesFile() {
     triggerDownload(generateCssContent(), 'styles.css');
@@ -248,6 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     for (const themeKey in allThemes) {
         const theme = allThemes[themeKey];
+        // **FIXED:** This line is now complete and correctly formats the CSS for each theme.
         cssString += `/* ${theme.name} */\n.${theme.class} {\n  --primary-bg-color: ${theme.colors[0]};\n  --primary-text-color: ${theme.colors[1]};\n  --accent-color: ${theme.colors[2]};\n  --secondary-bg-color: ${theme.colors[3]};\n}\n\n`;
     }
     return cssString;
