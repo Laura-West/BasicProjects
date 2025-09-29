@@ -10,7 +10,6 @@
   <style>
     /* Structural and behavioral styles for the widget itself. */
     :root {
-      /* Font family is now the single source of truth from styles.css */
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -43,21 +42,17 @@
       line-height: 1; 
       color: var(--primary-text-color); 
       transition: color 0.3s ease-in-out; 
-      /* Ensure text-shadow can be applied */
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
     #wins-text { font-size: clamp(1.25rem, 5vw, 2rem); font-weight: 500; color: var(--primary-text-color); opacity: 0.8; }
     #button-container { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(10px, 3vw, 15px); width: 100%; }
     .control-btn { 
-      color: var(--primary-bg-color); 
       border: none; 
       border-radius: 12px; 
       cursor: pointer; 
       transition: transform 0.2s ease, box-shadow 0.2s ease; 
       box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
       font-size: clamp(1rem, 4vw, 1.2rem); 
-      font-weight: 600; /* Updated for accessibility */
+      font-weight: 600;
       line-height: 1; 
       padding: clamp(12px, 3vw, 16px) clamp(18px, 5vw, 24px); 
       flex-grow: 1; 
@@ -104,31 +99,28 @@
           return 0;
       }
 
-      /**
-       * Determines the luminance of the background and applies a contrasting text border.
-       */
       function updateTextBorderForContrast() {
         const bgColor = window.getComputedStyle(widgetEl).getPropertyValue('background-color');
         const rgbMatch = bgColor.match(/\d+/g);
-        if (!rgbMatch || rgbMatch.length < 3) return; // Ensure valid RGB values
+        if (!rgbMatch || rgbMatch.length < 3) return;
 
-        const r = parseInt(rgbMatch[0]);
-        const g = parseInt(rgbMatch[1]);
-        const b = parseInt(rgbMatch[2]);
-
-        // Calculate luminance using the standard formula
+        const [r, g, b] = rgbMatch.map(Number);
         const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
         
-        const borderColor = luminance > 0.5 ? '#000000' : '#FFFFFF'; // Black for light backgrounds, White for dark
-        const borderThickness = '1px'; // A very thin border for the outline effect
+        const borderColor = luminance > 0.5 ? '#000000' : '#FFFFFF';
+        const borderThickness = '0.5px'; // Thinner border for a more subtle outline
 
-        // Apply multiple text-shadows to create a crisp outline
+        // Apply a crisp outline to the count display
         countDisplayEl.style.textShadow = `
           -${borderThickness} -${borderThickness} 0 ${borderColor},
            ${borderThickness} -${borderThickness} 0 ${borderColor},
           -${borderThickness}  ${borderThickness} 0 ${borderColor},
            ${borderThickness}  ${borderThickness} 0 ${borderColor}
         `;
+        
+        // Apply the same contrast color to the button text
+        incrementBtn.style.color = borderColor;
+        resetBtn.style.color = borderColor;
       }
 
       function updateDisplay() {
@@ -136,8 +128,6 @@
         iconDisplayEl.textContent = getEmojiForCount(state.count);
         winsTextEl.textContent = state.count === 1 ? 'win' : 'wins';
         widgetEl.dataset.countLevel = getCountLevel(state.count);
-        
-        // Call the function to set the text border
         updateTextBorderForContrast();
       }
 
@@ -158,7 +148,6 @@
       incrementBtn.addEventListener('click', () => { state.count++; updateDisplay(); saveCounter(); });
       resetBtn.addEventListener('click', resetCounter);
 
-      // Initialize the widget and then load the counter data
       initializeWidget(loadCounter);
     });
   </script>
