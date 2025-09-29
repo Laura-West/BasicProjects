@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const DASHBOARD_VERSION = 'v3.5';
+  const DASHBOARD_VERSION = 'v3.6';
 
-  // Default values for functional colours, used as a fallback.
   const DEFAULT_FUNCTIONAL_COLOURS = {
     'colour-success': '#28a745',
     'colour-status-0': '#DC143C',
@@ -12,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     'colour-status-5': '#ffc107'
   };
 
-  // DOM Element References
   const versionDisplay = document.getElementById('version-display');
   const cssVersionDisplay = document.getElementById('css-version-display');
   const dashboardContainer = document.getElementById('dashboard-container');
@@ -27,9 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
   let loadedCssVersion = 1.0;
 
   async function initializeStateFromCSS() {
-    // Set defaults first
     for (const id in DEFAULT_FUNCTIONAL_COLOURS) {
-        document.getElementById(id).value = DEFAULT_FUNCTIONAL_COLOURS[id];
+      const colourPicker = document.getElementById(id);
+      const hexInput = document.querySelector(`.colour-hex-input[data-picker="${id}"]`);
+      if (colourPicker) colourPicker.value = DEFAULT_FUNCTIONAL_COLOURS[id];
+      if (hexInput) hexInput.value = DEFAULT_FUNCTIONAL_COLOURS[id];
     }
 
     try {
@@ -41,9 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (versionMatch) {
         loadedCssVersion = parseFloat(versionMatch[1]);
         cssVersionDisplay.textContent = `CSS: v${loadedCssVersion.toFixed(1)}`;
-      } else {
-        cssVersionDisplay.textContent = 'CSS: v?';
-      }
+      } else { cssVersionDisplay.textContent = 'CSS: v?'; }
 
       const rootMatch = /:root\s*\{([^}]+)\}/.exec(cssText);
       if (rootMatch) {
@@ -51,7 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
         for (const id in DEFAULT_FUNCTIONAL_COLOURS) {
           const variableName = `--${id.replace('colour-', '')}`;
           const match = new RegExp(`${variableName}:\\s*([^;]+);`).exec(rootProperties);
-          if (match) document.getElementById(id).value = match[1].trim();
+          if (match) {
+            const colourValue = match[1].trim();
+            document.getElementById(id).value = colourValue;
+            const hexInput = document.querySelector(`.colour-hex-input[data-picker="${id}"]`);
+            if (hexInput) hexInput.value = colourValue;
+          }
         }
       }
       
@@ -109,10 +112,10 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="edit-mode">
           <div class="colour-inputs-grid">
             <input type="text" class="theme-name-input" placeholder="Theme Name" value="${name}">
-            <div class="colour-input-group"><label>Primary BG</label><input type="color" value="${colours[0]}"></div>
-            <div class="colour-input-group"><label>Primary Text</label><input type="color" value="${colours[1]}"></div>
-            <div class="colour-input-group"><label>Accent</label><input type="color" value="${colours[2]}"></div>
-            <div class="colour-input-group"><label>Secondary BG</label><input type="color" value="${colours[3]}"></div>
+            <div class="colour-input-group"><label>Primary BG</label><input type="color" value="${colours[0]}"><input type="text" class="colour-hex-input" value="${colours[0]}"></div>
+            <div class="colour-input-group"><label>Primary Text</label><input type="color" value="${colours[1]}"><input type="text" class="colour-hex-input" value="${colours[1]}"></div>
+            <div class="colour-input-group"><label>Accent</label><input type="color" value="${colours[2]}"><input type="text" class="colour-hex-input" value="${colours[2]}"></div>
+            <div class="colour-input-group"><label>Secondary BG</label><input type="color" value="${colours[3]}"><input type="text" class="colour-hex-input" value="${colours[3]}"></div>
           </div>
           <div class="edit-mode-controls">
             <button class="btn btn-save">Save</button>
@@ -130,6 +133,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   
+  themeListContainer.addEventListener('input', (e) => {
+    const row = e.target.closest('.theme-row.editing');
+    if (!row) return;
+    if (e.target.matches('input[type="color"]')) {
+      e.target.nextElementSibling.value = e.target.value;
+    }
+    if (e.target.matches('.colour-hex-input')) {
+      e.target.previousElementSibling.value = e.target.value;
+    }
+  });
+
   themeListContainer.addEventListener('click', (e) => {
     const row = e.target.closest('.theme-row');
     if (!row) return;
@@ -251,8 +265,19 @@ document.addEventListener('DOMContentLoaded', () => {
           updateActiveControls(); 
       });
     });
-    document.querySelectorAll('#functional-colours-container input[type="color"]').forEach(input => {
-        input.addEventListener('input', showSaveAndUploadElements);
+    
+    document.querySelectorAll('.colour-hex-input, input[type="color"]').forEach(input => {
+        input.addEventListener('input', (e) => {
+            if(e.target.matches('input[type="color"]')) {
+                const hexInput = e.target.parentElement.querySelector('.colour-hex-input');
+                if(hexInput) hexInput.value = e.target.value;
+            }
+            if(e.target.matches('.colour-hex-input')) {
+                const picker = e.target.parentElement.querySelector('input[type="color"]');
+                if(picker) picker.value = e.target.value;
+            }
+            showSaveAndUploadElements();
+        });
     });
   }
 
