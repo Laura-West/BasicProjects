@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const DASHBOARD_VERSION = 'v2.1';
+  const DASHBOARD_VERSION = 'v1.0';
 
   // DOM Element References
   const versionDisplay = document.getElementById('version-display');
@@ -10,19 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const downloadStylesBtn = document.getElementById('download-styles-btn');
   const addThemeBtn = document.getElementById('add-theme-btn');
   const newThemeNameInput = document.getElementById('new-theme-name');
-  const uploadInstructions = document.getElementById('upload-instructions');
-
+  
   let allThemes = {};
   let state = { selectedTheme: 'soft-evergreen-theme', selectedAlignment: 'center' };
 
   async function initializeThemes() {
     try {
-      // Fetch and parse the CSS file to build the theme object
-      const response = await fetch('styles.css');
+      const response = await fetch(`styles.css?v=${new Date().getTime()}`); // Cache-bust for fresh data
       if (!response.ok) throw new Error('styles.css could not be loaded.');
       const cssText = await response.text();
       
-      // Regex to find theme blocks: /* Theme Name */ .theme-class { ... }
       const themeRegex = /\/\*\s*(.*?)\s*\*\/\s*\.([\w-]+)\s*\{([^}]+)\}/g;
       let match;
       
@@ -36,13 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
           /--secondary-bg-color:\s*([^;]+);/.exec(properties)?.[1].trim()
         ];
         
-        if (colors.every(c => c)) { // Ensure all 4 colors were found
-          allThemes[className] = { name, class: className, colors, isDefault: true };
+        if (colors.every(c => c)) {
+          allThemes[className] = { name, class: className, colors };
         }
       }
     } catch (error) {
       console.error("Theme initialization failed:", error);
-      alert("Error: Could not load and parse styles.css. Please ensure the file exists and is correctly formatted.");
+      alert("Error: Could not load styles.css. Please ensure it's in the same directory.");
     }
   }
 
@@ -71,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const clickedThemeKey = e.currentTarget.dataset.key;
         state.selectedTheme = e.currentTarget.dataset.theme;
         applyDashboardTheme(clickedThemeKey);
-        editTheme(clickedThemeKey); // Load clicked theme into the editor
+        editTheme(clickedThemeKey);
         updateActiveControls();
       });
       themeControls.appendChild(option);
@@ -86,13 +83,52 @@ document.addEventListener('DOMContentLoaded', () => {
     newThemeNameInput.value = theme.name;
     const colorIds = ['color-primary-bg', 'color-primary-text', 'color-accent', 'color-secondary-bg'];
     colorIds.forEach((id, index) => {
-        const colorPicker = document.getElementById(id);
-        const hexInput = document.querySelector(`.color-hex-input[data-picker="${id}"]`);
-        colorPicker.value = theme.colors[index];
-        hexInput.value = theme.colors[index];
+        document.getElementById(id).value = theme.colors[index];
+        document.querySelector(`.color-hex-input[data-picker="${id}"]`).value = theme.colors[index];
     });
     addThemeBtn.textContent = 'Update Theme';
     addThemeBtn.dataset.editingKey = themeKey;
+  }
+
+  function addNewTheme() {
+    const themeName = newThemeNameInput.value.trim();
+    if (!themeName) { alert('Please enter a theme name.'); return; }
+
+    const editingKey = addThemeBtn.dataset.editingKey;
+    const colors = [
+        document.getElementById('color-primary-bg').value,
+        document.getElementById('color-primary-text').value,
+        document.getElementById('color-accent').value,
+        document.getElementById('color-secondary-bg').value
+    ];
+
+    if (editingKey && allThemes[editingKey]) {
+      // Update existing theme
+      allThemes[editingKey].name = themeName;
+      allThemes[editingKey].colors = colors;
+    } else {
+      // Add new theme
+      const themeKey = themeName.toLowerCase().replace(/\s+/g, '-') + '-theme';
+      if (allThemes[themeKey]) { alert('A theme with this name already exists.'); return; }
+      allThemes[themeKey] = { name: themeName, class: themeKey, colors: colors };
+    }
+    
+    renderThemes();
+    showSaveAndUploadElements();
+  }
+
+  function deleteTheme(event) {
+    event.stopPropagation();
+    const themeKey = event.target.dataset.themeKey;
+    if (allThemes[themeKey] && confirm(`Are you sure you want to delete "${allThemes[themeKey].name}"?`)) {
+        delete allThemes[themeKey];
+        if (state.selectedTheme === themeKey) {
+            state.selectedTheme = Object.keys(allThemes)[0] || '';
+            if (state.selectedTheme) applyDashboardTheme(state.selectedTheme);
+        }
+        renderThemes();
+        showSaveAndUploadElements();
+    }
   }
 
   function updateActiveControls() {
@@ -102,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showSaveAndUploadElements() {
     downloadStylesBtn.style.display = 'inline-block';
-    uploadInstructions.style.display = 'block';
     downloadConfigBtn.classList.remove('clicked');
     downloadStylesBtn.classList.remove('clicked');
   }
@@ -128,8 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function generateCssContent() {
-    // This function now rebuilds the entire styles.css file from the allThemes object
-    let cssString = `/* Widget Styles - Generated by Dashboard v${DASHBOARD_VERSION} */\n\n`;
+    let cssString = `/* Widget Styles - Generated by Dashboard ${DASHBOARD_VERSION} */\n\n`;
     for (const themeKey in allThemes) {
         const theme = allThemes[themeKey];
         cssString += `/* ${theme.name} */\n.${theme.class} {\n  --primary-bg-color: ${theme.colors[0]};\n  --primary-text-color: ${theme.colors[1]};\n  --accent-color: ${theme.colors[2]};\n  --secondary-bg-color: ${theme.colors[3]};\n}\n\n`;
@@ -137,32 +171,35 @@ document.addEventListener('DOMContentLoaded', () => {
     return cssString;
   }
 
-  // --- Main Execution ---
   async function main() {
     if (versionDisplay) versionDisplay.textContent = DASHBOARD_VERSION;
-
     await initializeThemes();
     renderThemes();
     updateActiveControls();
 
-    // Set initial theme for the dashboard
     if (state.selectedTheme && allThemes[state.selectedTheme]) {
         applyDashboardTheme(state.selectedTheme);
+        editTheme(state.selectedTheme); // Load initial theme into editor
     } else if (Object.keys(allThemes).length > 0) {
-        state.selectedTheme = Object.keys(allThemes)[0];
-        applyDashboardTheme(state.selectedTheme);
+        const firstTheme = Object.keys(allThemes)[0];
+        state.selectedTheme = firstTheme;
+        applyDashboardTheme(firstTheme);
+        editTheme(firstTheme);
     }
     
-    // Setup event listeners
     downloadConfigBtn.addEventListener('click', createConfigFile);
     downloadStylesBtn.addEventListener('click', downloadStylesFile);
-    // addThemeBtn.addEventListener('click', addNewTheme); // We will re-add this next
+    addThemeBtn.addEventListener('click', addNewTheme);
     alignmentControls.querySelectorAll('.alignment-option').forEach(option => {
       option.addEventListener('click', () => { 
           state.selectedAlignment = option.dataset.alignment; 
           showSaveAndUploadElements(); 
           updateActiveControls(); 
       });
+    });
+    // Add listeners to show save button on color change
+    document.querySelectorAll('.color-hex-input, input[type="color"]').forEach(input => {
+        input.addEventListener('input', showSaveAndUploadElements);
     });
   }
 
