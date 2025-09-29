@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const DASHBOARD_VERSION = 'v1.5';
+  const DASHBOARD_VERSION = 'v2.0';
 
   // DOM Element References
   const versionDisplay = document.getElementById('version-display');
@@ -9,23 +9,39 @@ document.addEventListener('DOMContentLoaded', () => {
   const downloadConfigBtn = document.getElementById('download-config-btn');
   const downloadStylesBtn = document.getElementById('download-styles-btn');
   const addThemeBtn = document.getElementById('add-theme-btn');
-  const newThemeBtn = document.getElementById('new-theme-btn'); // New button
+  const newThemeBtn = document.getElementById('new-theme-btn');
   const newThemeNameInput = document.getElementById('new-theme-name');
   
   let allThemes = {};
   let state = { selectedTheme: 'soft-evergreen-theme', selectedAlignment: 'center' };
 
-  async function initializeThemes() {
+  async function initializeStateFromCSS() {
     try {
       const response = await fetch(`styles.css?v=${new Date().getTime()}`);
       if (!response.ok) throw new Error('styles.css could not be loaded.');
       const cssText = await response.text();
       
-      const themeRegex = /\/\*\s*(.*?)\s*\*\/\s*\.([\w-]+)\s*\{([^}]+)\}/g;
-      let match;
+      // Parse :root for functional colors
+      const rootMatch = /:root\s*\{([^}]+)\}/.exec(cssText);
+      if (rootMatch) {
+        const rootProperties = rootMatch[1];
+        const functionalColorIds = ['color-success', ...Array.from({length: 6}, (_, i) => `color-status-${i}`)];
+        functionalColorIds.forEach(id => {
+          const variableName = `--${id.replace('color-', '')}`;
+          const match = new RegExp(`${variableName}:\\s*([^;]+);`).exec(rootProperties);
+          if (match) {
+            const colorValue = match[1].trim();
+            document.getElementById(id).value = colorValue;
+            document.querySelector(`.color-hex-input[data-picker="${id}"]`).value = colorValue;
+          }
+        });
+      }
       
-      while ((match = themeRegex.exec(cssText)) !== null) {
-        const [, name, className, properties] = match;
+      // Parse theme classes
+      const themeRegex = /\/\*\s*(.*?)\s*\*\/\s*\.([\w-]+)\s*\{([^}]+)\}/g;
+      let themeMatch;
+      while ((themeMatch = themeRegex.exec(cssText)) !== null) {
+        const [, name, className, properties] = themeMatch;
         const colors = [
           /--primary-bg-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
           /--primary-text-color:\s*([^;]+);/.exec(properties)?.[1].trim(),
@@ -37,8 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     } catch (error) {
-      console.error("Theme initialization failed:", error);
-      alert("Error: Could not load styles.css. Please ensure it's in the same directory.");
+      console.error("Initialization failed:", error);
+      alert("Error: Could not load styles.css.");
     }
   }
 
@@ -64,10 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
       
       option.addEventListener('click', (e) => {
         if (e.target.classList.contains('delete-btn')) return;
-        const clickedThemeKey = e.currentTarget.dataset.key;
         state.selectedTheme = e.currentTarget.dataset.theme;
-        applyDashboardTheme(clickedThemeKey);
-        editTheme(clickedThemeKey);
+        applyDashboardTheme(e.currentTarget.dataset.key);
+        editTheme(e.currentTarget.dataset.key);
         updateActiveControls();
       });
       themeControls.appendChild(option);
@@ -91,17 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   function clearEditForm() {
     newThemeNameInput.value = '';
-    const defaultColors = {
-      'color-primary-bg': '#f0f0f0', 'color-primary-text': '#333333',
-      'color-accent': '#007bff', 'color-secondary-bg': '#dddddd'
-    };
-     for (const id in defaultColors) {
-        document.getElementById(id).value = defaultColors[id];
-        document.querySelector(`.color-hex-input[data-picker="${id}"]`).value = defaultColors[id];
-    }
     addThemeBtn.textContent = 'Add New Theme';
     delete addThemeBtn.dataset.editingKey;
-    // Also deselect any active theme in the top list
     state.selectedTheme = null;
     updateActiveControls();
   }
@@ -135,10 +141,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (allThemes[themeKey] && confirm(`Are you sure you want to delete "${allThemes[themeKey].name}"?`)) {
         delete allThemes[themeKey];
         if (state.selectedTheme === themeKey) {
-            state.selectedTheme = Object.keys(allThemes)[0] || '';
-            if (state.selectedTheme) {
-              applyDashboardTheme(state.selectedTheme);
-              editTheme(state.selectedTheme);
+            const firstTheme = Object.keys(allThemes)[0] || '';
+            state.selectedTheme = firstTheme;
+            if (firstTheme) {
+              applyDashboardTheme(firstTheme);
+              editTheme(firstTheme);
             } else {
               clearEditForm();
             }
@@ -155,12 +162,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showSaveAndUploadElements() {
     downloadStylesBtn.style.display = 'inline-block';
-    downloadConfigBtn.classList.remove('clicked');
-    downloadStylesBtn.classList.remove('clicked');
   }
 
-  function triggerDownload(content, fileName, mimeType) {
-    const blob = new Blob([content], { type: mimeType });
+  function triggerDownload(content, fileName) {
+    const blob = new Blob([content], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = fileName;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
@@ -168,17 +173,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function createConfigFile() {
-    const content = `const widgetConfig = {\n  theme: '${state.selectedTheme}',\n  alignment: '${state.selectedAlignment}'\n};`;
-    triggerDownload(content, 'config.js', 'text/javascript');
+    triggerDownload(`const widgetConfig = {\n  theme: '${state.selectedTheme}',\n  alignment: '${state.selectedAlignment}'\n};`, 'config.js');
   }
 
   function downloadStylesFile() {
-    const content = generateCssContent();
-    triggerDownload(content, 'styles.css', 'text/css');
+    triggerDownload(generateCssContent(), 'styles.css');
   }
 
   function generateCssContent() {
-    let cssString = `/* Widget Styles - Generated by Dashboard ${DASHBOARD_VERSION} */\n\n`;
+    let cssString = `/* Widget Styles - Generated by Dashboard ${DASHBOARD_VERSION} */\n\n:root {\n`;
+    cssString += `  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;\n`;
+    const successColor = document.getElementById('color-success').value;
+    cssString += `  --success-color: ${successColor};\n`;
+    for (let i = 0; i < 6; i++) {
+        const statusColor = document.getElementById(`color-status-${i}`).value;
+        cssString += `  --status-color-${i}: ${statusColor};\n`;
+    }
+    cssString += '}\n\n';
+
     for (const themeKey in allThemes) {
         const theme = allThemes[themeKey];
         cssString += `/* ${theme.name} */\n.${theme.class} {\n  --primary-bg-color: ${theme.colors[0]};\n  --primary-text-color: ${theme.colors[1]};\n  --accent-color: ${theme.colors[2]};\n  --secondary-bg-color: ${theme.colors[3]};\n}\n\n`;
@@ -188,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function main() {
     if (versionDisplay) versionDisplay.textContent = DASHBOARD_VERSION;
-    await initializeThemes();
+    await initializeStateFromCSS();
     renderThemes();
     updateActiveControls();
 
@@ -205,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadConfigBtn.addEventListener('click', createConfigFile);
     downloadStylesBtn.addEventListener('click', downloadStylesFile);
     addThemeBtn.addEventListener('click', addNewTheme);
-    newThemeBtn.addEventListener('click', clearEditForm); // Listener for the new button
+    newThemeBtn.addEventListener('click', clearEditForm); 
     
     alignmentControls.querySelectorAll('.alignment-option').forEach(option => {
       option.addEventListener('click', () => { 
