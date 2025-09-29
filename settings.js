@@ -204,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showSaveAndUploadElements() {
     downloadStylesBtn.style.display = 'inline-block';
+    downloadConfigBtn.classList.remove('clicked');
   }
 
   function triggerDownload(content, fileName) {
@@ -216,10 +217,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function createConfigFile() {
     triggerDownload(`const widgetConfig = {\n  theme: '${state.selectedTheme || ''}',\n  alignment: '${state.selectedAlignment}'\n};`, 'config.js');
+    downloadConfigBtn.classList.add('clicked');
   }
 
   function downloadStylesFile() {
     triggerDownload(generateCssContent(), 'styles.css');
+    downloadStylesBtn.classList.add('clicked');
   }
 
   function generateCssContent() {
