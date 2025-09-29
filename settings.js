@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state.selectedTheme = key;
         applyDashboardTheme(key);
         renderThemes();
-        enableSaveButtons();
+        showSaveAndUploadElements();
     }
     if (e.target.classList.contains('btn-edit')) { row.classList.add('editing'); }
     if (e.target.classList.contains('btn-cancel')) {
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (state.selectedTheme) applyDashboardTheme(state.selectedTheme);
         }
         renderThemes();
-        enableSaveButtons();
+        showSaveAndUploadElements();
       }
     }
     if (e.target.classList.contains('btn-save')) {
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         colors: Array.from(colourInputs).map(input => input.value)
       };
       renderThemes();
-      enableSaveButtons();
+      showSaveAndUploadElements();
     }
   });
 
@@ -212,9 +212,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.alignment-option').forEach(opt => opt.classList.toggle('active', opt.dataset.alignment === state.selectedAlignment));
   }
 
-  function enableSaveButtons() {
-    downloadStylesBtn.disabled = false;
-    downloadConfigBtn.disabled = false;
+  function showSaveAndUploadElements() {
+    downloadStylesBtn.style.display = 'inline-block';
+    downloadConfigBtn.classList.remove('clicked');
   }
 
   function triggerDownload(content, fileName) {
@@ -227,12 +227,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function createConfigFile() {
     triggerDownload(`const widgetConfig = {\n  theme: '${state.selectedTheme || ''}',\n  alignment: '${state.selectedAlignment}'\n};`, 'config.js');
-    downloadConfigBtn.disabled = true;
+    downloadConfigBtn.classList.add('clicked');
 }
 
   function downloadStylesFile() {
     triggerDownload(generateCssContent(), 'styles.css');
-    downloadStylesBtn.disabled = true;
+    downloadStylesBtn.classList.add('clicked');
   }
 
   function generateCssContent() {
@@ -255,10 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function main() {
     if (versionDisplay) versionDisplay.textContent = DASHBOARD_VERSION;
-    
-    downloadStylesBtn.disabled = true;
-    downloadConfigBtn.disabled = true;
-
     await initializeStateFromCSS();
     renderThemes();
     updateActiveControls();
@@ -278,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
     alignmentControls.querySelectorAll('.alignment-option').forEach(option => {
       option.addEventListener('click', () => { 
           state.selectedAlignment = option.dataset.alignment; 
-          enableSaveButtons(); 
+          showSaveAndUploadElements(); 
           updateActiveControls(); 
       });
     });
@@ -293,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const picker = e.target.parentElement.querySelector('input[type="color"]');
                 if(picker) picker.value = e.target.value;
             }
-            enableSaveButtons();
+            showSaveAndUploadElements();
         });
     });
   }
