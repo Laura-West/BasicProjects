@@ -1,4 +1,4 @@
 const widgetConfig = {
-  theme: 'soft-lavender-theme',
+  theme: 'null',
   alignment: 'center'
 };
