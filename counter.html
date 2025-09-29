@@ -46,10 +46,12 @@
     #wins-text { font-size: clamp(1.25rem, 5vw, 2rem); font-weight: 500; color: var(--primary-text-color); opacity: 0.8; }
     #button-container { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(10px, 3vw, 15px); width: 100%; }
     .control-btn { 
+      /* The button color is now controlled by a CSS variable */
+      color: var(--button-text-color, #FFFFFF);
       border: none; 
       border-radius: 12px; 
       cursor: pointer; 
-      transition: transform 0.2s ease, box-shadow 0.2s ease; 
+      transition: transform 0.2s ease, box-shadow 0.2s ease, color 0.3s ease; 
       box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
       font-size: clamp(1rem, 4vw, 1.2rem); 
       font-weight: 600;
@@ -107,20 +109,19 @@
         const [r, g, b] = rgbMatch.map(Number);
         const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
         
-        const borderColor = luminance > 0.5 ? '#000000' : '#FFFFFF';
-        const borderThickness = '0.5px'; // Thinner border for a more subtle outline
+        const contrastColor = luminance > 0.5 ? '#000000' : '#FFFFFF';
+        const borderThickness = '0.5px'; // Thinner border
 
         // Apply a crisp outline to the count display
         countDisplayEl.style.textShadow = `
-          -${borderThickness} -${borderThickness} 0 ${borderColor},
-           ${borderThickness} -${borderThickness} 0 ${borderColor},
-          -${borderThickness}  ${borderThickness} 0 ${borderColor},
-           ${borderThickness}  ${borderThickness} 0 ${borderColor}
+          -${borderThickness} -${borderThickness} 0 ${contrastColor},
+           ${borderThickness} -${borderThickness} 0 ${contrastColor},
+          -${borderThickness}  ${borderThickness} 0 ${contrastColor},
+           ${borderThickness}  ${borderThickness} 0 ${contrastColor}
         `;
         
-        // Apply the same contrast color to the button text
-        incrementBtn.style.color = borderColor;
-        resetBtn.style.color = borderColor;
+        // Set the CSS variable on the widget to control button text color
+        widgetEl.style.setProperty('--button-text-color', contrastColor);
       }
 
       function updateDisplay() {
