@@ -37,9 +37,8 @@
         }
         h1 { display: flex; justify-content: center; align-items: center; gap: 15px; font-size: 2.2em; font-weight: 700; margin-bottom: 10px; }
         #version-display { font-size: 0.5em; font-weight: 500; color: #888; background-color: var(--secondary-bg-color); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--border-color); }
-        h2 { font-size: 1.5em; font-weight: 600; text-align: center; }
+        h2 { font-size: 1.5em; font-weight: 600; text-align: center; border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px; }
         h3 { font-size: 1.2em; font-weight: 600; text-align: center; color: var(--primary-text-color); }
-        .heading-with-button { display: flex; justify-content: center; align-items: center; gap: 15px; border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px; }
         .section-control { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; padding: 20px; background-color: var(--secondary-bg-color); border: 1px solid var(--border-color); border-radius: 8px; }
         .theme-option, .alignment-option { padding: 10px 15px; border: 2px solid #ccc; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; display: flex; align-items: center; gap: 10px; font-weight: 500; }
         .theme-option:hover, .alignment-option:hover { border-color: var(--accent-color); }
@@ -55,6 +54,8 @@
         .btn { padding: 12px 25px; border: none; background-color: var(--accent-color); color: white; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 600; transition: transform 0.1s ease, filter 0.1s ease; }
         .btn:hover { filter: brightness(110%); }
         .btn:active { transform: scale(0.97); filter: brightness(95%); }
+        .btn.secondary { background-color: #6c757d; font-size: 0.9em; padding: 8px 15px; }
+        .editor-buttons { display: flex; gap: 10px; justify-content: center; align-items: center; width: 100%; }
         .download-section { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
         .upload-instructions { text-align: center; background-color: var(--secondary-bg-color); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); }
         .upload-instructions a { color: var(--accent-color); font-weight: 600; }
@@ -66,10 +67,7 @@
     <div class="container" id="dashboard-container">
         <h1>Widget Dashboard <span id="version-display"></span></h1>
 
-        <div class="heading-with-button">
-            <h2>Select & Edit Themes</h2>
-            <button id="new-theme-btn" class="btn" title="Clear form to create a new theme" style="padding: 5px 12px; font-size: 0.9em;">+ New</button>
-        </div>
+        <h2>Select & Edit Themes</h2>
         <div id="theme-controls" class="section-control"></div>
 
         <div class="section-control" style="flex-direction: column; align-items: stretch; gap: 20px;">
@@ -92,7 +90,10 @@
                     <input type="color" id="color-secondary-bg" value="#cedbd9"><input type="text" class="color-hex-input" data-picker="color-secondary-bg" value="#cedbd9">
                 </div>
             </div>
-            <button id="add-theme-btn" class="btn">Add New Theme</button>
+            <div class="editor-buttons">
+                <button id="add-theme-btn" class="btn">Add New Theme</button>
+                <button id="new-theme-btn" class="btn secondary" title="Clear form to create a new theme">+ New</button>
+            </div>
         </div>
 
         <details>
@@ -117,17 +118,24 @@
             </div>
         </details>
         
-        <h2 style="border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px;">Select Text Alignment</h2>
-        <div id="alignment-controls" class="section-control"></div>
+        <h2>Select Text Alignment</h2>
+        <div id="alignment-controls" class="section-control">
+            <div class="alignment-option" data-alignment="left"><span>↔ Left</span></div>
+            <div class="alignment-option" data-alignment="center"><span>↔ Center</span></div>
+            <div class="alignment-option" data-alignment="right"><span>↔ Right</span></div>
+        </div>
 
         <div class="download-section">
             <button id="download-config-btn" class="btn">Save Settings</button>
             <button id="download-styles-btn" class="btn" style="display: none;">Save Styles</button>
         </div>
         
-        <div id="upload-instructions" class="upload-instructions"></div>
+        <div id="upload-instructions" class="upload-instructions">
+             <p>After saving, upload your file(s) to GitHub:</p>
+            <a href="https://github.com/Laura-West/BasicProjects/upload/main" target="_blank">Upload Files to GitHub</a>
+        </div>
     </div>
     
-    <script src="settings.js?v=2.0"></script>
+    <script src="settings.js?v=2.1"></script>
 </body>
 </html>

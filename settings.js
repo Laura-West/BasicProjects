@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const DASHBOARD_VERSION = 'v2.0';
+  const DASHBOARD_VERSION = 'v2.1';
 
   // DOM Element References
   const versionDisplay = document.getElementById('version-display');
@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!response.ok) throw new Error('styles.css could not be loaded.');
       const cssText = await response.text();
       
-      // Parse :root for functional colors
       const rootMatch = /:root\s*\{([^}]+)\}/.exec(cssText);
       if (rootMatch) {
         const rootProperties = rootMatch[1];
@@ -37,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
       
-      // Parse theme classes
       const themeRegex = /\/\*\s*(.*?)\s*\*\/\s*\.([\w-]+)\s*\{([^}]+)\}/g;
       let themeMatch;
       while ((themeMatch = themeRegex.exec(cssText)) !== null) {
