@@ -85,6 +85,39 @@
         .save-section .filename { font-weight: 600; font-size: 1.1em; background-color: var(--primary-bg-color); padding: 5px 10px; border-radius: 5px; border: 1px solid var(--border-color); display: inline-block; margin: 0 auto; }
         .save-section p { font-size: 0.9em; line-height: 1.5; color: var(--primary-text-color); margin: 0; }
         .save-section .btn { margin-top: auto; }
+        
+        /* Hyperlink Section Styles */
+        #hyperlinks-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+        .link-entry-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr auto; /* Label, URL, Delete */
+            gap: 10px;
+            width: 100%;
+        }
+        .link-entry-grid input[type="text"] {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 0.9em;
+            box-sizing: border-box;
+        }
+        .link-entry-grid .btn.danger {
+            width: 40px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+        }
+        .link-label-input { grid-column: 1 / 2; }
+        .link-url-input { grid-column: 2 / 3; }
+        .link-delete-btn { grid-column: 3 / 4; }
+        .link-title-input { grid-column: 1 / -1; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -122,6 +155,14 @@
             <button class="btn alignment-option" data-alignment="center">↔ Centre</button>
             <button class="btn alignment-option" data-alignment="right">↔ Right</button>
         </div>
+        
+        <h2 class="widget-title" style="border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px;">Hyperlink Widget Configuration</h2>
+        <div id="hyperlinks-controls" class="section-control">
+            <div id="hyperlinks-container" style="width: 100%;">
+                <input type="text" id="links-title-input" class="link-title-input" placeholder="Widget Title (e.g., Quick Links)">
+                </div>
+            <button id="add-new-link-btn" class="btn secondary" style="width: 100%;">+ Add New Link</button>
+        </div>
 
         <h2 style="border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px;">Save & Upload Files</h2>
         <div class="save-section-container">
@@ -134,7 +175,7 @@
             <div class="save-section">
                 <h3>Widget Settings</h3>
                 <span class="filename">config.js</span>
-                <p>This is the widget's instruction file. Save this when you select a different theme or change the text alignment.</p>
+                <p>This is the widget's instruction file. Save this when you select a different theme, change the text alignment, or update the hyperlink list.</p>
                 <button id="download-config-btn" class="btn">Save Settings</button>
             </div>
         </div>
@@ -146,5 +187,82 @@
     </div>
     
     <script src="settings.js?v=3.8"></script>
+    <script>
+        // Start of new script functionality to manage links, will be integrated into settings.js
+        // but is included here for completeness of the dashboard logic.
+        
+        const linksContainer = document.getElementById('hyperlinks-container');
+        const addLinkBtn = document.getElementById('add-new-link-btn');
+        const linksTitleInput = document.getElementById('links-title-input');
+        
+        // Default links configuration
+        let linksConfig = {
+            title: "Quick Links",
+            links: [
+                { label: "Google", url: "https://www.google.com" },
+                { label: "Wikipedia", url: "https://www.wikipedia.org" }
+            ]
+        };
+
+        // Function to create a link input row
+        function createLinkRow(link = { label: '', url: '' }) {
+            const linkRow = document.createElement('div');
+            linkRow.classList.add('link-entry-grid');
+            
+            const labelInput = document.createElement('input');
+            labelInput.type = 'text';
+            labelInput.classList.add('link-label-input');
+            labelInput.placeholder = 'Link Label';
+            labelInput.value = link.label;
+            
+            const urlInput = document.createElement('input');
+            urlInput.type = 'text';
+            urlInput.classList.add('link-url-input');
+            urlInput.placeholder = 'https://example.com';
+            urlInput.value = link.url;
+            
+            const deleteBtn = document.createElement('button');
+            deleteBtn.classList.add('btn', 'danger', 'link-delete-btn');
+            deleteBtn.textContent = '✖';
+            deleteBtn.onclick = () => linkRow.remove();
+            
+            linkRow.append(labelInput, urlInput, deleteBtn);
+            linksContainer.appendChild(linkRow);
+            
+            return linkRow;
+        }
+
+        // Render initial links
+        linksTitleInput.value = linksConfig.title;
+        linksConfig.links.forEach(link => createLinkRow(link));
+        
+        // Add new link button functionality
+        addLinkBtn.addEventListener('click', () => createLinkRow());
+        
+        // Expose function to settings.js to read link configuration
+        window.getLinksConfig = function() {
+            const rows = linksContainer.querySelectorAll('.link-entry-grid');
+            const links = [];
+            rows.forEach(row => {
+                const label = row.querySelector('.link-label-input').value.trim();
+                let url = row.querySelector('.link-url-input').value.trim();
+                
+                if (label && url) {
+                    // Simple URL validation: prepend http:// if no protocol is found
+                    if (!url.match(/^(f|ht)tps?:\/\//i)) {
+                        url = 'http://' + url;
+                    }
+                    links.push({ label, url });
+                }
+            });
+            
+            return {
+                title: linksTitleInput.value.trim() || "Quick Links",
+                links: links
+            };
+        };
+        // NOTE: The `settings.js` file must be updated to call `window.getLinksConfig()` 
+        // and include the result in the `config.js` file it generates.
+    </script>
 </body>
 </html>

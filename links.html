@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hyperlink Widget</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: var(--font-family);
+      background-color: transparent;
+    }
+    .widget {
+      width: min(400px, 92vw); /* Adjusted width for a link list */
+      border-radius: 12px;
+      padding: clamp(15px, 4vw, 25px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(10px, 3vh, 15px);
+      background-color: var(--primary-bg-color);
+      color: var(--primary-text-color);
+      border: 2px solid var(--secondary-bg-color);
+      transition: background-color 0.5s, border-color 0.5s, color 0.5s;
+    }
+    h2.widget-title {
+        font-size: clamp(1.2rem, 4vw, 1.8rem);
+        font-weight: 700;
+        margin-bottom: 5px;
+        color: var(--primary-text-color);
+        text-align: var(--text-alignment, center); /* Use theme alignment */
+        width: 100%;
+    }
+    .link-list {
+        list-style: none;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .link-item a {
+        display: block;
+        padding: 10px 15px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: clamp(0.9rem, 3vw, 1.1rem);
+        font-weight: 600;
+        color: var(--primary-bg-color); /* Text color contrasting with accent */
+        background-color: var(--accent-color);
+        transition: background-color 0.2s, transform 0.1s;
+        text-align: var(--text-alignment, center); /* Use theme alignment */
+    }
+    .link-item a:hover {
+        filter: brightness(110%);
+    }
+    .link-item a:active {
+        transform: scale(0.98);
+        filter: brightness(95%);
+    }
+    .error { color: #d32f2f; font-style: italic; }
+  </style>
+</head>
+<body>
+  <div id="links-container" class="widget">
+    <h2 class="widget-title">Quick Links</h2>
+    <ul class="link-list" id="link-list">
+        <li class="link-item error">Links are loading...</li>
+    </ul>
+  </div>
+  <script src="config.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const linksContainer = document.getElementById('links-container');
+      const linkList = document.getElementById('link-list');
+      const widgetTitle = linksContainer.querySelector('.widget-title');
+      
+      // Apply Theme
+      const activeTheme = (typeof widgetConfig !== 'undefined' && widgetConfig.theme) ? widgetConfig.theme : 'soft-evergreen-theme';
+      linksContainer.classList.add(activeTheme);
+
+      // Render Links
+      if (typeof widgetConfig !== 'undefined' && widgetConfig.linksConfig && widgetConfig.linksConfig.links && Array.isArray(widgetConfig.linksConfig.links)) {
+        
+        // Apply Alignment
+        linksContainer.style.setProperty('--text-alignment', widgetConfig.alignment || 'center');
+        
+        const links = widgetConfig.linksConfig.links;
+        widgetTitle.textContent = widgetConfig.linksConfig.title || 'Quick Links';
+        linkList.innerHTML = ''; // Clear the initial loading message
+        
+        if (links.length > 0) {
+            links.forEach(link => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('link-item');
+                const anchor = document.createElement('a');
+                anchor.href = link.url;
+                anchor.textContent = link.label;
+                anchor.target = '_blank'; // Open in new tab
+                listItem.appendChild(anchor);
+                linkList.appendChild(listItem);
+            });
+        } else {
+            linkList.innerHTML = '<li class="link-item error">No links configured.</li>';
+        }
+
+      } else {
+        linkList.innerHTML = '<li class="link-item error">Failed to load link configuration.</li>';
+      }
+    });
+  </script>
+</body>
+</html>
