@@ -1,4 +1,4 @@
 const widgetConfig = {
-  theme: 'electric-iris-theme',
+  theme: 'midnight-sapphire-theme',
   alignment: 'center'
 };
