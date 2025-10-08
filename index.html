@@ -47,6 +47,8 @@
         .btn { padding: 10px 20px; border: none; background-color: var(--accent-color); color: white; border-radius: 8px; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: transform 0.1s ease, filter 0.1s ease; }
         .btn:hover { filter: brightness(110%); }
         .btn:active { transform: scale(0.97); filter: brightness(95%); }
+        .btn.secondary { background-color: #6c757d; }
+        .btn.danger { background-color: #dc3545; }
         .btn.selected, .btn.alignment-option.active { background-color: #28a745; cursor: default; }
         .btn.selected:hover, .btn.alignment-option.active:hover { filter: none; }
         
@@ -120,7 +122,7 @@
             <button class="btn alignment-option" data-alignment="center">↔ Centre</button>
             <button class="btn alignment-option" data-alignment="right">↔ Right</button>
         </div>
-        
+
         <h2 style="border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px;">Save & Upload Files</h2>
         <div class="save-section-container">
             <div class="save-section">
