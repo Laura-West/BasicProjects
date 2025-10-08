@@ -1,37 +1,19 @@
-function initializeWidget(renderCallback) {
-  // Default configuration
-  let config = {
-    theme: 'soft-evergreen-theme',
-    alignment: 'center'
-  };
-
-  // Check if the widgetConfig object exists and apply settings
-  if (typeof widgetConfig !== 'undefined') {
-    config = { ...config, ...widgetConfig };
-  }
-
-  // Find the widget element
-  const widgetElement = document.querySelector('.widget');
-
-  // Apply configuration directly to the widget element
-  if (widgetElement) {
-    // This adds the theme class (e.g., 'soft-evergreen-theme') to the widget div
-    widgetElement.classList.add(config.theme);
-  }
-
-  if (renderCallback) {
-    renderCallback(config);
+// Shared widget initialization script
+function initializeWidget(callback) {
+  try {
+    if (typeof widgetConfig !== 'undefined') {
+      document.body.classList.add(widgetConfig.theme);
+      callback(widgetConfig);
+    } else {
+      // Fallback default config if config.js missing
+      const defaultConfig = { theme: 'midnight-sapphire-theme', alignment: 'center' };
+      document.body.classList.add(defaultConfig.theme);
+      callback(defaultConfig);
+    }
+  } catch (err) {
+    console.error('Widget initialization failed:', err);
+    const fallback = { theme: 'midnight-sapphire-theme', alignment: 'center' };
+    document.body.classList.add(fallback.theme);
+    callback(fallback);
   }
 }
-
-// Handle config.js loading errors
-window.addEventListener('error', function(e) {
-  if (e.target && e.target.src && e.target.src.includes('config.js')) {
-    console.warn('Config file not found, using defaults');
-    window.widgetConfig = {
-      theme: 'soft-evergreen-theme',
-      alignment: 'center'
-    };
-    initializeWidget();
-  }
-}, true);
