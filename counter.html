@@ -28,19 +28,24 @@
     #count {
       font-size: 4rem;
       font-weight: bold;
-      margin: 20px 0;
+      margin: 10px 0;
       text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+    #emoji {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      transition: transform 0.2s;
     }
     button {
       border: none;
       border-radius: 8px;
-      padding: 10px 20px;
-      margin: 0 5px;
-      font-size: 1.2rem;
+      padding: 10px 24px;
+      margin: 0 6px;
+      font-size: 1.3rem;
       cursor: pointer;
       transition: transform 0.15s;
     }
-    button:hover { transform: scale(1.05); }
+    button:hover { transform: scale(1.07); }
     #increment-btn { background-color: var(--accent-color); color: #fff; }
     #reset-btn { background-color: var(--success); color: #fff; }
   </style>
@@ -48,9 +53,10 @@
 <body>
   <div class="widget">
     <h2>Counter</h2>
+    <div id="emoji">😐</div>
     <div id="count">0</div>
     <div>
-      <button id="increment-btn">Increment</button>
+      <button id="increment-btn">+1</button>
       <button id="reset-btn">Reset</button>
     </div>
   </div>
@@ -60,11 +66,24 @@
   <script>
     let count = 0;
     const countEl = document.getElementById('count');
+    const emojiEl = document.getElementById('emoji');
     const incrementBtn = document.getElementById('increment-btn');
     const resetBtn = document.getElementById('reset-btn');
 
+    const EMOJIS = [
+      '😞','😐','🙂','😊','😄','😁','😆','🥳','😇'
+    ];
+
+    function getEmoji(num) {
+      const idx = Math.min(Math.floor(num / 2), EMOJIS.length - 1);
+      return EMOJIS[idx];
+    }
+
     function updateDisplay() {
       countEl.textContent = count;
+      emojiEl.textContent = getEmoji(count);
+      emojiEl.style.transform = 'scale(1.2)';
+      setTimeout(() => emojiEl.style.transform = 'scale(1)', 150);
     }
 
     function loadCounter(config) {
