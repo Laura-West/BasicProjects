@@ -14,9 +14,7 @@
       --border-color: #e0e0e0;
     }
 
-    html, body {
-      height: 100%;
-    }
+    html, body { height: 100%; }
 
     body {
       font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
@@ -33,7 +31,7 @@
       background: var(--primary-bg-color);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
       display: grid;
       gap: 24px;
       padding: 28px;
@@ -61,10 +59,7 @@
       opacity: .75;
     }
 
-    .row {
-      display: grid;
-      gap: 16px;
-    }
+    .row { display: grid; gap: 16px; }
     @media (min-width: 900px) {
       .row.two {
         grid-template-columns: 1.15fr .85fr;
@@ -78,16 +73,8 @@
       border-radius: 12px;
       padding: 18px;
     }
-    .card h2 {
-      margin: 0 0 12px;
-      font-size: 1.2rem;
-    }
-    .hint {
-      font-size: .9rem;
-      opacity: .8;
-      margin-top: -6px;
-      margin-bottom: 12px;
-    }
+    .card h2 { margin: 0 0 12px; font-size: 1.2rem; }
+    .hint { font-size: .9rem; opacity: .8; margin-top: -6px; margin-bottom: 12px; }
 
     /* Theme list */
     .theme-row {
@@ -100,10 +87,7 @@
       border-radius: 10px;
       margin-bottom: 10px;
     }
-    .theme-name {
-      font-weight: 600;
-      word-break: break-word;
-    }
+    .theme-name { font-weight: 600; word-break: break-word; }
     .swatch {
       display: grid;
       grid-template-columns: repeat(4, 28px);
@@ -140,10 +124,7 @@
       gap: 10px;
       justify-content: start;
     }
-    .links-grid {
-      display: grid;
-      gap: 10px;
-    }
+    .links-grid { display: grid; gap: 10px; }
     .link-row {
       display: grid;
       grid-template-columns: 1fr 1fr auto;
@@ -157,10 +138,7 @@
       border-radius: 8px;
       font: inherit;
     }
-    .tiny {
-      font-size: .85rem;
-      opacity: .8;
-    }
+    .tiny { font-size: .85rem; opacity: .8; }
     .pill {
       display: inline-block;
       padding: 4px 8px;
@@ -186,10 +164,7 @@
       border-radius: 10px;
       padding: 8px 10px;
     }
-    .func-item code {
-      font-size: .85rem;
-      opacity: .8;
-    }
+    .func-item code { font-size: .85rem; opacity: .8; }
     .func-item input[type="color"] {
       width: 32px;
       height: 32px;
@@ -253,16 +228,9 @@
       color: #fff;
       border: none;
     }
-    .save-hint {
-      font-size: .95rem;
-      opacity: .9;
-      margin-top: 6px;
-    }
+    .save-hint { font-size: .95rem; opacity: .9; margin-top: 6px; }
 
-    .upload {
-      text-align: center;
-      padding-top: 6px;
-    }
+    .upload { text-align: center; padding-top: 6px; }
     .upload a {
       text-decoration: none;
       color: var(--primary-text-color);
@@ -341,6 +309,6 @@
   </div>
 
   <!-- Single script to keep all logic contained -->
-  <script src="settings.js?v=4.0"></script>
+  <script src="settings.js?v=4.1"></script>
 </body>
 </html>
