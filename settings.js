@@ -85,12 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
         functional[varName] = m ? m[1].trim() : fallback;
       });
 
-      // Themes: /* Name */ .class { --primary-bg-color: ...; --primary-text-color: ...; --accent-color: ...; --secondary-bg-color: ...; }
+      // Themes: /* Name */ .class { --primary-bg-color: ...; ... }
       themes = {};
-      const re = /\/\*\s*([\s\S]*?)\s*\*\/\s*\.([\w-]+)\s*\{([\s\S]*?)\}/g;
+      // Match only theme comment + class blocks; skip header/root
+      const re = /\/\*\s*([^*][^\/]*?)\s*\*\/\s*\.(?!root)([\w-]+)\s*\{([\s\S]*?)\}/g;
       let m;
       while ((m = re.exec(css)) !== null) {
         const name = m[1].trim();
+        if (name.toLowerCase().includes('widget styles')) continue; // skip header
         const klass = m[2].trim();
         const props = m[3];
         const get = k => (props.match(new RegExp(k.replace(/[-]/g, '\\$&') + '\\s*:\\s*([^;]+);', 'i')) || [,''])[1].trim();
@@ -114,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Build UI
-
   function renderFunctional() {
     els.funcGrid.innerHTML = '';
     FUNCTIONAL.forEach(([id, varName, fallback]) => {
@@ -135,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function themeRowHTML(key, t) {
     const [bg, txt, acc, sec] = t.colors;
     const checked = key === selectedTheme ? 'checked' : '';
-    const nameId = `name-${key}`;
     return `
       <div class="theme-row" data-key="${key}">
         <div class="theme-name">
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Object.keys(themes).forEach(k => {
       els.themeList.insertAdjacentHTML('beforeend', themeRowHTML(k, themes[k]));
     });
-    applyPreview(); // keep preview in sync after rerender
+    applyPreview();
   }
 
   function renderLinks() {
@@ -183,19 +183,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Alignment controls
   function hydrateAlignment() {
     const radios = els.alignControls.querySelectorAll('input[name="align"]');
     radios.forEach(r => r.checked = r.value === selectedAlignment);
   }
 
-  // Live preview
   function applyPreview() {
-    // Remove any previous theme classes from preview root
     Object.keys(themes).forEach(k => els.previewRoot.classList.remove(k));
     if (selectedTheme) els.previewRoot.classList.add(selectedTheme);
 
-    // Apply inline variables to preview root for edited colours
     const t = themes[selectedTheme] || Object.values(themes)[0];
     if (!t) return;
     const [bg, txt, acc, sec] = t.colors;
@@ -207,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     els.previewAlignBox.style.textAlign = selectedAlignment;
   }
 
-  // Events: themes list
+  // Event handlers: themes list
   els.themeList.addEventListener('input', e => {
     const row = e.target.closest('.theme-row');
     if (!row) return;
@@ -218,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target.matches('input[type="color"]')) {
       const k = +e.target.dataset.k;
       t.colors[k] = e.target.value;
-      // sync hex input
       const hex = row.querySelector(`.hex[data-k="${k}"]`);
       if (hex) hex.value = e.target.value;
       applyPreview();
@@ -253,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     if (e.target.dataset.act === 'duplicate') {
-      const base = key.replace(/-copy\d*$/,'');
+      const base = key.replace(/-copy\d*$/, '');
       const newKey = uniqueKey(base + '-copy');
       themes[newKey] = { name: t.name + ' Copy', class: newKey, colors: t.colors.slice() };
       if (!selectedTheme) selectedTheme = newKey;
@@ -274,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return cand;
   }
 
-  // Links
+  // Links handling
   els.addLinkBtn.addEventListener('click', () => {
     links.push({ label: '', url: '' });
     renderLinks();
@@ -298,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
     links[i] = { label, url };
   });
 
-  // Alignment
+  // Alignment handling
   els.alignControls.addEventListener('change', e => {
     if (e.target.name === 'align') {
       selectedAlignment = e.target.value;
@@ -316,7 +311,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const value = e.target.value.trim();
     functional[varName] = value;
 
-    // Cross-sync the other input in the same row
     const row = e.target.closest('.func-item');
     const color = row.querySelector('input[type="color"]');
     const text = row.querySelector('input[type="text"]');
@@ -324,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target === text && color) color.value = value;
   });
 
-  // Downloads
+  // Download buttons
   els.downloadStyles.addEventListener('click', () => {
     const css = generateStylesCSS();
     triggerDownload(css, 'styles.css', 'text/css');
@@ -349,12 +343,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function generateStylesCSS() {
-    // Increment version if we had one; otherwise start at 1.0
     let ver = parseFloat(cssVersion);
     if (!isFinite(ver)) ver = 1.0;
     const next = (ver + 0.1).toFixed(1);
 
-    // Root block with functional colours
     let out = `/* Widget Styles - CSS Version: ${next} - Generated by Dashboard ${DASHBOARD_VERSION} */\n\n`;
     out += `:root {\n`;
     out += `  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;\n`;
@@ -363,7 +355,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     out += `}\n\n`;
 
-    // Theme blocks
     Object.keys(themes).forEach(k => {
       const t = themes[k];
       const [bg, txt, acc, sec] = t.colors;
@@ -392,7 +383,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    // Pretty-print for easy diffs
     return 'const widgetConfig = ' + JSON.stringify(config, null, 2) + ';\n';
   }
 
@@ -401,7 +391,6 @@ document.addEventListener('DOMContentLoaded', () => {
     await loadConfigJS();
     await loadStylesCSS();
 
-    // If config theme isn’t in the styles, pick first available
     if (!selectedTheme || !themes[selectedTheme]) {
       selectedTheme = Object.keys(themes)[0] || selectedTheme;
     }
