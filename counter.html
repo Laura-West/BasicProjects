@@ -52,7 +52,6 @@
 </head>
 <body>
   <div class="widget">
-    <h2>Counter</h2>
     <div id="emoji">😐</div>
     <div id="count">0</div>
     <div>
@@ -70,9 +69,7 @@
     const incrementBtn = document.getElementById('increment-btn');
     const resetBtn = document.getElementById('reset-btn');
 
-    const EMOJIS = [
-      '😞','😐','🙂','😊','😄','😁','😆','🥳','😇'
-    ];
+    const EMOJIS = ['😞','😐','🙂','😊','😄','😁','😆','🥳','😇'];
 
     function getEmoji(num) {
       const idx = Math.min(Math.floor(num / 2), EMOJIS.length - 1);
