@@ -1,109 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-AU">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hyperlink Widget</title>
-  <link rel="stylesheet" href="styles.css" />
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      font-family: var(--font-family);
-      background-color: transparent;
-    }
-    .widget {
-      width: min(400px, 92vw); /* Adjusted width for a link list */
-      border-radius: 12px;
-      padding: clamp(15px, 4vw, 25px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: clamp(10px, 3vh, 15px);
-      background-color: var(--primary-bg-color);
-      color: var(--primary-text-color);
-      border: 2px solid var(--secondary-bg-color);
-      transition: background-color 0.5s, border-color 0.5s, color 0.5s;
-    }
-    h2.widget-title {
-        font-size: clamp(1.2rem, 4vw, 1.8rem);
-        font-weight: 700;
-        margin-bottom: 5px;
-        color: var(--primary-text-color);
-        text-align: var(--text-alignment, center);
-        width: 100%;
-        transition: color 0.5s;
-    }
-    .link-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-    .link-item {
-        width: 100%;
-        text-align: var(--text-alignment, center);
-    }
-    .link-item a {
-        display: block;
-        padding: 10px 15px;
-        background-color: var(--accent-color);
-        color: var(--primary-bg-color); /* Use primary BG color as text color for high contrast on accent */
-        text-decoration: none;
-        border-radius: 6px;
-        font-size: 1rem;
-        font-weight: 600;
-        transition: background-color 0.3s, transform 0.1s;
-    }
-    .link-item a:hover {
-        background-color: color-mix(in srgb, var(--accent-color) 85%, black);
-        transform: translateY(-1px);
-    }
-    .link-item.error {
-        color: var(--status-0);
-        font-style: italic;
-        padding: 10px;
-        border: 1px dashed var(--status-0);
-        border-radius: 6px;
-        text-align: center;
-    }
-    /* Default Alignment fallback */
-    .widget {
-        --text-alignment: center;
-    }
-  </style>
-  <script src="config.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget Theme Dashboard</title>
+    <style>
+        :root {
+            --primary-bg-color: #ffffff;
+            --secondary-bg-color: #f8f9fa;
+            --primary-text-color: #333333;
+            --accent-color: #6a9a8d;
+            --border-color: #e0e0e0;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            box-sizing: border-box;
+        }
+        #dashboard-container {
+            width: min(900px, 95vw);
+            padding: 30px;
+            background-color: var(--primary-bg-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        /* Apply dynamic text colour to all relevant elements */
+        h1, h2, h3, .theme-name, .functional-colour-row .label, .colour-input-group label, .alignment-option, .save-section h3, .save-section .filename, .upload-instructions p {
+             color: var(--primary-text-color); 
+        }
+        h1 { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px; font-size: 2.2em; font-weight: 700; margin-bottom: 10px; }
+        .version-info { font-size: 0.5em; font-weight: 500; color: var(--primary-text-color); background-color: var(--secondary-bg-color); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--border-color); opacity: 0.7; }
+        h2 { font-size: 1.5em; font-weight: 600; text-align: center; }
+        h3 { font-size: 1.2em; font-weight: 600; text-align: center; margin-bottom: 15px; }
+        .heading-with-button { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px; width: 100%; }
+        .section-control { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; padding: 20px; background-color: var(--secondary-bg-color); border: 1px solid var(--border-color); border-radius: 8px; }
+        .btn { padding: 10px 20px; border: none; background-color: var(--accent-color); color: white; border-radius: 8px; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: transform 0.1s ease, filter 0.1s ease; }
+        .btn:hover { filter: brightness(110%); }
+        .btn:active { transform: scale(0.97); filter: brightness(95%); }
+        .btn.selected, .btn.alignment-option.active { background-color: #28a745; cursor: default; }
+        .btn.selected:hover, .btn.alignment-option.active:hover { filter: none; }
+        
+        .upload-instructions {
+            text-align: center;
+            width: 100%;
+            border-top: 1px solid var(--border-color);
+            padding-top: 25px;
+            margin-top: 10px;
+        }
+        .upload-instructions a { color: var(--accent-color); font-weight: 600; }
+
+        /* List-Style & Grid UI Styles */
+        .theme-row, .functional-colour-row { padding: 15px; background-color: var(--secondary-bg-color); border: 1px solid var(--border-color); border-radius: 8px; display: flex; flex-direction: column; gap: 15px; }
+        .theme-row.editing .view-mode { display: none; }
+        .theme-row:not(.editing) .edit-mode { display: none; }
+        .view-mode, .edit-mode-controls, .functional-colour-row .controls { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .theme-name, .functional-colour-row .label { font-weight: 600; margin-right: auto; }
+        .colour-swatch-group { display: flex; gap: 5px; }
+        .colour-swatch { width: 25px; height: 25px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.2); }
+        .colour-inputs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; width: 100%; }
+        .colour-input-group { display: flex; flex-direction: column; gap: 5px; }
+        .colour-input-group label { font-weight: 500; font-size: 0.9em; }
+        .colour-input-group input[type="color"] { width: 100%; height: 35px; border: 1px solid var(--border-color); cursor: pointer; padding: 0; background: none; border-radius: 5px; }
+        .colour-hex-input { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 0.9em; box-sizing: border-box; }
+        .theme-name-input { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 1em; box-sizing: border-box; grid-column: 1 / -1; }
+        
+        details { width: 100%; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 10px; }
+        summary { cursor: pointer; font-weight: 600; font-size: 1.5em; text-align: center; padding: 10px; color: var(--primary-text-color); }
+        
+        /* New Save Section Styles */
+        .save-section-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .save-section { background-color: var(--secondary-bg-color); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 15px; text-align: center; }
+        .save-section .filename { font-weight: 600; font-size: 1.1em; background-color: var(--primary-bg-color); padding: 5px 10px; border-radius: 5px; border: 1px solid var(--border-color); display: inline-block; margin: 0 auto; }
+        .save-section p { font-size: 0.9em; line-height: 1.5; color: var(--primary-text-color); margin: 0; }
+        .save-section .btn { margin-top: auto; }
+    </style>
 </head>
 <body>
-  <div class="widget" id="links-container">
-    <h2 class="widget-title" id="widget-title">Quick Links</h2>
-    <ul class="link-list" id="link-list">
-      <li class="link-item error">Links are not configured in **config.js**.</li>
-    </ul>
-  </div>
+    <div class="container" id="dashboard-container">
+        <h1>
+            Widget Dashboard 
+            <span id="version-display" class="version-info"></span>
+            <span id="css-version-display" class="version-info">CSS: v?</span>
+        </h1>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const linksContainer = document.getElementById('links-container');
-      const widgetTitle = document.getElementById('widget-title');
-      const linkList = document.getElementById('link-list');
-      
-      // Load Configuration
-      const activeTheme = (typeof widgetConfig !== 'undefined' && widgetConfig.theme) ? widgetConfig.theme : 'soft-evergreen-theme';
-      linksContainer.classList.add(activeTheme);
-      
-      // Apply Alignment
-      linksContainer.style.setProperty('--text-alignment', (typeof widgetConfig !== 'undefined' && widgetConfig.alignment) ? widgetConfig.alignment : 'center');
-
-      // The original link widget did not load dynamic links. It just applied the theme.
-      // Since it is reverted, it shows the fallback message.
-    });
-  </script>
+        <div class="heading-with-button">
+            <h2>Themes</h2>
+            <button id="add-new-theme-btn" class="btn">+ Add New Theme</button>
+        </div>
+        <div id="theme-list-container" style="display: flex; flex-direction: column; gap: 10px; width: 100%;"></div>
+        
+        <details>
+            <summary>Global Functional Colours</summary>
+            <div id="functional-colours-container" class="section-control">
+                <div class="colour-inputs-grid">
+                    <div class="colour-input-group"><label for="colour-success">Success Colour</label><input type="color" id="colour-success" value="#28a745"><input type="text" class="colour-hex-input" data-picker="colour-success" value="#28a745"></div>
+                    <div class="colour-input-group"><label for="colour-status-0">Status 0</label><input type="color" id="colour-status-0" value="#DC143C"><input type="text" class="colour-hex-input" data-picker="colour-status-0" value="#DC143C"></div>
+                    <div class="colour-input-group"><label for="colour-status-1">Status 1</label><input type="color" id="colour-status-1" value="#FF8C00"><input type="text" class="colour-hex-input" data-picker="colour-status-1" value="#FF8C00"></div>
+                    <div class="colour-input-group"><label for="colour-status-2">Status 2</label><input type="color" id="colour-status-2" value="#FFD700"><input type="text" class="colour-hex-input" data-picker="colour-status-2" value="#FFD700"></div>
+                    <div class="colour-input-group"><label for="colour-status-3">Status 3</label><input type="color" id="colour-status-3" value="#32CD32"><input type="text" class="colour-hex-input" data-picker="colour-status-3" value="#32CD32"></div>
+                    <div class="colour-input-group"><label for="colour-status-4">Status 4</label><input type="color" id="colour-status-4" value="#DA70D6"><input type="text" class="colour-hex-input" data-picker="colour-status-4" value="#DA70D6"></div>
+                    <div class="colour-input-group"><label for="colour-status-5">Status 5</label><input type="color" id="colour-status-5" value="#ffc107"><input type="text" class="colour-hex-input" data-picker="colour-status-5" value="#ffc107"></div>
+                </div>
+            </div>
+        </details>
+        
+        <h2 style="border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px;">Select Text Alignment</h2>
+        <div id="alignment-controls" class="section-control">
+            <button class="btn alignment-option" data-alignment="left">↔ Left</button>
+            <button class="btn alignment-option" data-alignment="center">↔ Centre</button>
+            <button class="btn alignment-option" data-alignment="right">↔ Right</button>
+        </div>
+        
+        <h2 style="border-top: 1px solid var(--border-color); padding-top: 25px; margin-top: 10px;">Save & Upload Files</h2>
+        <div class="save-section-container">
+            <div class="save-section">
+                <h3>Theme Library</h3>
+                <span class="filename">styles.css</span>
+                <p>This is the master library of all your themes and functional colours. Save this file when you add, edit, or delete any theme or colour.</p>
+                <button id="download-styles-btn" class="btn">Save Styles</button>
+            </div>
+            <div class="save-section">
+                <h3>Widget Settings</h3>
+                <span class="filename">config.js</span>
+                <p>This is the widget's instruction file. Save this when you select a different theme or change the text alignment.</p>
+                <button id="download-config-btn" class="btn">Save Settings</button>
+            </div>
+        </div>
+        
+        <div id="upload-instructions" class="upload-instructions">
+             <p>After saving, upload your file(s) to GitHub:</p>
+            <a href="https://github.com/Laura-West/BasicProjects/upload/main" target="_blank">Upload Files to GitHub</a>
+        </div>
+    </div>
+    
+    <script src="settings.js?v=3.8"></script>
 </body>
 </html>
