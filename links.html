@@ -1,328 +1,113 @@
 <!DOCTYPE html>
 <html lang="en-AU">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Widget Theme Dashboard</title>
-  <meta name="color-scheme" content="light dark" />
+  <title>Quick Links Widget</title>
+  <link rel="stylesheet" href="styles.css" />
   <style>
-    :root {
-      --primary-bg-color: #ffffff;
-      --secondary-bg-color: #f6f7f9;
-      --primary-text-color: #222222;
-      --accent-color: #6a9a8d;
-      --border-color: #e0e0e0;
-    }
-
-    html, body { height: 100%; }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-      background: linear-gradient(180deg, #f0f3f6 0%, #ffffff 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: var(--font-family);
+      background-color: transparent;
+    }
+
+    .widget {
+      width: min(420px, 94vw);
+      background-color: var(--primary-bg-color);
       color: var(--primary-text-color);
-      display: grid;
-      place-items: center;
-      margin: 0;
-      padding: 40px 16px;
-    }
-
-    #dashboard-container {
-      width: min(1100px, 96vw);
-      background: var(--primary-bg-color);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-      display: grid;
-      gap: 24px;
-      padding: 28px;
-      transition: background-color .3s, color .3s, border-color .3s;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    h1 {
-      font-size: 1.9rem;
-      margin: 0;
-      letter-spacing: .3px;
-    }
-    .version {
-      font-size: .85rem;
-      background: var(--secondary-bg-color);
-      border: 1px solid var(--border-color);
-      padding: 6px 10px;
-      border-radius: 8px;
-      opacity: .75;
-    }
-
-    .row { display: grid; gap: 16px; }
-    @media (min-width: 900px) {
-      .row.two {
-        grid-template-columns: 1.2fr 0.8fr;
-        align-items: start;
-      }
-    }
-
-    .card {
-      background: var(--primary-bg-color);
-      border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 18px;
-    }
-    .card h2 { margin: 0 0 12px; font-size: 1.2rem; }
-    .hint { font-size: .9rem; opacity: .8; margin-top: -6px; margin-bottom: 12px; }
-
-    /* === FLEX THEME ROWS === */
-    .theme-row {
+      border: 2px solid var(--secondary-bg-color);
+      padding: 24px;
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 12px;
-      border: 1px dashed var(--border-color);
-      border-radius: 10px;
-      margin-bottom: 14px;
-      transition: border-color 0.2s, background-color 0.2s;
-    }
-    .theme-row:nth-child(even) {
-      background: var(--secondary-bg-color);
-    }
-    .theme-row:hover { border-color: var(--accent-color); }
-
-    .theme-name { font-weight: 600; min-width: 160px; flex: 1 1 220px; }
-    .theme-actions { display: flex; gap: 8px; flex: 0 0 auto; }
-    .theme-actions .btn {
-      padding: 6px 10px;
-      font-size: 0.9rem;
-      cursor: pointer;
+      gap: 16px;
+      transition: background-color 0.4s, color 0.4s, border-color 0.4s;
     }
 
-    .swatch-group {
+    h2.widget-title {
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-text-color);
+      text-align: var(--text-alignment, center);
+      width: 100%;
+    }
+
+    ul.link-list {
+      list-style: none;
+      width: 100%;
       display: flex;
+      flex-direction: column;
       gap: 10px;
-      flex-wrap: wrap;
-      flex: 1 1 400px;
-    }
-    .swatch {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-    .swatch input[type="color"] {
-      width: 32px;
-      height: 32px;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      background: transparent;
-      cursor: pointer;
       padding: 0;
     }
-    .swatch input[type="text"] {
-      width: 90px;
-      padding: 6px 8px;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      font: inherit;
-    }
 
-    /* Alignment + links */
-    .alignment-options {
-      display: flex;
-      gap: 10px;
-      justify-content: start;
-      flex-wrap: wrap;
-    }
-    .links-grid { display: grid; gap: 10px; }
-    .link-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr auto;
-      gap: 10px;
-      align-items: center;
-    }
-    .link-row input {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid var(--border-color);
+    .link-item a {
+      display: block;
+      padding: 12px 16px;
       border-radius: 8px;
-      font: inherit;
-    }
-    .tiny { font-size: .85rem; opacity: .8; }
-    .pill {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid var(--border-color);
-      background: var(--secondary-bg-color);
-      font-size: .8rem;
-      opacity: .9;
-    }
-
-    /* Functional colours */
-    .func-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
-      gap: 12px;
-    }
-    .func-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px dashed var(--border-color);
-      border-radius: 10px;
-      padding: 8px 10px;
-    }
-    .func-item code { font-size: .85rem; opacity: .8; }
-    .func-item input[type="color"] {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      background: transparent;
-    }
-    .func-item input[type="text"] {
-      width: 90px;
-      padding: 6px 8px;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      font: inherit;
-    }
-
-    /* Preview */
-    .preview {
-      display: grid;
-      gap: 10px;
-      padding: 16px;
-      border: 1px dashed var(--border-color);
-      border-radius: 12px;
-      background: var(--secondary-bg-color);
-    }
-    .preview .box {
-      background: var(--primary-bg-color);
-      color: var(--primary-text-color);
-      border: 2px solid var(--secondary-bg-color);
-      border-radius: 12px;
-      padding: 16px;
-    }
-    .preview .cta {
-      background: var(--accent-color);
-      border: none;
-      color: white;
-      padding: 10px 14px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    /* Save actions */
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    .btn {
-      appearance: none;
-      -webkit-appearance: none;
-      font: inherit;
-      cursor: pointer;
-      border: 1px solid var(--border-color);
-      background: var(--secondary-bg-color);
-      padding: 12px 14px;
-      border-radius: 10px;
-    }
-    .btn.primary {
-      background: var(--accent-color);
-      color: #fff;
-      border: none;
-    }
-    .save-hint { font-size: .95rem; opacity: .9; margin-top: 6px; }
-
-    .upload { text-align: center; padding-top: 6px; }
-    .upload a {
       text-decoration: none;
-      color: var(--primary-text-color);
-      border: 1px solid var(--border-color);
-      background: var(--secondary-bg-color);
-      padding: 8px 12px;
-      border-radius: 10px;
+      font-size: clamp(0.9rem, 3vw, 1.1rem);
+      font-weight: 600;
+      color: var(--primary-bg-color);
+      background-color: var(--accent-color);
+      text-align: var(--text-alignment, center);
+      transition: filter 0.2s, transform 0.1s;
     }
+    .link-item a:hover { filter: brightness(110%); }
+    .link-item a:active { transform: scale(0.97); filter: brightness(95%); }
+
+    .error { color: #d32f2f; font-style: italic; }
   </style>
 </head>
 <body>
-  <div id="dashboard-container">
-    <header>
-      <h1>Notion Widgets Settings</h1>
-      <div class="version">
-        <span id="version-display">Dashboard v4.0</span> •
-        <span id="css-version-display" class="tiny">styles.css not loaded</span>
-      </div>
-    </header>
-
-    <div class="row two">
-      <section class="card" id="themes-card">
-        <h2>Themes</h2>
-        <p class="hint">Edit any theme’s four base colours. Select one to apply across all widgets.</p>
-        <div id="theme-list-container"></div>
-        <div class="tiny">
-          <span class="pill">Note</span> Only these four tokens are theme-specific:
-          <code>--primary-bg-color</code>, <code>--primary-text-color</code>,
-          <code>--accent-color</code>, <code>--secondary-bg-color</code>.
-          Functional colours live in <code>:root</code> below.
-        </div>
-      </section>
-
-      <section class="card">
-        <h2>Preview</h2>
-        <div class="preview" id="preview">
-          <div class="box"><strong>Card</strong><br/>This is how most widgets look.</div>
-          <button class="cta">Accent Button</button>
-          <div id="preview-align" class="box">Alignment sample</div>
-        </div>
-
-        <h2 style="margin-top:18px;">Alignment</h2>
-        <div class="alignment-options" id="alignment-controls">
-          <label><input type="radio" name="align" value="left"> Left</label>
-          <label><input type="radio" name="align" value="center" checked> Center</label>
-          <label><input type="radio" name="align" value="right"> Right</label>
-        </div>
-
-        <h2 style="margin-top:18px;">Quick Links</h2>
-        <div class="links-grid" id="links-grid"></div>
-        <div style="margin-top:8px;">
-          <button class="btn" id="add-link-btn">Add Link</button>
-          <span class="tiny">Shown in <code>links.html</code>.</span>
-        </div>
-      </section>
-    </div>
-
-    <section class="card">
-      <h2>Functional Colours</h2>
-      <p class="hint">These are global tokens used by multiple widgets. They are not per-theme. Keep names consistent or enjoy chaos.</p>
-      <div class="func-grid" id="func-grid"></div>
-    </section>
-
-    <section class="card">
-      <h2>Save & Upload</h2>
-      <div class="actions">
-        <div>
-          <button id="download-styles-btn" class="btn primary">Save Styles (styles.css)</button>
-          <div class="save-hint tiny">Use this when you add/edit/delete themes or functional colours.</div>
-        </div>
-        <div>
-          <button id="download-config-btn" class="btn">Save Settings (config.js)</button>
-          <div class="save-hint tiny">Use this when you change the selected theme, alignment, or links.</div>
-        </div>
-      </div>
-      <div class="upload">
-        <p class="tiny">After saving, upload to GitHub:</p>
-        <p><a href="https://github.com/Laura-West/BasicProjects/upload/main" target="_blank" rel="noopener">Upload Files to GitHub</a></p>
-      </div>
-    </section>
+  <div id="links-container" class="widget">
+    <h2 class="widget-title">Quick Links</h2>
+    <ul id="link-list" class="link-list">
+      <li class="link-item error">Loading links...</li>
+    </ul>
   </div>
 
-  <script src="settings.js?v=4.3"></script>
+  <script src="config.js"></script>
+  <script src="widget.js"></script>
+  <script>
+    function loadLinks(config) {
+      const container = document.getElementById('links-container');
+      const list = document.getElementById('link-list');
+      const title = container.querySelector('.widget-title');
+
+      container.classList.add(config.theme);
+      container.style.setProperty('--text-alignment', config.alignment || 'center');
+
+      const cfg = config.linksConfig || { title: 'Quick Links', links: [] };
+      title.textContent = cfg.title || 'Quick Links';
+      list.innerHTML = '';
+
+      if (Array.isArray(cfg.links) && cfg.links.length > 0) {
+        cfg.links.forEach(link => {
+          const li = document.createElement('li');
+          li.className = 'link-item';
+          const a = document.createElement('a');
+          a.href = link.url;
+          a.textContent = link.label;
+          a.target = '_blank';
+          li.appendChild(a);
+          list.appendChild(li);
+        });
+      } else {
+        list.innerHTML = '<li class="link-item error">No links configured.</li>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeWidget(loadLinks);
+    });
+  </script>
 </body>
 </html>

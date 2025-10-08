@@ -27,7 +27,7 @@
     }
 
     #dashboard-container {
-      width: min(1000px, 96vw);
+      width: min(1100px, 96vw);
       background: var(--primary-bg-color);
       border: 1px solid var(--border-color);
       border-radius: 16px;
@@ -39,10 +39,11 @@
     }
 
     header {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
     }
     h1 {
       font-size: 1.9rem;
@@ -50,7 +51,6 @@
       letter-spacing: .3px;
     }
     .version {
-      justify-self: end;
       font-size: .85rem;
       background: var(--secondary-bg-color);
       border: 1px solid var(--border-color);
@@ -62,7 +62,7 @@
     .row { display: grid; gap: 16px; }
     @media (min-width: 900px) {
       .row.two {
-        grid-template-columns: 1.15fr .85fr;
+        grid-template-columns: 1.2fr 0.8fr;
         align-items: start;
       }
     }
@@ -76,53 +76,66 @@
     .card h2 { margin: 0 0 12px; font-size: 1.2rem; }
     .hint { font-size: .9rem; opacity: .8; margin-top: -6px; margin-bottom: 12px; }
 
-    /* Theme list */
+    /* === FLEX THEME ROWS === */
     .theme-row {
-      display: grid;
-      grid-template-columns: 1fr repeat(4, max-content);
-      gap: 12px;
+      display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      padding: 12px;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 12px;
       border: 1px dashed var(--border-color);
       border-radius: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 14px;
+      transition: border-color 0.2s, background-color 0.2s;
     }
-    .theme-name { font-weight: 600; word-break: break-word; }
+    .theme-row:nth-child(even) {
+      background: var(--secondary-bg-color);
+    }
+    .theme-row:hover { border-color: var(--accent-color); }
+
+    .theme-name { font-weight: 600; min-width: 160px; flex: 1 1 220px; }
+    .theme-actions { display: flex; gap: 8px; flex: 0 0 auto; }
+    .theme-actions .btn {
+      padding: 6px 10px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .swatch-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      flex: 1 1 400px;
+    }
     .swatch {
-      display: grid;
-      grid-template-columns: repeat(4, 28px);
+      display: flex;
       gap: 6px;
       align-items: center;
     }
     .swatch input[type="color"] {
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      padding: 0;
       background: transparent;
       cursor: pointer;
+      padding: 0;
     }
     .swatch input[type="text"] {
-      width: 86px;
+      width: 90px;
       padding: 6px 8px;
       border: 1px solid var(--border-color);
       border-radius: 6px;
       font: inherit;
     }
-    .theme-actions {
-      justify-self: end;
-      display: grid;
-      grid-auto-flow: column;
-      gap: 8px;
-    }
 
     /* Alignment + links */
     .alignment-options {
-      display: grid;
-      grid-auto-flow: column;
+      display: flex;
       gap: 10px;
       justify-content: start;
+      flex-wrap: wrap;
     }
     .links-grid { display: grid; gap: 10px; }
     .link-row {
@@ -152,13 +165,12 @@
     /* Functional colours */
     .func-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
       gap: 12px;
     }
     .func-item {
-      display: grid;
-      grid-template-columns: max-content 1fr;
-      gap: 8px;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
       border: 1px dashed var(--border-color);
       border-radius: 10px;
@@ -170,16 +182,14 @@
       height: 32px;
       border-radius: 8px;
       border: 1px solid var(--border-color);
-      padding: 0;
       background: transparent;
     }
     .func-item input[type="text"] {
-      width: 110px;
+      width: 90px;
       padding: 6px 8px;
       border: 1px solid var(--border-color);
       border-radius: 6px;
       font: inherit;
-      justify-self: end;
     }
 
     /* Preview */
@@ -256,7 +266,12 @@
         <h2>Themes</h2>
         <p class="hint">Edit any theme’s four base colours. Select one to apply across all widgets.</p>
         <div id="theme-list-container"></div>
-        <div class="tiny"><span class="pill">Note</span> Only these four tokens are theme-specific: <code>--primary-bg-color</code>, <code>--primary-text-color</code>, <code>--accent-color</code>, <code>--secondary-bg-color</code>. Functional colours live in <code>:root</code> below.</div>
+        <div class="tiny">
+          <span class="pill">Note</span> Only these four tokens are theme-specific:
+          <code>--primary-bg-color</code>, <code>--primary-text-color</code>,
+          <code>--accent-color</code>, <code>--secondary-bg-color</code>.
+          Functional colours live in <code>:root</code> below.
+        </div>
       </section>
 
       <section class="card">
@@ -308,7 +323,6 @@
     </section>
   </div>
 
-  <!-- Single script to keep all logic contained -->
-  <script src="settings.js?v=4.1"></script>
+  <script src="settings.js?v=4.3"></script>
 </body>
 </html>
