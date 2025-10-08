@@ -16,96 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const downloadConfigBtn = document.getElementById('download-config-btn');
   const downloadStylesBtn = document.getElementById('download-styles-btn');
   const alignmentControls = document.getElementById('alignment-controls');
-  const linksTitleInput = document.getElementById('links-title-input');
-  const linksContainer = document.getElementById('hyperlinks-container');
-  const addLinkBtn = document.getElementById('add-new-link-btn');
   
   // State Variables
   let allThemes = {};
   let state = { selectedTheme: '', selectedAlignment: 'center' };
   let loadedCssVersion = 1.0;
-
-  // --- Utility Functions for Link Configuration ---
-  
-  /**
-   * Creates a link input row and appends it to the container.
-   * @param {object} link - The link object with label and url.
-   */
-  function createLinkRow(link = { label: '', url: '' }) {
-    const linkRow = document.createElement('div');
-    linkRow.classList.add('link-entry-grid');
-    
-    const labelInput = document.createElement('input');
-    labelInput.type = 'text';
-    labelInput.classList.add('link-label-input');
-    labelInput.placeholder = 'Link Label';
-    labelInput.value = link.label;
-    labelInput.addEventListener('input', () => showSaveAndUploadElements());
-    
-    const urlInput = document.createElement('input');
-    urlInput.type = 'text';
-    urlInput.classList.add('link-url-input');
-    urlInput.placeholder = 'https://example.com';
-    urlInput.value = link.url;
-    urlInput.addEventListener('input', () => showSaveAndUploadElements());
-    
-    const deleteBtn = document.createElement('button');
-    deleteBtn.classList.add('btn', 'danger', 'link-delete-btn');
-    deleteBtn.textContent = '✖';
-    deleteBtn.onclick = () => { linkRow.remove(); showSaveAndUploadElements(); };
-    
-    linkRow.append(labelInput, urlInput, deleteBtn);
-    
-    // Find the 'Add New Link' button to insert the new row before it
-    linksContainer.insertBefore(linkRow, addLinkBtn);
-    
-    return linkRow;
-  }
-
-  /**
-   * Reads link configuration from dashboard inputs.
-   * Exposed globally for use in createConfigFile.
-   */
-  window.getLinksConfig = function() {
-    const rows = linksContainer.querySelectorAll('.link-entry-grid');
-    const links = [];
-    rows.forEach(row => {
-        const label = row.querySelector('.link-label-input').value.trim();
-        let url = row.querySelector('.link-url-input').value.trim();
-        
-        if (label && url) {
-            // Simple URL validation: prepend http:// if no protocol is found
-            if (!url.match(/^(f|ht)tps?:\/\//i)) {
-                url = 'http://' + url;
-            }
-            links.push({ label, url });
-        }
-    });
-    
-    return {
-        title: linksTitleInput.value.trim() || "Quick Links",
-        links: links
-    };
-  };
-
-  /**
-   * Loads saved link configuration into the dashboard.
-   * Exposed globally for use in loadConfig.
-   */
-  window.loadLinksConfig = function(config) {
-    // Clear existing dynamic link rows first (only those added by the script)
-    linksContainer.querySelectorAll('.link-entry-grid').forEach(row => row.remove());
-    
-    if (config.title) {
-        linksTitleInput.value = config.title;
-    }
-
-    if (Array.isArray(config.links)) {
-        config.links.forEach(link => createLinkRow(link));
-    }
-  };
-
-  // --- Core Dashboard Functions ---
 
   /**
    * Dynamically loads the config.js file to retrieve the last saved state.
@@ -117,11 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (typeof widgetConfig !== 'undefined') {
         state.selectedTheme = widgetConfig.theme;
         state.selectedAlignment = widgetConfig.alignment || 'center';
-        
-        // Load links configuration back into the dashboard if it exists
-        if (widgetConfig.linksConfig) {
-            window.loadLinksConfig(widgetConfig.linksConfig);
-        }
       }
       initializeDashboard();
     };
@@ -133,21 +43,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /**
-   * Creates the config.js file containing the current theme, alignment, and links configuration.
+   * Creates the config.js file containing the current theme and alignment configuration.
    */
   function createConfigFile() {
-    // Get link data using the function defined above
-    const linksConfigData = window.getLinksConfig();
-
     const configData = {
       theme: state.selectedTheme,
       alignment: state.selectedAlignment,
-      linksConfig: linksConfigData 
     };
 
-    const linksConfigString = JSON.stringify(configData.linksConfig, null, 2).replace(/"/g, '\"');
-
-    const fileContent = `const widgetConfig = {\n  theme: '${configData.theme}',\n  alignment: '${configData.alignment}',\n  linksConfig: ${linksConfigString}\n};`;
+    const fileContent = `const widgetConfig = {\n  theme: '${configData.theme}',\n  alignment: '${configData.alignment}'\n};`;
     
     downloadFile('config.js', fileContent, 'text/javascript');
     showSaveAndUploadElements(false);
@@ -169,19 +73,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /**
-   * Generates the styles.css content and triggers a download. (Omitted for brevity, but assumed correct from prior steps)
+   * Generates the styles.css content and triggers a download.
    */
   function downloadStylesFile() {
-    const customStyles = generateCustomStyles(); // Assuming this function exists and is correct
+    const customStyles = generateCustomStyles();
     downloadFile('styles.css', customStyles, 'text/css');
     showSaveAndUploadElements(false);
   }
   
   /**
-   * Reads existing styles.css to extract themes and functional colours. (Omitted for brevity, but assumed correct from prior steps)
+   * Reads existing styles.css to extract themes and functional colours.
    */
   function parseExistingStyles() {
-    // ... (Existing implementation to read styles.css, extract themes, and call loadConfig)
     const xhr = new XMLHttpRequest();
     xhr.open('GET', 'styles.css?t=' + new Date().getTime(), true); // Bypass cache
     xhr.onload = function() {
@@ -247,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   /**
-   * Constructs the final styles.css content. (Omitted for brevity, but assumed correct from prior steps)
+   * Constructs the final styles.css content.
    */
   function generateCustomStyles() {
     let css = `/* Widget Styles - CSS Version: ${loadedCssVersion.toFixed(1)} - Generated by Dashboard ${DASHBOARD_VERSION} */\n\n`;
@@ -277,9 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     return css;
   }
-
-  // Helper functions like renderThemes, createThemeRow, applyDashboardTheme, updateActiveControls, 
-  // and showSaveAndUploadElements are assumed to be present and correct from the previous full file.
   
   // Renders the list of themes in the dashboard
   function renderThemes() {
@@ -505,11 +405,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (state.selectedTheme && allThemes[state.selectedTheme]) {
         applyDashboardTheme(state.selectedTheme);
     } 
+    // 2. If not, or if no theme was set, fall back to the first theme in the list.
     else if (Object.keys(allThemes).length > 0) {
         state.selectedTheme = Object.keys(allThemes)[0];
         applyDashboardTheme(state.selectedTheme);
     }
     
+    // Finally, render the UI with the correct theme selected.
     renderThemes();
     updateActiveControls();
 
@@ -554,15 +456,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (newRow) newRow.classList.add('editing');
         }
     });
-
-    // Add New Link button
-    addLinkBtn.addEventListener('click', () => {
-        createLinkRow();
-        showSaveAndUploadElements();
-    });
-
-    // Link Title Input
-    linksTitleInput.addEventListener('input', () => showSaveAndUploadElements());
 
     // Initial check to hide save buttons if nothing has been loaded/changed yet
     showSaveAndUploadElements(false);
